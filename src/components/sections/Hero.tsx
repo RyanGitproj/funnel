@@ -1,4 +1,6 @@
-﻿import * as React from "react";
+﻿"use client";
+
+import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +25,7 @@ export interface HeroProps {
   eyebrow?: string;
   title: React.ReactNode;
   subtitle?: React.ReactNode;
+  microReassurance?: React.ReactNode;
   primaryCta?: HeroCta;
   secondaryCta?: HeroCta;
   image: HeroImage;
@@ -34,6 +37,7 @@ interface SubHeroProps {
   eyebrow?: string;
   title: React.ReactNode;
   subtitle?: React.ReactNode;
+  microReassurance?: React.ReactNode;
   primaryCta?: HeroCta;
   secondaryCta?: HeroCta;
   image: HeroImage;
@@ -48,6 +52,34 @@ function CtaContent({ cta }: { cta: HeroCta }) {
         &rarr;
       </span>
     </>
+  );
+}
+
+function scrollToHash(href: string) {
+  const id = href.startsWith("#") ? href.slice(1) : null;
+  if (!id) return;
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+}
+
+function CtaLink({ cta, className }: { cta: HeroCta; className?: string }) {
+  if (cta.href.startsWith("#")) {
+    return (
+      <a
+        href={cta.href}
+        className={className}
+        onClick={(e) => {
+          e.preventDefault();
+          scrollToHash(cta.href);
+        }}
+      >
+        <CtaContent cta={cta} />
+      </a>
+    );
+  }
+  return (
+    <Link href={cta.href} className={className}>
+      <CtaContent cta={cta} />
+    </Link>
   );
 }
 
@@ -76,9 +108,7 @@ function CtaRow({
           variant={primary.variant ?? "primary"}
           className="w-full max-w-full whitespace-normal px-5 text-center sm:w-auto sm:whitespace-nowrap sm:px-10"
         >
-          <Link href={primary.href}>
-            <CtaContent cta={primary} />
-          </Link>
+          <CtaLink cta={primary} />
         </Button>
       )}
       {secondary && (
@@ -88,9 +118,7 @@ function CtaRow({
           variant={secondary.variant ?? "outline"}
           className="w-full max-w-full whitespace-normal px-5 text-center sm:w-auto sm:whitespace-nowrap sm:px-10"
         >
-          <Link href={secondary.href}>
-            <CtaContent cta={secondary} />
-          </Link>
+          <CtaLink cta={secondary} />
         </Button>
       )}
     </div>
@@ -102,6 +130,7 @@ export function Hero({
   eyebrow,
   title,
   subtitle,
+  microReassurance,
   primaryCta,
   secondaryCta,
   image,
@@ -114,6 +143,7 @@ export function Hero({
         eyebrow={eyebrow}
         title={title}
         subtitle={subtitle}
+        microReassurance={microReassurance}
         primaryCta={primaryCta}
         secondaryCta={secondaryCta}
         image={image}
@@ -128,6 +158,7 @@ export function Hero({
         eyebrow={eyebrow}
         title={title}
         subtitle={subtitle}
+        microReassurance={microReassurance}
         primaryCta={primaryCta}
         secondaryCta={secondaryCta}
         image={image}
@@ -141,6 +172,7 @@ export function Hero({
       eyebrow={eyebrow}
       title={title}
       subtitle={subtitle}
+      microReassurance={microReassurance}
       primaryCta={primaryCta}
       secondaryCta={secondaryCta}
       image={image}
@@ -154,6 +186,7 @@ function HeroAccueil({
   eyebrow,
   title,
   subtitle,
+  microReassurance,
   primaryCta,
   secondaryCta,
   image,
@@ -163,7 +196,7 @@ function HeroAccueil({
   return (
     <section
       className={cn(
-        "relative isolate flex min-h-[70vh] items-center justify-center overflow-hidden bg-surface md:min-h-[74vh]",
+        "relative isolate flex min-h-[70svh] items-center justify-center overflow-hidden bg-surface md:min-h-[74vh]",
         className,
       )}
     >
@@ -174,7 +207,7 @@ function HeroAccueil({
           fill
           priority
           sizes="(max-width: 767px) 100vw, 0vw"
-          className="object-cover opacity-20"
+          className="object-cover"
         />
       </div>
 
@@ -205,9 +238,9 @@ function HeroAccueil({
         </>
       )}
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,253,248,0.96)_0%,rgba(250,246,238,0.92)_43%,rgba(250,246,238,0.45)_72%,rgba(250,246,238,0)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(250,246,238,0.86)_0%,rgba(250,246,238,0.62)_46%,rgba(250,246,238,0.9)_100%)] md:bg-[radial-gradient(circle_at_center,rgba(255,253,248,0.96)_0%,rgba(250,246,238,0.92)_43%,rgba(250,246,238,0.45)_72%,rgba(250,246,238,0)_100%)]" />
 
-      <div className="relative z-10 mx-auto max-w-5xl px-6 py-28 text-center md:py-32">
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 py-20 text-center md:py-32">
         {eyebrow && (
           <Badge
             variant="accent"
@@ -216,7 +249,7 @@ function HeroAccueil({
             {eyebrow}
           </Badge>
         )}
-        <h1 className="max-w-full break-words font-serif text-3xl font-semibold leading-[1.08] text-ink sm:text-4xl md:text-6xl lg:text-[72px]">
+        <h1 className="mx-auto max-w-[22rem] break-words font-serif text-3xl font-semibold leading-[1.08] tracking-normal text-ink sm:max-w-2xl sm:text-4xl md:max-w-full md:text-6xl lg:text-[72px]">
           {title}
         </h1>
         {subtitle && (
@@ -225,6 +258,11 @@ function HeroAccueil({
           </p>
         )}
         <CtaRow primary={primaryCta} secondary={secondaryCta} />
+        {microReassurance && (
+          <p className="mx-auto mt-5 max-w-2xl text-xs leading-relaxed text-ink-subtle md:text-sm">
+            {microReassurance}
+          </p>
+        )}
       </div>
     </section>
   );
@@ -234,6 +272,7 @@ function HeroCeremonie({
   eyebrow,
   title,
   subtitle,
+  microReassurance,
   primaryCta,
   secondaryCta,
   image,
@@ -267,6 +306,11 @@ function HeroCeremonie({
             </p>
           )}
           <CtaRow primary={primaryCta} secondary={secondaryCta} align="left" />
+          {microReassurance && (
+            <p className="mt-5 max-w-xl text-xs leading-relaxed text-ink-subtle md:text-sm">
+              {microReassurance}
+            </p>
+          )}
         </div>
 
         <div className="order-1 lg:order-2">
@@ -292,6 +336,7 @@ function HeroFestif({
   eyebrow,
   title,
   subtitle,
+  microReassurance,
   primaryCta,
   secondaryCta,
   image,
@@ -325,7 +370,7 @@ function HeroFestif({
       />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-32 lg:px-10">
-        <div className="max-w-2xl">
+        <div className="max-w-[21.5rem] sm:max-w-2xl">
           {eyebrow && (
             <Badge
               variant="accent"
@@ -334,7 +379,7 @@ function HeroFestif({
               {eyebrow}
             </Badge>
           )}
-          <h1 className="max-w-full break-words font-serif text-4xl font-semibold leading-[1.04] text-ink sm:text-5xl md:text-6xl lg:text-[70px]">
+          <h1 className="max-w-full break-words font-serif text-[2.45rem] font-semibold leading-[1.04] text-ink sm:text-5xl md:text-6xl lg:text-[70px]">
             {title}
           </h1>
           {subtitle && (
@@ -343,6 +388,11 @@ function HeroFestif({
             </p>
           )}
           <CtaRow primary={primaryCta} secondary={secondaryCta} align="left" />
+          {microReassurance && (
+            <p className="mt-5 max-w-xl text-xs leading-relaxed text-ink-subtle md:text-sm">
+              {microReassurance}
+            </p>
+          )}
         </div>
       </div>
     </section>

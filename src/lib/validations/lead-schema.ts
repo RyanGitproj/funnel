@@ -25,6 +25,39 @@ import { z } from "zod";
 
 const telephoneRegex = /^[+()\d][\d\s().-]{5,19}$/;
 
+export const festifTypeActiviteOptions = [
+  "EVJF",
+  "EVG",
+  "Anniversaire",
+  "Week-end",
+  "Autre",
+] as const;
+
+export const festifDateFlexibleOptions = ["Oui", "Non"] as const;
+
+export const festifDureeOptions = ["Soirée", "1 nuit", "Week-end"] as const;
+
+export const festifBesoinOptions = [
+  "Hébergement",
+  "Activités",
+  "Restauration",
+  "Animation",
+] as const;
+
+export const festifAmbianceOptions = [
+  "Chic",
+  "Fun",
+  "Relax",
+  "Intense",
+  "Surprise",
+] as const;
+
+export const festifMaturiteOptions = [
+  "Découverte",
+  "Comparaison",
+  "Prêt à réserver",
+] as const;
+
 const baseLeadFields = {
   nom: z
     .string()
@@ -85,10 +118,43 @@ export const festifLeadSchema = z
   .object({
     ...baseLeadFields,
     univers: z.literal("festif"),
-    type_activite: z.enum(
-      ["EVJF", "EVG", "Anniversaire", "Autre événement festif"],
-      { message: "Veuillez choisir un type d'événement." },
-    ),
+    date_evenement: z
+      .string()
+      .trim()
+      .min(1, "Veuillez indiquer une date souhaitée."),
+    type_activite: z.enum(festifTypeActiviteOptions, {
+      message: "Veuillez choisir un type d'événement.",
+    }),
+    date_flexible: z.enum(festifDateFlexibleOptions, {
+      message: "Veuillez préciser si la date est flexible.",
+    }),
+    nombre_participants: z
+      .number({ message: "Veuillez saisir un nombre de participants valide." })
+      .int("Le nombre de participants doit être un entier.")
+      .min(1, "Le nombre de participants doit être au moins 1.")
+      .max(200, "Au-delà de 200 participants, contactez-nous directement."),
+    duree: z.enum(festifDureeOptions, {
+      message: "Veuillez choisir une durée.",
+    }),
+    besoins: z
+      .array(z.enum(festifBesoinOptions))
+      .min(1, "Veuillez sélectionner au moins un besoin."),
+    ambiance: z.enum(festifAmbianceOptions, {
+      message: "Veuillez choisir l'ambiance recherchée.",
+    }),
+    budget_estime: z
+      .string()
+      .trim()
+      .min(2, "Veuillez indiquer votre budget estimé.")
+      .max(120, "Le budget estimé ne peut pas dépasser 120 caractères."),
+    maturite: z.enum(festifMaturiteOptions, {
+      message: "Veuillez préciser votre niveau de maturité.",
+    }),
+    message: z
+      .string()
+      .trim()
+      .min(2, "Veuillez ajouter quelques mots sur votre projet.")
+      .max(2000, "Le message ne peut pas dépasser 2000 caractères."),
   })
   .strict();
 

@@ -64,7 +64,7 @@ export default function HomePage() {
           title={
             <>
               Un domaine privé pour célébrer
-              <br />
+              <br className="hidden md:block" />{" "}
               ce qui compte vraiment.
             </>
           }
@@ -90,7 +90,7 @@ export default function HomePage() {
 
         <section
           id="orientation"
-          className="border-y border-line bg-surface-alt py-20 md:py-28"
+          className="scroll-mt-24 border-y border-line bg-surface-alt py-20 md:scroll-mt-28 md:py-28"
         >
           <div className="mx-auto max-w-7xl px-6 text-center lg:px-10">
             <Badge variant="accent" className="mb-6">

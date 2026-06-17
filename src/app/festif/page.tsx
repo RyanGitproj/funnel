@@ -5,42 +5,41 @@ import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LeadFormFestif } from "@/components/forms/LeadFormFestif";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Festif — EVJF, EVG & anniversaires chic",
+  title: "Festif - EVJF, EVG & anniversaires chic",
   description:
-    "Fêtez votre EVJF, EVG ou anniversaire au Domaine des Élégances : ambiance nocturne chic, activités sur mesure, espaces modulables. Devis personnalisé sous 24h.",
+    "EVJF, EVG, anniversaire ou week-end entre amis au Domaine des Élégances : un domaine privatisé pour célébrer entre proches dans un cadre élégant.",
   alternates: { canonical: "/festif" },
   openGraph: {
-    title: "Festif — EVJF, EVG & anniversaires au Domaine des Élégances",
+    title: "Festif - EVJF, EVG & anniversaires au Domaine des Élégances",
     description:
-      "Quand la nuit devient élégance. Espaces modulables, activités sur mesure, ambiance nocturne chic pour célébrer entre proches.",
+      "Un domaine privatisé pour vivre un moment fort entre proches, sans complexité et sous réserve de disponibilité.",
     url: "/festif",
     type: "website",
   },
 };
 
-const activites = [
+const experiences = [
   {
-    titre: "Activités sur mesure",
+    titre: "Activités sur demande",
     detail:
-      "Ateliers œnologie, mixologie, parfum, cuisine : des expériences pensées pour votre groupe.",
+      "Animations et expériences adaptées à votre groupe et à l'ambiance recherchée.",
   },
   {
     titre: "Espaces modulables",
     detail:
-      "Salon lounge, piste de danse, bar éphémère, espace photo : la nuit prend la forme que vous voulez.",
+      "Intérieurs et extérieurs pensés pour suivre le rythme de votre événement.",
   },
   {
-    titre: "Ambiance nocturne",
+    titre: "Ambiance festive",
     detail:
-      "Lumière chaude, sonorisation soignée, équipe discrète : le décor d'une soirée qui s'étire.",
+      "Chic, conviviale ou animée, toujours dans un cadre élégant.",
   },
   {
-    titre: "Hébergement inclus",
+    titre: "Hébergement sur place",
     detail:
-      "Chambres pour les convives qui prolongent l'instant, petit-déjeuner lent le lendemain.",
+      "Jusqu'à 22 couchages maximum pour prolonger l'expérience avec les proches essentiels.",
   },
 ];
 
@@ -54,88 +53,64 @@ export default function FestifPage() {
       <Header />
 
       <main className="flex-1">
-        {/* Hero Festif — pleine largeur, overlay marine, CTA doré */}
         <Hero
           variant="festif"
-          eyebrow="Univers Festif · Nuits d'élégance"
-          title={
-            <>
-              Quand la nuit
-              <br />
-              devient élégance.
-            </>
-          }
-          subtitle="EVJF, EVG, anniversaires — un cadre qui transforme une soirée entre proches en moment d'exception. Ambiance nocturne chic, sans jamais tomber dans l'ostentatoire."
+          eyebrow="EVJF · EVG · Anniversaires · Week-ends"
+          title="Célébrez entre proches, sans sacrifier le raffinement."
+          subtitle="EVJF, EVG, anniversaire ou week-end entre amis : un domaine privatisé pensé pour vivre un moment fort sans complexité."
+          microReassurance="Réponse sous 24h · Proposition personnalisée · Sous réserve de disponibilité"
           primaryCta={{
             href: "#devis",
             label: "Obtenir mon devis festif",
-          }}
-          secondaryCta={{
-            href: "/#orientation",
-            label: "Revenir à l'accueil",
-            variant: "outline",
+            variant: "primaryGlow",
           }}
           image={{
             src: "/images/festif/barnum.jpg",
-            alt: "Ambiance festive nocturne au Domaine des Élégances",
+            alt: "Réception festive nocturne au Domaine des Élégances",
           }}
         />
 
-        {/* Bande claire — EVJF / EVG / Anniversaires (respiration) */}
         <ThemeProvider
           theme="ceremonie"
           as="section"
           className="bg-surface py-20 md:py-28"
         >
-          <div className="mx-auto max-w-3xl px-6 text-center lg:px-10">
+          <div className="mx-auto max-w-4xl px-6 text-center lg:px-10">
             <Badge variant="accent" className="mb-6">
-              EVJF · EVG · Anniversaires
+              EVJF · EVG · ANNIVERSAIRES
             </Badge>
             <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
-              Célébrer entre proches, sans sacrifier le raffinement
+              Un lieu pensé pour profiter, sans gérer toute l'organisation
             </h2>
-            <p className="mt-8 text-base leading-relaxed text-ink-muted md:text-lg">
-              Un enterrement de vie de garçon, un anniversaire marquant, un
-              EVJF qui se prolonge en nuit blanche : ces moments méritent
-              mieux qu'une salle louée à l'heure. Le Domaine des Élégances
-              ouvre ses portes pour une soirée entière, sans voisins, sans
-              curieux, sans précipitation.
-            </p>
-            <p className="mt-6 text-base leading-relaxed text-ink-muted md:text-lg">
-              Notre équipe coordonne l'ensemble : traiteur, activités,
-              décoration lumineuse, gestion des flux. Vous êtes là pour
-              célébrer — nous sommes là pour le reste.
+            <p className="mx-auto mt-8 max-w-3xl text-base leading-relaxed text-ink-muted md:text-lg">
+              Vous privatisez un domaine pour vivre un moment entre proches
+              dans un cadre élégant, fluide et simple à organiser. Nous
+              adaptons la structure selon votre projet.
             </p>
           </div>
         </ThemeProvider>
 
-        {/* Bande sombre — Activités & espaces (grille serrée) */}
         <section className="bg-surface py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6 lg:px-10">
-            <div className="mb-12 max-w-3xl">
-              <Badge variant="accent" className="mb-6">
-                Activités & espaces
-              </Badge>
+            <div className="mx-auto mb-12 max-w-3xl text-center">
               <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
-                Une nuit qui prend la forme de votre idée
+                Une expérience qui s'adapte à votre groupe
               </h2>
-              <p className="mt-8 text-base leading-relaxed text-ink-muted md:text-lg">
-                Ateliers, dîner, piste de danse, bar éphémère : les espaces
-                s'enchaînent sans rupture d'ambiance. Tout est pensé pour
-                que vos invités restent dans l'instant.
+              <p className="mt-6 text-base leading-relaxed text-ink-muted md:text-lg">
+                Le domaine garde le cadre. Votre groupe choisit le rythme.
               </p>
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {activites.map((item) => (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {experiences.map((item) => (
                 <div
                   key={item.titre}
-                  className="flex flex-col gap-3 border border-line bg-surface-elevated p-8 rounded-[var(--radius-lg)] glow-accent"
+                  className="border border-line bg-surface-elevated p-7 glow-accent"
                 >
                   <h3 className="font-serif text-lg font-medium text-ink">
                     {item.titre}
                   </h3>
-                  <p className="text-sm leading-relaxed text-ink-muted">
+                  <p className="mt-4 text-sm leading-relaxed text-ink-muted">
                     {item.detail}
                   </p>
                 </div>
@@ -144,89 +119,34 @@ export default function FestifPage() {
           </div>
         </section>
 
-        {/* Galerie ambiance — grille d'images serrée */}
-        <section className="bg-surface py-20 md:py-28">
-          <div className="mx-auto max-w-7xl px-6 lg:px-10">
-            <div className="mb-12 text-center">
-              <Badge variant="accent" className="mb-6">
-                Galerie ambiance
-              </Badge>
-              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
-                L'ambiance en quelques images
-              </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-ink-muted md:text-lg">
-                Placeholders — à remplacer par les clichés des dernières
-                soirées du domaine.
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {[
-                { legende: "Salon lounge", tall: true },
-                { legende: "Bar éphémère", tall: false },
-                { legende: "Piste de danse", tall: false },
-                { legende: "Espace photo", tall: false },
-                { legende: "Coucher de lumière", tall: true },
-                { legende: "Dernier verre", tall: false },
-              ].map((item) => (
-                <figure
-                  key={item.legende}
-                  className={`group relative overflow-hidden rounded-[var(--radius-lg)] border border-line ${
-                    item.tall ? "sm:row-span-2" : ""
-                  }`}
-                >
-                  <div
-                    className={`relative bg-surface-alt ${
-                      item.tall ? "aspect-[3/4]" : "aspect-[4/3]"
-                    }`}
-                  >
-                    <Image
-                      src="/placeholders/placeholder-dark.svg"
-                      alt={`${item.legende} — Domaine des Élégances`}
-                      fill
-                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                    />
-                  </div>
-                  <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent p-5 text-sm text-white">
-                    {item.legende}
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Bande claire — Formulaire Festif */}
         <ThemeProvider
           theme="ceremonie"
           as="section"
           id="devis"
           className="bg-surface py-20 md:py-28"
         >
-          <div className="mx-auto max-w-3xl px-6 lg:px-10">
+          <div className="mx-auto max-w-4xl px-6 lg:px-10">
             <div className="mb-12 text-center">
               <Badge variant="accent" className="mb-6">
                 Demande de devis
               </Badge>
               <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
-                Organisons votre soirée
+                Préparez votre devis festif
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-ink-muted md:text-lg">
-                Dites-nous qui vous êtes, ce que vous imaginez, et nous
-                revenons vers vous sous 24h avec une première proposition
-                d'organisation — sans engagement.
+                Quelques réponses suffisent pour vérifier la faisabilité et
+                construire une proposition adaptée à votre groupe.
               </p>
             </div>
 
-            <div className="bg-surface-elevated border border-line rounded-[var(--radius-lg)] shadow-soft p-6 md:p-10">
+            <div className="border border-line bg-surface-elevated p-6 shadow-soft md:p-10">
               <LeadFormFestif />
             </div>
           </div>
         </ThemeProvider>
       </main>
 
-      <Footer />
+      <Footer description="Un domaine privé pour célébrer entre proches : EVJF, EVG, anniversaires et week-ends festifs dans un cadre élégant et confortable." />
     </ThemeProvider>
   );
 }

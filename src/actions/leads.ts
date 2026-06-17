@@ -75,6 +75,21 @@ export async function submitFestifLead(values: unknown): Promise<ActionResult> {
     };
   }
 
+  const message = [
+    `Message libre : ${parsed.data.message}`,
+    "",
+    "Détails de la demande festif :",
+    `Type d'événement : ${parsed.data.type_activite}`,
+    `Date souhaitée : ${parsed.data.date_evenement}`,
+    `Date flexible : ${parsed.data.date_flexible}`,
+    `Nombre de participants : ${parsed.data.nombre_participants}`,
+    `Durée : ${parsed.data.duree}`,
+    `Besoins : ${parsed.data.besoins.join(", ")}`,
+    `Ambiance : ${parsed.data.ambiance}`,
+    `Budget estimé : ${parsed.data.budget_estime}`,
+    `Niveau de maturité : ${parsed.data.maturite}`,
+  ].join("\n");
+
   const result = await insertLead(
     normalizeEmptyToUndefined({
       univers: "festif" as const,
@@ -83,7 +98,7 @@ export async function submitFestifLead(values: unknown): Promise<ActionResult> {
       telephone: parsed.data.telephone,
       date_evenement: parsed.data.date_evenement,
       type_activite: parsed.data.type_activite,
-      message: parsed.data.message,
+      message,
     }),
   );
 

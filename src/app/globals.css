@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+html {
+  scroll-padding-top: 5rem; /* compense le header sticky h-20 (80px) */
+}
+
 /* ─────────────────────────────────────────────────────────────
    Domaine des Élégances — Système de thèmes
    ─────────────────────────────────────────────────────────────
@@ -106,16 +110,16 @@
    Marine/anthracite chaud (pas noir pur), or saturé qui « brille ».
    ───────────────────────────────────────────────────────────── */
 [data-theme="festif"] {
-  --surface: #161b29;            /* marine/anthracite chaud profond */
-  --surface-alt: #1f2536;        /* marine un cran plus clair pour bandes alternées */
-  --surface-elevated: #232a3d;   /* cartes */
-  --ink: #f3ecdc;                /* ivoire */
-  --ink-muted: #c4bca8;          /* ivoire atténué */
-  --ink-subtle: #908875;         /* or clair grisé */
-  --accent: #e8c477;             /* or saturé, contraste fort sur fond sombre */
-  --accent-strong: #f3d595;      /* or clair « qui flotte » sur marine */
-  --accent-foreground: #1a1f2e;  /* marine sur or */
-  --line: rgba(232, 196, 119, 0.32);
+  --surface: #0b1b2b;            /* bleu nuit profond */
+  --surface-alt: #13263a;        /* marine un cran plus clair pour bandes alternées */
+  --surface-elevated: #172b40;   /* cartes */
+  --ink: #f5f0e8;                /* ivoire chaud */
+  --ink-muted: #e8ddcf;          /* beige sable */
+  --ink-subtle: #b9ab94;         /* champagne atténué */
+  --accent: #c8a96a;             /* doré champagne */
+  --accent-strong: #e2c37d;      /* or clair pour CTA */
+  --accent-foreground: #0b1b2b;  /* bleu nuit sur or */
+  --line: rgba(200, 169, 106, 0.34);
   --shadow-color: 0 0 0;         /* ombre neutre (légère) pour CTA doré */
   /* Overlay marine plus profond pour Festif : conserve l'ambiance
      nocturne tout en assurant la lisibilité. */

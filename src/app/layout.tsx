@@ -61,7 +61,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" suppressHydrationWarning data-scroll-behavior="smooth">
-      <body className="antialiased" data-theme="accueil">
+      <body className="antialiased" data-theme="accueil" suppressHydrationWarning>
         {children}
       </body>
     </html>

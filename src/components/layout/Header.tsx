@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ThemeProvider } from "./ThemeProvider";
 
@@ -24,6 +26,12 @@ export function Header() {
           href="/"
           className="group flex flex-col leading-none"
           aria-label="Domaine des Élégances — accueil"
+          onClick={(e) => {
+            if (window.location.pathname === "/") {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
         >
           <span
             className="text-eyebrow text-ink"
