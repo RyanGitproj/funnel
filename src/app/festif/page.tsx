@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LeadFormFestif } from "@/components/forms/LeadFormFestif";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Festif - EVJF, EVG & anniversaires chic",
@@ -40,6 +41,29 @@ const experiences = [
     titre: "Hébergement sur place",
     detail:
       "Jusqu'à 22 couchages maximum pour prolonger l'expérience avec les proches essentiels.",
+  },
+];
+
+const galerie = [
+  {
+    src: "/images/festif/hero.jpg",
+    alt: "Façade du domaine illuminée pour une soirée privée",
+    legende: "Domaine privatisé",
+  },
+  {
+    src: "/images/festif/hero-2.jpg",
+    alt: "Espace piscine éclairé aux bougies pour une réception nocturne",
+    legende: "Espaces nocturnes",
+  },
+  {
+    src: "/images/festif/ambiance.jpg",
+    alt: "Invitées dansant dans une ambiance festive au domaine",
+    legende: "Ambiance entre proches",
+  },
+  {
+    src: "/images/festif/sauna.jpg",
+    alt: "Sauna privatif disponible sur place",
+    legende: "Détente sur place",
   },
 ];
 
@@ -114,6 +138,63 @@ export default function FestifPage() {
                     {item.detail}
                   </p>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-surface-alt py-20 md:py-28">
+          <div className="mx-auto max-w-7xl px-6 lg:px-10">
+            <div className="mx-auto mb-12 max-w-3xl text-center">
+              <Badge variant="accent" className="mb-6">
+                Aperçu du domaine
+              </Badge>
+              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+                Un cadre réel pour se projeter simplement
+              </h2>
+              <p className="mt-6 text-base leading-relaxed text-ink-muted md:text-lg">
+                Quelques images pour ressentir l'ambiance du lieu avant de
+                préciser votre projet.
+              </p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-4">
+              {galerie.map((image, index) => (
+                <figure
+                  key={image.src}
+                  className={
+                    index === 0
+                      ? "group md:col-span-2 md:row-span-2"
+                      : "group"
+                  }
+                >
+                  <div
+                    className={
+                      index === 0
+                        ? "relative aspect-[4/3] overflow-hidden border border-line bg-surface-elevated md:h-full"
+                        : "relative aspect-[4/3] overflow-hidden border border-line bg-surface-elevated"
+                    }
+                  >
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      sizes={
+                        index === 0
+                          ? "(min-width: 768px) 50vw, 100vw"
+                          : "(min-width: 768px) 25vw, 100vw"
+                      }
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                    <div
+                      className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0b1b2b]/80 to-transparent p-4"
+                      aria-hidden
+                    />
+                    <figcaption className="absolute bottom-4 left-4 right-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#f5f0e8]">
+                      {image.legende}
+                    </figcaption>
+                  </div>
+                </figure>
               ))}
             </div>
           </div>
