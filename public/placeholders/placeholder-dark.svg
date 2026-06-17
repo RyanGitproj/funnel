@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Emplacement image — ambiance festive">
+  <rect width="1200" height="900" fill="#1f2536"/>
+  <rect x="0" y="0" width="1200" height="900" fill="url(#gradDark)" opacity="0.7"/>
+  <defs>
+    <linearGradient id="gradDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#232a3d"/>
+      <stop offset="100%" stop-color="#0f1320"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#e8c477" stroke-width="1" fill="none" opacity="0.5">
+    <rect x="40" y="40" width="1120" height="820"/>
+    <rect x="60" y="60" width="1080" height="780" opacity="0.5"/>
+  </g>
+  <g transform="translate(600 450)" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif">
+    <text y="-10" font-size="36" fill="#e8c477" letter-spacing="6">FESTIF</text>
+    <text y="40" font-size="18" fill="#c4bca8" letter-spacing="10">AMBIANCE NOCTURNE</text>
+    <line x1="-80" y1="70" x2="80" y2="70" stroke="#e8c477" stroke-width="1"/>
+    <text y="110" font-size="12" fill="#908875" letter-spacing="4">IMAGE PLACEHOLDER</text>
+  </g>
+</svg>
