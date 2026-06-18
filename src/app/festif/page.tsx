@@ -221,6 +221,7 @@ export default function FestifPage() {
                 title="Aperçu du Domaine des Élégances — ambiance festive"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
+                loading="lazy"
                 className="h-full w-full"
               />
             </div>

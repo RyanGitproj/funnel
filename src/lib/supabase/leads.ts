@@ -24,6 +24,7 @@ export async function insertLead(
   const { error } = await supabase.from("elegance_leads").insert(cleanPayload);
 
   if (error) {
+    console.error("[insertLead]", error.code, error.message);
     return {
       success: false,
       error:

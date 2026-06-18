@@ -1,7 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import {
@@ -18,16 +20,18 @@ import {
   type CeremonieLeadInput,
 } from "@/lib/validations/lead-schema";
 import { submitCeremonieLead } from "@/actions/leads";
-import { FormField, fieldBaseClass, fieldSelectClass } from "./FormField";
+import {
+  FormField,
+  fieldBaseClass,
+  fieldSelectClass,
+  optionCheckboxClass,
+  checkboxInputClass,
+  PhoneInputInner,
+} from "./FormField";
+import { StepIndicator } from "./StepIndicator";
 import { Button } from "@/components/ui/button";
 
 const FORM_ID = "lead-form-ceremonie";
-
-const OPTION_CLASS =
-  "flex min-h-11 cursor-pointer items-center gap-3 rounded-[var(--radius-md)] border border-line bg-surface-elevated px-3 py-2 text-sm text-ink transition-colors hover:border-accent";
-const CHECKBOX_CLASS = "size-4 shrink-0 accent-[var(--accent-strong)]";
-
-const STEP_LABELS = ["Coordonnées", "Événement", "Projet"] as const;
 
 const STEP_FIELDS: (keyof CeremonieLeadInput)[][] = [
   ["first_name", "last_name", "email", "phone"],
@@ -38,58 +42,7 @@ const STEP_FIELDS: (keyof CeremonieLeadInput)[][] = [
     "guest_count",
     "ceremony_format",
   ],
-  ["budget_range", "project_stage"],
 ];
-
-function StepIndicator({ current }: { current: number }) {
-  return (
-    <div className="flex items-start" aria-label={`Étape ${current} sur 3`}>
-      {STEP_LABELS.map((label, i) => {
-        const n = i + 1;
-        const done = n < current;
-        const active = n === current;
-        return (
-          <React.Fragment key={n}>
-            <div className="flex flex-1 flex-col items-center gap-1.5">
-              <div
-                className={cn(
-                  "flex size-8 items-center justify-center rounded-full text-sm font-bold transition-all",
-                  done
-                    ? "bg-accent text-accent-foreground"
-                    : active
-                      ? "bg-accent text-accent-foreground ring-2 ring-accent/30"
-                      : "border-2 border-line text-ink-subtle",
-                )}
-              >
-                {done ? "✓" : n}
-              </div>
-              <span
-                className={cn(
-                  "text-center text-[10px] font-semibold uppercase tracking-[0.14em]",
-                  active
-                    ? "text-accent"
-                    : done
-                      ? "text-ink-muted"
-                      : "text-ink-subtle",
-                )}
-              >
-                {label}
-              </span>
-            </div>
-            {i < STEP_LABELS.length - 1 && (
-              <div
-                className={cn(
-                  "mx-1 mt-4 h-px flex-[2] transition-colors",
-                  done ? "bg-accent" : "bg-line",
-                )}
-              />
-            )}
-          </React.Fragment>
-        );
-      })}
-    </div>
-  );
-}
 
 export function LeadFormCeremonie() {
   const [step, setStep] = React.useState(1);
@@ -101,6 +54,8 @@ export function LeadFormCeremonie() {
     register,
     handleSubmit,
     trigger,
+    control,
+    setValue,
     formState: { errors },
   } = useForm<CeremonieLeadInput>({
     resolver: zodResolver(ceremonieLeadSchema),
@@ -127,13 +82,15 @@ export function LeadFormCeremonie() {
     },
   });
 
+  const phoneValue = useWatch({ control, name: "phone", defaultValue: "" });
+
   const numReg = (name: "guest_count" | "adult_count" | "children_count") =>
     register(name, {
       setValueAs: (v) => (v === "" || v === undefined ? undefined : Number(v)),
     });
 
   const scrollToForm = () =>
-    formRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
+    formRef.current?.scrollIntoView({ behavior: "instant", block: "nearest" });
 
   const goNext = async () => {
     const fields = STEP_FIELDS[step - 1];
@@ -224,12 +181,22 @@ export function LeadFormCeremonie() {
             required
             error={errors.phone?.message}
           >
-            <input
-              type="tel"
-              autoComplete="tel"
-              className={fieldBaseClass}
-              placeholder="+33 6 12 34 56 78"
-              {...register("phone")}
+            <PhoneInput
+              defaultCountry="FR"
+              placeholder="06 12 34 56 78"
+              value={phoneValue}
+              onChange={(val) =>
+                setValue("phone", val ?? "", { shouldValidate: !!errors.phone })
+              }
+              inputComponent={PhoneInputInner}
+              className={cn(
+                "flex items-center",
+                "border border-line rounded-[var(--radius-md)]",
+                "bg-surface-elevated",
+                "transition-[border-color,box-shadow] duration-200",
+                "focus-within:border-accent-strong focus-within:ring-2 focus-within:ring-accent/40",
+                errors.phone && "border-accent-strong ring-2 ring-accent-strong/30",
+              )}
             />
           </FormField>
         </div>
@@ -297,6 +264,7 @@ export function LeadFormCeremonie() {
           <FormField
             id="c-date-flex"
             label="Date flexible ?"
+            required
             error={errors.date_flexibility?.message}
           >
             <select
@@ -304,7 +272,9 @@ export function LeadFormCeremonie() {
               defaultValue=""
               {...register("date_flexibility")}
             >
-              <option value="">Sélectionner...</option>
+              <option value="" disabled>
+                Sélectionner...
+              </option>
               {dateFlexibilityOptions.map((v) => (
                 <option key={v} value={v}>
                   {dateFlexibilityLabels[v]}
@@ -364,11 +334,11 @@ export function LeadFormCeremonie() {
           </legend>
           <div className="grid grid-cols-2 gap-2">
             {ceremonieSelectedOptions.map((v) => (
-              <label key={v} className={OPTION_CLASS}>
+              <label key={v} className={optionCheckboxClass}>
                 <input
                   type="checkbox"
                   value={v}
-                  className={CHECKBOX_CLASS}
+                  className={checkboxInputClass}
                   {...register("selected_options")}
                 />
                 <span>{v}</span>
@@ -448,11 +418,11 @@ export function LeadFormCeremonie() {
           </legend>
           <div className="grid grid-cols-2 gap-2">
             {ceremonieConstraintOptions.map((v) => (
-              <label key={v} className={OPTION_CLASS}>
+              <label key={v} className={optionCheckboxClass}>
                 <input
                   type="checkbox"
                   value={v}
-                  className={CHECKBOX_CLASS}
+                  className={checkboxInputClass}
                   {...register("constraints")}
                 />
                 <span>{v}</span>

@@ -218,3 +218,23 @@ html {
 .animate-fade-in-up {
   animation: fade-in-up 600ms ease-out both;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   react-phone-number-input — surcharges thème
+   ───────────────────────────────────────────────────────────── */
+.PhoneInputCountry {
+  padding-left: 0.75rem;
+  padding-right: 0.375rem;
+  border-right: 1px solid var(--line);
+  flex-shrink: 0;
+}
+
+.PhoneInputCountrySelectArrow {
+  border-color: var(--ink-subtle) !important;
+  opacity: 0.7;
+}
+
+.PhoneInputCountryIcon--border {
+  box-shadow: none !important;
+  background-color: transparent !important;
+}

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const phoneRegex = /^[+()\d][\d\s().-]{5,19}$/;
+const phoneRegex = /^\+[1-9]\d{6,14}$/;
 
 const optionalSelect = <T extends readonly [string, ...string[]]>(
   values: T,
@@ -244,7 +244,8 @@ export function normalizeEmptyToUndefined<T extends Record<string, unknown>>(
 ): T {
   const out: Record<string, unknown> = { ...values };
   for (const [key, value] of Object.entries(out)) {
-    if (value === "") out[key] = undefined;
+    if (value === "" || (Array.isArray(value) && value.length === 0))
+      out[key] = undefined;
   }
   return out as T;
 }
