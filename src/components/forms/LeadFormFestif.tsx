@@ -6,8 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import {
   budgetRangeOptions,
+  dateFlexibilityLabels,
+  dateFlexibilityOptions,
   festifAmbianceOptions,
-  festifDateFlexibilityOptions,
   festifDurationOptions,
   festifEventTypeOptions,
   festifLeadSchema,
@@ -30,7 +31,7 @@ const STEP_LABELS = ["Coordonnées", "Événement", "Projet"] as const;
 
 const STEP_FIELDS: (keyof FestifLeadInput)[][] = [
   ["first_name", "last_name", "email", "phone"],
-  ["event_type", "event_date", "guest_count", "duration"],
+  ["event_type", "event_date", "date_flexibility", "guest_count", "duration"],
   ["budget_range", "project_stage"],
 ];
 
@@ -99,6 +100,7 @@ export function LeadFormFestif() {
     resolver: zodResolver(festifLeadSchema),
     defaultValues: {
       funnel_type: "festif",
+      source_page: "/festif",
       first_name: "",
       last_name: "",
       email: "",
@@ -152,6 +154,7 @@ export function LeadFormFestif() {
       className="flex flex-col gap-5"
     >
       <input type="hidden" {...register("funnel_type")} value="festif" />
+      <input type="hidden" {...register("source_page")} value="/festif" />
 
       <StepIndicator current={step} />
 
@@ -161,6 +164,7 @@ export function LeadFormFestif() {
           <FormField
             id="f-first-name"
             label="Prénom"
+            required
             error={errors.first_name?.message}
           >
             <input
@@ -288,9 +292,9 @@ export function LeadFormFestif() {
               {...register("date_flexibility")}
             >
               <option value="">Sélectionner...</option>
-              {festifDateFlexibilityOptions.map((v) => (
+              {dateFlexibilityOptions.map((v) => (
                 <option key={v} value={v}>
-                  {v}
+                  {dateFlexibilityLabels[v]}
                 </option>
               ))}
             </select>

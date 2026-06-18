@@ -21,7 +21,7 @@ export async function insertLead(
     ]),
   );
 
-  const { error } = await supabase.from("leads").insert(cleanPayload);
+  const { error } = await supabase.from("elegance_leads").insert(cleanPayload);
 
   if (error) {
     return {

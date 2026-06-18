@@ -15,7 +15,7 @@ export type LeadInput = CeremonieLeadInput | FestifLeadInput;
  * Payload envoyé à la couche d'accès aux données (lib/supabase/leads.ts).
  * Tous les champs optionnels sont explicitement `undefined`-ables
  * (et non juste absents) pour bien mapper avec les colonnes nullable
- * de la table `leads`.
+ * de la table `elegance_leads`.
  */
 export type LeadInsertPayload = LeadInput;
 

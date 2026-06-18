@@ -31,9 +31,7 @@ const baseLeadFields = {
     .string()
     .trim()
     .min(2, "Le prénom doit comporter au moins 2 caractères.")
-    .max(80, "Le prénom ne peut pas dépasser 80 caractères.")
-    .optional()
-    .or(z.literal("")),
+    .max(80, "Le prénom ne peut pas dépasser 80 caractères."),
   last_name: z
     .string()
     .trim()
@@ -50,7 +48,10 @@ const baseLeadFields = {
     .min(1, "Le numéro de téléphone est obligatoire.")
     .regex(phoneRegex, "Le numéro de téléphone n'est pas valide."),
   event_date: z.string().trim().min(1, "Veuillez indiquer une date souhaitée."),
-  date_flexibility: optionalSelect(["Oui", "Non", "À définir"] as const),
+  date_flexibility: requiredSelect(
+    ["oui", "non", "a_definir"] as const,
+    "Veuillez préciser si la date est flexible.",
+  ),
   budget_range: requiredSelect(
     [
       "À définir",
@@ -83,7 +84,7 @@ export const festifEventTypeOptions = [
   "Autre",
 ] as const;
 
-export const festifDateFlexibilityOptions = ["Oui", "Non", "À définir"] as const;
+export const dateFlexibilityOptions = ["oui", "non", "a_definir"] as const;
 
 export const festifParticipantProfileOptions = [
   "Adultes uniquement",
@@ -128,11 +129,14 @@ export const ceremonieEventTypeOptions = [
   "Autre",
 ] as const;
 
-export const ceremonieDateFlexibilityOptions = [
-  "Oui",
-  "Non",
-  "À définir",
-] as const;
+export const dateFlexibilityLabels: Record<
+  (typeof dateFlexibilityOptions)[number],
+  string
+> = {
+  oui: "Oui",
+  non: "Non",
+  a_definir: "À définir",
+};
 
 export const ceremonieFormatOptions = [
   "Journée",
@@ -193,6 +197,7 @@ export const festifLeadSchema = z
   .object({
     ...baseLeadFields,
     funnel_type: z.literal("festif"),
+    source_page: z.literal("/festif"),
     event_type: requiredSelect(
       festifEventTypeOptions,
       "Veuillez choisir un type d'événement.",
@@ -212,6 +217,7 @@ export const ceremonieLeadSchema = z
   .object({
     ...baseLeadFields,
     funnel_type: z.literal("ceremonie"),
+    source_page: z.literal("/ceremonie"),
     event_type: requiredSelect(
       ceremonieEventTypeOptions,
       "Veuillez choisir un type de cérémonie.",

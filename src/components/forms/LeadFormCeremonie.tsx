@@ -7,12 +7,13 @@ import { cn } from "@/lib/utils";
 import {
   budgetRangeOptions,
   ceremonieConstraintOptions,
-  ceremonieDateFlexibilityOptions,
   ceremonieEventTypeOptions,
   ceremonieFormatOptions,
   ceremonieLeadSchema,
   ceremonieProjectPriorityOptions,
   ceremonieSelectedOptions,
+  dateFlexibilityLabels,
+  dateFlexibilityOptions,
   projectStageOptions,
   type CeremonieLeadInput,
 } from "@/lib/validations/lead-schema";
@@ -30,7 +31,13 @@ const STEP_LABELS = ["Coordonnées", "Événement", "Projet"] as const;
 
 const STEP_FIELDS: (keyof CeremonieLeadInput)[][] = [
   ["first_name", "last_name", "email", "phone"],
-  ["event_type", "event_date", "guest_count", "ceremony_format"],
+  [
+    "event_type",
+    "event_date",
+    "date_flexibility",
+    "guest_count",
+    "ceremony_format",
+  ],
   ["budget_range", "project_stage"],
 ];
 
@@ -99,6 +106,7 @@ export function LeadFormCeremonie() {
     resolver: zodResolver(ceremonieLeadSchema),
     defaultValues: {
       funnel_type: "ceremonie",
+      source_page: "/ceremonie",
       first_name: "",
       last_name: "",
       email: "",
@@ -159,6 +167,7 @@ export function LeadFormCeremonie() {
       className="flex flex-col gap-5"
     >
       <input type="hidden" {...register("funnel_type")} value="ceremonie" />
+      <input type="hidden" {...register("source_page")} value="/ceremonie" />
 
       <StepIndicator current={step} />
 
@@ -168,6 +177,7 @@ export function LeadFormCeremonie() {
           <FormField
             id="c-first-name"
             label="Prénom"
+            required
             error={errors.first_name?.message}
           >
             <input
@@ -295,9 +305,9 @@ export function LeadFormCeremonie() {
               {...register("date_flexibility")}
             >
               <option value="">Sélectionner...</option>
-              {ceremonieDateFlexibilityOptions.map((v) => (
+              {dateFlexibilityOptions.map((v) => (
                 <option key={v} value={v}>
-                  {v}
+                  {dateFlexibilityLabels[v]}
                 </option>
               ))}
             </select>
