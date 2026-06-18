@@ -200,6 +200,33 @@ export default function FestifPage() {
           </div>
         </section>
 
+        <section className="bg-surface py-20 md:py-28">
+          <div className="mx-auto max-w-4xl px-6 lg:px-10">
+            <div className="mx-auto mb-10 max-w-3xl text-center">
+              <Badge variant="accent" className="mb-6">
+                Ambiance en vidéo
+              </Badge>
+              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+                Vivez l'ambiance avant d'arriver
+              </h2>
+              <p className="mt-6 text-base leading-relaxed text-ink-muted md:text-lg">
+                Un aperçu réel du domaine pour vous projeter dans votre
+                événement festif.
+              </p>
+            </div>
+
+            <div className="overflow-hidden border border-line shadow-soft" style={{ aspectRatio: "16/9" }}>
+              <iframe
+                src="https://www.youtube.com/embed/WNk1pnocuI4"
+                title="Aperçu du Domaine des Élégances — ambiance festive"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="h-full w-full"
+              />
+            </div>
+          </div>
+        </section>
+
         <ThemeProvider
           theme="ceremonie"
           as="section"
