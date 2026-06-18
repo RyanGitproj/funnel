@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ThemeProvider } from "./ThemeProvider";
 
 /**
@@ -19,6 +20,10 @@ const navLinks = [
 ];
 
 export function Header() {
+  const pathname = usePathname();
+  const isCeremonie = pathname === "/ceremonie";
+  const ctaHref = isCeremonie ? "#devis" : "/#orientation";
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-line backdrop-blur-md bg-surface/85">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
@@ -60,7 +65,14 @@ export function Header() {
         </nav>
 
         <Link
-          href="/#orientation"
+          href={ctaHref}
+          onClick={(e) => {
+            if (!isCeremonie) return;
+            e.preventDefault();
+            document.getElementById("devis")?.scrollIntoView({
+              behavior: "smooth",
+            });
+          }}
           className="hidden bg-accent-strong text-accent-foreground px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition-colors hover:brightness-95 md:inline-flex"
           style={{ borderRadius: "var(--radius-md)" }}
         >

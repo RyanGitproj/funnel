@@ -146,7 +146,7 @@ export function LeadFormCeremonie() {
             step={1}
             inputMode="numeric"
             className={fieldBaseClass}
-            placeholder="120"
+            placeholder="60"
             {...register("nb_invites", {
               setValueAs: (v) =>
                 v === "" || v === undefined || v === null
@@ -182,7 +182,9 @@ export function LeadFormCeremonie() {
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs leading-relaxed text-ink-subtle">
-          Réponse sous 24h ouvrées · Devis personnalisé sans engagement
+          Réponse sous 24h ouvrées. Proposition transmise sous réserve de
+          disponibilité et de validation finale par l'équipe du Domaine des
+          Élégances.
         </p>
         <Button
           type="submit"
@@ -191,7 +193,16 @@ export function LeadFormCeremonie() {
           disabled={isPending}
           className="w-full sm:w-auto"
         >
-          {isPending ? "Envoi en cours…" : "Préparer mon devis cérémonie"}
+          {isPending ? (
+            "Envoi en cours..."
+          ) : (
+            <>
+              Préparer mon devis cérémonie
+              <span aria-hidden className="text-base leading-none">
+                &rarr;
+              </span>
+            </>
+          )}
         </Button>
       </div>
     </form>
