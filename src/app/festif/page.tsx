@@ -215,8 +215,9 @@ export default function FestifPage() {
                 Préparez votre devis festif
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-ink-muted md:text-lg">
-                Quelques réponses suffisent pour vérifier la faisabilité et
-                construire une proposition adaptée à votre groupe.
+                Indiquez-nous votre projet : nous revenons vers vous avec une
+                première proposition adaptée à votre date, à votre groupe et
+                aux options souhaitées.
               </p>
             </div>
 

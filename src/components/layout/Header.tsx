@@ -22,7 +22,14 @@ const navLinks = [
 export function Header() {
   const pathname = usePathname();
   const isCeremonie = pathname === "/ceremonie";
-  const ctaHref = isCeremonie ? "#devis" : "/#orientation";
+  const isFestif = pathname === "/festif";
+  const isFunnel = isCeremonie || isFestif;
+
+  const scrollToForm = (e: React.MouseEvent) => {
+    if (!isFunnel) return;
+    e.preventDefault();
+    document.getElementById("devis")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-line backdrop-blur-md bg-surface/85">
@@ -65,18 +72,13 @@ export function Header() {
         </nav>
 
         <Link
-          href={ctaHref}
-          onClick={(e) => {
-            if (!isCeremonie) return;
-            e.preventDefault();
-            document.getElementById("devis")?.scrollIntoView({
-              behavior: "smooth",
-            });
-          }}
-          className="hidden bg-accent-strong text-accent-foreground px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition-colors hover:brightness-95 md:inline-flex"
+          href={isFunnel ? "#devis" : "/#orientation"}
+          onClick={scrollToForm}
+          className={`bg-accent-strong text-accent-foreground font-semibold uppercase tracking-[0.18em] transition-colors hover:brightness-95${isFunnel ? " inline-flex px-4 py-2.5 text-[10px] md:px-6 md:py-3 md:text-xs" : " hidden px-6 py-3 text-xs md:inline-flex"}`}
           style={{ borderRadius: "var(--radius-md)" }}
         >
-          OBTENIR MON DEVIS
+          <span className="md:hidden">MON DEVIS</span>
+          <span className="hidden md:inline">OBTENIR MON DEVIS</span>
         </Link>
       </div>
     </header>

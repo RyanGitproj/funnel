@@ -1,47 +1,113 @@
 import { z } from "zod";
 
-/**
- * Schémas de validation des leads — source unique de vérité.
- *
- * Partagés entre :
- *   - la validation client (React Hook Form + zodResolver)
- *   - la re-validation serveur (Server Action)
- *
- * Règle : aucune règle de validation n'est dupliquée côté client ou
- * côté serveur. Tout vit ici.
- *
- * Convention de mapping avec la table `leads` :
- *   - `univers` : 'ceremonie' | 'festif' (CHECK constraint côté base)
- *   - `nb_invites` : renseigné uniquement si univers = 'ceremonie'
- *   - `type_activite` : renseigné uniquement si univers = 'festif'
- *
- * Note technique : on n'utilise pas `.transform()` ici pour normaliser
- * les chaînes vides en `undefined`. Cela casse l'inférence de type
- * côté React Hook Form (les champs `optional` deviennent `required`
- * mais avec valeur `undefined` autorisée — incohérent avec RHF).
- * La normalisation "chaîne vide → undefined" est faite côté Server
- * Action, au moment de l'envoi à Supabase.
- */
+const phoneRegex = /^[+()\d][\d\s().-]{5,19}$/;
 
-const telephoneRegex = /^[+()\d][\d\s().-]{5,19}$/;
+const optionalSelect = <T extends readonly [string, ...string[]]>(
+  values: T,
+) => z.enum(values).optional().or(z.literal(""));
 
-export const festifTypeActiviteOptions = [
+const requiredSelect = <T extends readonly [string, ...string[]]>(
+  values: T,
+  message: string,
+) => z.enum(values, { message });
+
+const optionalString = z.string().trim().max(2000).optional().or(z.literal(""));
+
+const optionalPositiveInt = z
+  .number({ message: "Veuillez saisir un nombre valide." })
+  .int("Veuillez saisir un nombre entier.")
+  .min(0, "Le nombre ne peut pas être négatif.")
+  .max(2000, "Veuillez vérifier ce nombre.")
+  .optional();
+
+const positiveInt = z
+  .number({ message: "Veuillez saisir un nombre valide." })
+  .int("Veuillez saisir un nombre entier.")
+  .min(1, "Veuillez saisir un nombre supérieur à 0.")
+  .max(2000, "Veuillez vérifier ce nombre.");
+
+const baseLeadFields = {
+  first_name: z
+    .string()
+    .trim()
+    .min(2, "Le prénom doit comporter au moins 2 caractères.")
+    .max(80, "Le prénom ne peut pas dépasser 80 caractères.")
+    .optional()
+    .or(z.literal("")),
+  last_name: z
+    .string()
+    .trim()
+    .min(2, "Le nom doit comporter au moins 2 caractères.")
+    .max(100, "Le nom ne peut pas dépasser 100 caractères."),
+  email: z
+    .string()
+    .trim()
+    .min(1, "L'adresse e-mail est obligatoire.")
+    .email("L'adresse e-mail n'est pas valide."),
+  phone: z
+    .string()
+    .trim()
+    .min(1, "Le numéro de téléphone est obligatoire.")
+    .regex(phoneRegex, "Le numéro de téléphone n'est pas valide."),
+  event_date: z.string().trim().min(1, "Veuillez indiquer une date souhaitée."),
+  date_flexibility: optionalSelect(["Oui", "Non", "À définir"] as const),
+  budget_range: requiredSelect(
+    [
+      "À définir",
+      "Moins de 3 000 €",
+      "3 000 € – 5 000 €",
+      "5 000 € – 8 000 €",
+      "8 000 € – 12 000 €",
+      "Plus de 12 000 €",
+    ] as const,
+    "Veuillez choisir un budget estimatif global.",
+  ),
+  project_stage: requiredSelect(
+    [
+      "Je découvre",
+      "Je compare plusieurs lieux",
+      "Mon projet est déjà assez défini",
+      "Je souhaite réserver rapidement",
+    ] as const,
+    "Veuillez préciser où vous en êtes dans votre projet.",
+  ),
+  message: optionalString,
+} as const;
+
+export const festifEventTypeOptions = [
   "EVJF",
   "EVG",
   "Anniversaire",
-  "Week-end",
+  "Week-end entre amis",
+  "Fête privée",
   "Autre",
 ] as const;
 
-export const festifDateFlexibleOptions = ["Oui", "Non"] as const;
+export const festifDateFlexibilityOptions = ["Oui", "Non", "À définir"] as const;
 
-export const festifDureeOptions = ["Soirée", "1 nuit", "Week-end"] as const;
+export const festifParticipantProfileOptions = [
+  "Adultes uniquement",
+  "Mixte adultes / enfants",
+  "À définir",
+] as const;
 
-export const festifBesoinOptions = [
+export const festifDurationOptions = [
+  "Journée",
+  "Soirée",
+  "1 nuit",
+  "Week-end",
+  "À définir",
+] as const;
+
+export const festifSelectedOptions = [
   "Hébergement",
-  "Activités",
   "Restauration",
+  "Brunch / petit-déjeuner",
+  "Activités",
   "Animation",
+  "Privatisation",
+  "Aucun besoin spécifique",
+  "Autre",
 ] as const;
 
 export const festifAmbianceOptions = [
@@ -50,124 +116,123 @@ export const festifAmbianceOptions = [
   "Relax",
   "Intense",
   "Surprise",
+  "Élégante mais festive",
 ] as const;
 
-export const festifMaturiteOptions = [
-  "Découverte",
-  "Comparaison",
-  "Prêt à réserver",
+export const ceremonieEventTypeOptions = [
+  "Mariage",
+  "Baptême",
+  "Communion",
+  "Bar Mitzvah",
+  "Événement familial",
+  "Autre",
 ] as const;
 
-const baseLeadFields = {
-  nom: z
-    .string()
-    .trim()
-    .min(2, "Le nom doit comporter au moins 2 caractères.")
-    .max(120, "Le nom ne peut pas dépasser 120 caractères."),
-  email: z
-    .string()
-    .trim()
-    .min(1, "L'adresse e-mail est obligatoire.")
-    .email("L'adresse e-mail n'est pas valide."),
-  telephone: z
-    .string()
-    .trim()
-    .min(1, "Le numéro de téléphone est obligatoire.")
-    .regex(telephoneRegex, "Le numéro de téléphone n'est pas valide."),
-  date_evenement: z
-    .string()
-    .trim()
-    .optional()
-    .or(z.literal("")),
-  message: z
-    .string()
-    .trim()
-    .max(2000, "Le message ne peut pas dépasser 2000 caractères.")
-    .optional()
-    .or(z.literal("")),
-} as const;
+export const ceremonieDateFlexibilityOptions = [
+  "Oui",
+  "Non",
+  "À définir",
+] as const;
 
-/**
- * Schéma Cérémonie.
- * `nb_invites` est facultatif (l'utilisateur peut ne pas encore savoir)
- * mais s'il est renseigné il doit être un entier positif.
- *
- * La conversion "chaîne vide → undefined" est gérée côté formulaire via
- * `register("nb_invites", { setValueAs: ... })`, ce qui permet au
- * schéma de rester simple et bien typé (`number | undefined`).
- */
-export const ceremonieLeadSchema = z
-  .object({
-    ...baseLeadFields,
-    univers: z.literal("ceremonie"),
-    nb_invites: z
-      .number({ message: "Veuillez saisir un nombre d'invités valide." })
-      .int("Le nombre d'invités doit être un entier.")
-      .min(1, "Le nombre d'invités doit être au moins 1.")
-      .max(2000, "Plus de 2000 invités ? Contactez-nous directement.")
-      .optional(),
-  })
-  // Defense en profondeur : on rejette les clés non attendues.
-  .strict();
+export const ceremonieFormatOptions = [
+  "Journée",
+  "Soirée",
+  "Week-end",
+  "Cérémonie + réception",
+  "Cérémonie + hébergement",
+  "À définir",
+] as const;
 
-/**
- * Schéma Festif.
- * `type_activite` est obligatoire (select).
- */
+export const ceremonieSelectedOptions = [
+  "Réception",
+  "Restauration",
+  "Hébergement",
+  "Brunch / lendemain",
+  "Décoration",
+  "Mobilier",
+  "Animation",
+  "Espaces extérieurs",
+  "Autre",
+] as const;
+
+export const ceremonieProjectPriorityOptions = [
+  "Le cadre du lieu",
+  "L'élégance de la réception",
+  "L'hébergement des proches essentiels",
+  "La simplicité d'organisation",
+  "La confidentialité du domaine",
+  "La possibilité de privatiser le week-end",
+] as const;
+
+export const ceremonieConstraintOptions = [
+  "Enfants",
+  "Accessibilité",
+  "Horaires spécifiques",
+  "Restauration spécifique",
+  "Besoins familiaux",
+  "Aucune pour le moment",
+] as const;
+
+export const budgetRangeOptions = [
+  "À définir",
+  "Moins de 3 000 €",
+  "3 000 € – 5 000 €",
+  "5 000 € – 8 000 €",
+  "8 000 € – 12 000 €",
+  "Plus de 12 000 €",
+] as const;
+
+export const projectStageOptions = [
+  "Je découvre",
+  "Je compare plusieurs lieux",
+  "Mon projet est déjà assez défini",
+  "Je souhaite réserver rapidement",
+] as const;
+
 export const festifLeadSchema = z
   .object({
     ...baseLeadFields,
-    univers: z.literal("festif"),
-    date_evenement: z
-      .string()
-      .trim()
-      .min(1, "Veuillez indiquer une date souhaitée."),
-    type_activite: z.enum(festifTypeActiviteOptions, {
-      message: "Veuillez choisir un type d'événement.",
-    }),
-    date_flexible: z.enum(festifDateFlexibleOptions, {
-      message: "Veuillez préciser si la date est flexible.",
-    }),
-    nombre_participants: z
-      .number({ message: "Veuillez saisir un nombre de participants valide." })
-      .int("Le nombre de participants doit être un entier.")
-      .min(1, "Le nombre de participants doit être au moins 1.")
-      .max(200, "Au-delà de 200 participants, contactez-nous directement."),
-    duree: z.enum(festifDureeOptions, {
-      message: "Veuillez choisir une durée.",
-    }),
-    besoins: z
-      .array(z.enum(festifBesoinOptions))
-      .min(1, "Veuillez sélectionner au moins un besoin."),
-    ambiance: z.enum(festifAmbianceOptions, {
-      message: "Veuillez choisir l'ambiance recherchée.",
-    }),
-    budget_estime: z
-      .string()
-      .trim()
-      .min(2, "Veuillez indiquer votre budget estimé.")
-      .max(120, "Le budget estimé ne peut pas dépasser 120 caractères."),
-    maturite: z.enum(festifMaturiteOptions, {
-      message: "Veuillez préciser votre niveau de maturité.",
-    }),
-    message: z
-      .string()
-      .trim()
-      .min(2, "Veuillez ajouter quelques mots sur votre projet.")
-      .max(2000, "Le message ne peut pas dépasser 2000 caractères."),
+    funnel_type: z.literal("festif"),
+    event_type: requiredSelect(
+      festifEventTypeOptions,
+      "Veuillez choisir un type d'événement.",
+    ),
+    guest_count: positiveInt,
+    participant_profile: optionalSelect(festifParticipantProfileOptions),
+    duration: requiredSelect(
+      festifDurationOptions,
+      "Veuillez choisir une durée souhaitée.",
+    ),
+    selected_options: z.array(z.enum(festifSelectedOptions)).optional(),
+    ambiance: optionalSelect(festifAmbianceOptions),
+  })
+  .strict();
+
+export const ceremonieLeadSchema = z
+  .object({
+    ...baseLeadFields,
+    funnel_type: z.literal("ceremonie"),
+    event_type: requiredSelect(
+      ceremonieEventTypeOptions,
+      "Veuillez choisir un type de cérémonie.",
+    ),
+    guest_count: positiveInt,
+    adult_count: optionalPositiveInt,
+    children_count: optionalPositiveInt,
+    ceremony_format: requiredSelect(
+      ceremonieFormatOptions,
+      "Veuillez choisir un format souhaité.",
+    ),
+    selected_options: z.array(z.enum(ceremonieSelectedOptions)).optional(),
+    project_priority: optionalSelect(ceremonieProjectPriorityOptions),
+    constraints: z.array(z.enum(ceremonieConstraintOptions)).optional(),
   })
   .strict();
 
 export type CeremonieLeadInput = z.infer<typeof ceremonieLeadSchema>;
 export type FestifLeadInput = z.infer<typeof festifLeadSchema>;
+export type FunnelType = "ceremonie" | "festif";
 
-export type LeadUnivers = "ceremonie" | "festif";
-
-/**
- * Normalise une valeur post-validation : transforme les chaînes vides
- * en `undefined` (pour que Supabase reçoive NULL, pas une string vide).
- * Utilisée côté Server Action.
- */
 export function normalizeEmptyToUndefined<T extends Record<string, unknown>>(
   values: T,
 ): T {

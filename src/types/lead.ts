@@ -17,16 +17,7 @@ export type LeadInput = CeremonieLeadInput | FestifLeadInput;
  * (et non juste absents) pour bien mapper avec les colonnes nullable
  * de la table `leads`.
  */
-export interface LeadInsertPayload {
-  univers: "ceremonie" | "festif";
-  nom: string;
-  email: string;
-  telephone: string;
-  date_evenement?: string;
-  nb_invites?: number;
-  type_activite?: string;
-  message?: string;
-}
+export type LeadInsertPayload = LeadInput;
 
 /**
  * Résultat typé d'une insertion — jamais d'exception, toujours un
