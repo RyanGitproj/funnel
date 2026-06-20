@@ -98,8 +98,8 @@ html {
   --ink: #2a2622;                /* anthracite profond */
   --ink-muted: #6b645a;          /* taupe */
   --ink-subtle: #8c8478;         /* taupe clair */
-  --accent: #c2a368;             /* champagne doré */
-  --accent-strong: #a8895c;      /* or plus profond (hover / CTA) */
+  --accent: #C9A44A;             /* or doré saturé */
+  --accent-strong: #B08A30;      /* or profond (hover / CTA) */
   --accent-foreground: #2a2622;  /* anthracite sur or */
   --line: rgba(168, 137, 92, 0.22);
   --shadow-color: 42 35 25;      /* ombre chaude (RGB brut pour usage avec /opacité) */
@@ -125,8 +125,8 @@ html {
   --ink: #f5f0e8;                /* ivoire chaud */
   --ink-muted: #e8ddcf;          /* beige sable */
   --ink-subtle: #b9ab94;         /* champagne atténué */
-  --accent: #c8a96a;             /* doré champagne */
-  --accent-strong: #e2c37d;      /* or clair pour CTA */
+  --accent: #D4AF5A;             /* or champagne saturé */
+  --accent-strong: #F2CB6A;      /* or vif pour CTA (brille sur fond sombre) */
   --accent-foreground: #0b1b2b;  /* bleu nuit sur or */
   --line: rgba(200, 169, 106, 0.34);
   --shadow-color: 0 0 0;         /* ombre neutre (légère) pour CTA doré */
@@ -189,8 +189,8 @@ html {
   /* Léger glow doré pour les cartes sur fond Festif (les ombres
      classiques étant invisibles sur fond sombre) */
   .glow-accent {
-    box-shadow: 0 0 0 1px rgba(232, 196, 119, 0.18),
-                0 8px 32px -12px rgba(232, 196, 119, 0.25);
+    box-shadow: 0 0 0 1px rgba(242, 203, 106, 0.18),
+                0 8px 32px -12px rgba(242, 203, 106, 0.25);
   }
 
   /* « Très » large : badge sur-majuscule avec letter-spacing marque de luxe */

@@ -102,7 +102,7 @@ export default function CeremoniePage() {
           variant="ceremonie"
           eyebrow="Univers Cérémonie"
           title="Un domaine privé pour une cérémonie qui compte vraiment."
-          subtitle="Mariage, baptême, communion, Bar Mitzvah ou événement familial : le Domaine des Élégances vous accueille dans un cadre élégant, rassurant et privatisable, pensé pour réunir vos proches dans les meilleures conditions."
+          subtitle="Mariage, baptême, communion, Bar Mitzvah : un cadre élégant, rassurant et privatisable pour réunir vos proches dans les meilleures conditions."
           primaryCta={{
             href: "#devis",
             label: "Préparer mon devis cérémonie",

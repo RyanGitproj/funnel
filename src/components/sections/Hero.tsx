@@ -263,39 +263,70 @@ function HeroCeremonie({
   return (
     <section
       className={cn(
-        "relative overflow-hidden py-16 md:py-24 lg:py-28",
+        "relative isolate overflow-hidden",
+        // Mobile : hero plein cadre centré dans le viewport
+        "flex min-h-[82svh] items-center",
+        // Desktop : layout bloc classique avec padding vertical
+        "lg:block lg:min-h-0 lg:py-24 xl:py-28",
         className,
       )}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_18%,rgba(194,163,104,0.16),transparent_28%),linear-gradient(180deg,rgba(255,253,248,0.9),rgba(250,246,238,0.98))]" />
+      {/* Image de fond — mobile uniquement */}
+      <div className="absolute inset-0 lg:hidden">
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      </div>
+      {/* Voile sombre gradué — lisibilité texte blanc sur mobile */}
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/48 to-black/65 lg:hidden"
+        aria-hidden
+      />
+      {/* Vignette latérale douce — mobile */}
+      <div
+        className="absolute inset-0 bg-[radial-gradient(ellipse_120%_100%_at_50%_50%,transparent_40%,rgba(10,8,5,0.35)_100%)] lg:hidden"
+        aria-hidden
+      />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:px-10">
-        <div className="order-2 lg:order-1">
+      {/* Gradient décoratif desktop — inchangé */}
+      <div className="pointer-events-none absolute inset-0 hidden lg:block bg-[radial-gradient(circle_at_85%_18%,rgba(194,163,104,0.16),transparent_28%),linear-gradient(180deg,rgba(255,253,248,0.9),rgba(250,246,238,0.98))]" />
+
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-14 lg:grid lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-16 lg:px-10 lg:py-0">
+        {/* Bloc texte — premier dans le DOM → premier sur mobile */}
+        <div className="lg:order-1">
           {eyebrow && (
             <Badge
               variant="accent"
-              className="mb-6 max-w-full whitespace-normal text-center leading-relaxed"
+              className="mb-6 max-w-full whitespace-normal text-center leading-relaxed lg:text-left"
             >
               {eyebrow}
             </Badge>
           )}
-          <h1 className="max-w-full break-words font-serif text-4xl font-semibold leading-[1.08] text-ink md:text-5xl lg:text-[62px]">
+          <h1 className="max-w-full break-words text-center font-serif text-4xl font-semibold leading-[1.08] text-[#fffdf8] [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.28)] md:text-5xl lg:text-left lg:text-[62px] lg:text-ink lg:[text-shadow:none]">
             {title}
           </h1>
           {subtitle && (
-            <p className="mt-8 max-w-xl text-base leading-relaxed text-ink-muted md:text-lg">
+            <p className="mx-auto mt-6 max-w-xl text-center text-base leading-relaxed text-white [text-shadow:0_1px_4px_rgba(0,0,0,1),0_2px_12px_rgba(0,0,0,0.92),0_4px_24px_rgba(0,0,0,0.75),0_0_48px_rgba(0,0,0,0.50)] md:text-lg lg:mx-0 lg:mt-8 lg:text-left lg:text-ink-muted lg:[text-shadow:none]">
               {subtitle}
             </p>
           )}
-          <CtaRow primary={primaryCta} secondary={secondaryCta} align="left" />
+          <div className="flex justify-center lg:justify-start">
+            <CtaRow primary={primaryCta} secondary={secondaryCta} align="left" />
+          </div>
           {microReassurance && (
-            <p className="mt-5 max-w-xl text-xs leading-relaxed text-ink-subtle md:text-sm">
+            <p className="mx-auto mt-5 max-w-xl text-center text-xs leading-relaxed text-white/70 [text-shadow:0_1px_5px_rgba(0,0,0,0.90),0_2px_14px_rgba(0,0,0,0.65)] md:text-sm lg:mx-0 lg:text-left lg:text-ink-subtle lg:[text-shadow:none]">
               {microReassurance}
             </p>
           )}
         </div>
 
-        <div className="order-1 lg:order-2">
+        {/* Carte image — desktop uniquement */}
+        <div className="order-2 hidden lg:block lg:order-2">
           <div className="rounded-[var(--radius-xl)] border border-accent/45 bg-surface-elevated p-2 shadow-soft">
             <div className="relative aspect-[16/11] overflow-hidden rounded-[var(--radius-md)] bg-surface-alt lg:aspect-[5/4]">
               <Image
