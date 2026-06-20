@@ -40,10 +40,10 @@ const buttonVariants = cva(
           "bg-accent-strong text-white",
           "glow-accent hover:brightness-105 active:brightness-95",
         ].join(" "),
-        // Action secondaire — outline fin doré
+        // Action secondaire — fond blanc, bordure et texte dorés
         outline: [
-          "border border-accent text-white bg-surface/15 backdrop-blur-sm",
-          "hover:bg-accent/10",
+          "bg-white border border-accent text-accent-strong",
+          "hover:bg-accent/5 hover:border-accent-strong",
         ].join(" "),
         // Lien discret (texte doré, underline au hover)
         link: [

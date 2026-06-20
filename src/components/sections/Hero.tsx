@@ -190,57 +190,39 @@ function HeroAccueil({
   primaryCta,
   secondaryCta,
   image,
-  accentImage,
   className,
 }: SubHeroProps & { accentImage?: HeroImage }) {
   return (
     <section
       className={cn(
-        "relative isolate flex min-h-[70svh] items-center justify-center overflow-hidden bg-surface md:min-h-[74vh]",
+        "relative isolate flex min-h-[82svh] items-center justify-center overflow-hidden md:min-h-[90vh]",
         className,
       )}
     >
-      <div className="absolute inset-0 md:hidden">
+      {/* Image plein cadre — mobile et desktop */}
+      <div className="absolute inset-0">
         <Image
           src={image.src}
           alt={image.alt}
           fill
           priority
-          sizes="(max-width: 767px) 100vw, 0vw"
-          className="object-cover"
+          sizes="100vw"
+          className="object-cover object-center"
         />
       </div>
 
-      <div className="absolute inset-y-0 left-0 hidden w-[52%] opacity-95 md:block">
-        <Image
-          src={image.src}
-          alt={image.alt}
-          fill
-          priority
-          sizes="52vw"
-          className="object-cover"
-        />
-      </div>
-      <div className="absolute inset-y-0 left-0 hidden w-[62%] bg-gradient-to-r from-transparent via-surface/40 to-surface md:block" />
+      {/* Voile sombre gradué — lisibilité du texte blanc */}
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/32 to-black/58"
+        aria-hidden
+      />
+      {/* Vignette latérale douce pour concentrer le regard au centre */}
+      <div
+        className="absolute inset-0 bg-[radial-gradient(ellipse_120%_100%_at_50%_50%,transparent_42%,rgba(12,9,5,0.38)_100%)]"
+        aria-hidden
+      />
 
-      {accentImage && (
-        <>
-          <div className="absolute inset-y-0 right-0 hidden w-[48%] opacity-95 md:block">
-            <Image
-              src={accentImage.src}
-              alt={accentImage.alt}
-              fill
-              sizes="(max-width: 767px) 0vw, 48vw"
-              className="object-cover"
-            />
-          </div>
-          <div className="absolute inset-y-0 right-0 hidden w-[58%] bg-gradient-to-l from-transparent via-surface/40 to-surface md:block" />
-        </>
-      )}
-
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(250,246,238,0.35)_0%,rgba(250,246,238,0.05)_50%,rgba(250,246,238,0.50)_100%)] md:bg-[radial-gradient(circle_at_center,rgba(255,253,248,0.96)_0%,rgba(250,246,238,0.86)_35%,rgba(250,246,238,0.20)_65%,rgba(250,246,238,0)_100%)]" />
-
-      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 py-20 text-center md:py-32">
+      <div className="relative z-10 mx-auto w-full max-w-4xl px-6 py-24 text-center md:py-40">
         {eyebrow && (
           <Badge
             variant="accent"
@@ -249,17 +231,17 @@ function HeroAccueil({
             {eyebrow}
           </Badge>
         )}
-        <h1 className="mx-auto max-w-[22rem] break-words font-serif text-[2.1rem] font-bold leading-[1.08] tracking-normal text-[#120f0c] [text-shadow:0_0_18px_rgba(255,253,248,1),0_0_36px_rgba(255,253,248,0.85)] sm:max-w-2xl sm:text-4xl md:max-w-full md:text-6xl md:font-semibold md:text-ink md:[text-shadow:none] lg:text-[72px]">
+        <h1 className="mx-auto max-w-[22rem] break-words font-serif text-[2.1rem] font-bold leading-[1.08] tracking-normal text-[#fffdf8] [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.30)] sm:max-w-2xl sm:text-4xl md:max-w-3xl md:text-[3.6rem] md:font-semibold md:leading-[1.05] lg:text-[72px]">
           {title}
         </h1>
         {subtitle && (
-          <p className="mx-auto mt-8 max-w-2xl rounded-xl px-4 py-2 text-base leading-relaxed text-ink-muted backdrop-blur-sm bg-surface/65 md:bg-transparent md:backdrop-blur-none md:px-0 md:py-0 md:text-lg">
+          <p className="mx-auto mt-8 max-w-2xl rounded-xl px-6 py-4 text-base leading-[1.8] text-ink bg-white/92 backdrop-blur-md md:px-8 md:py-5 md:text-lg">
             {subtitle}
           </p>
         )}
         <CtaRow primary={primaryCta} secondary={secondaryCta} />
         {microReassurance && (
-          <p className="mx-auto mt-5 max-w-2xl text-xs leading-relaxed text-ink-subtle md:text-sm">
+          <p className="mx-auto mt-5 max-w-2xl text-xs leading-relaxed text-white/65 md:text-sm">
             {microReassurance}
           </p>
         )}
