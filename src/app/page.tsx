@@ -3,9 +3,9 @@ import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
-import { UniversCard } from "@/components/sections/UniversCard";
 import { ReassuranceBar } from "@/components/sections/ReassuranceBar";
-import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import Image from "next/image";
 import { Clock, Sparkles, HeartHandshake, MapPinned } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -79,7 +79,7 @@ export default function HomePage() {
             variant: "outline",
           }}
           image={{
-            src: "/images/ceremonie/parc-du-domaine.jpeg",
+            src: "/images/ceremonie/hero-bg.jpeg",
             alt: "Vue panoramique du Domaine des Élégances",
           }}
           accentImage={{
@@ -90,48 +90,101 @@ export default function HomePage() {
 
         <section
           id="orientation"
-          className="scroll-mt-24 border-y border-line bg-surface-alt py-20 md:scroll-mt-28 md:py-28"
+          className="scroll-mt-20 border-y border-line bg-surface-alt py-16 md:py-24"
         >
-          <div className="mx-auto max-w-7xl px-6 text-center lg:px-10">
-            <Badge variant="accent" className="mb-6">
-              PARCOURS PERSONNALISÉ
-            </Badge>
-            <h2 className="mx-auto max-w-3xl font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
-              Quel événement souhaitez-vous organiser&nbsp;?
-            </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-ink-muted md:text-lg">
-              Le Domaine des Élégances accueille deux types de projets : les
-              moments solennels à vivre en famille, et les célébrations
-              festives entre proches. Choisissez le parcours qui correspond à
-              votre intention, puis recevez une première proposition adaptée.
-            </p>
-          </div>
-        </section>
+          <div className="mx-auto max-w-2xl px-6 lg:px-10">
+            <div className="flex flex-col items-center">
 
-        <section className="py-20 md:py-28">
-          <div className="mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-2 lg:gap-10 lg:px-10">
-            <UniversCard
-              eyebrow="UNIVERS CÉRÉMONIE"
-              title="Mariages & cérémonies familiales"
-              description="Pour un mariage, une Bar Mitzvah, un baptême, une communion ou une réunion familiale élégante, le domaine offre un cadre privé, lumineux et rassurant, avec des espaces de réception et des couchages sur place pour les proches essentiels."
-              href="/ceremonie"
-              ctaLabel="PRÉPARER MON PROJET CÉRÉMONIE"
-              image={{
-                src: "/images/ceremonie/hero-bg.jpeg",
-                alt: "Façade lumineuse du Domaine des Élégances",
-              }}
-            />
-            <UniversCard
-              eyebrow="UNIVERS FESTIF"
-              title="EVJF, EVG & anniversaires"
-              description="Pour un EVJF, un EVG, un anniversaire ou un week-end entre amis, le domaine permet de vivre une parenthèse privée, festive et confortable, avec espaces extérieurs, hébergements, activités et ambiance sur mesure."
-              href="/festif"
-              ctaLabel="DÉCOUVRIR LE PARCOURS FESTIF"
-              image={{
-                src: "/images/festif/barnum.jpg",
-                alt: "Réception festive nocturne au Domaine des Élégances",
-              }}
-            />
+              {/* Boîte de bienvenue */}
+              <div className="w-full max-w-sm rounded-[var(--radius-lg)] border border-accent/45 bg-surface-elevated px-10 py-8 text-center shadow-soft">
+                <span className="text-accent/80" aria-hidden style={{ fontSize: "0.75rem", letterSpacing: "0.12em" }}>◆</span>
+                <p className="mt-3 font-serif text-2xl font-semibold leading-snug text-ink">
+                  Bienvenue au{" "}
+                  <span className="whitespace-nowrap text-accent-strong">Domaine des Élégances</span>
+                </p>
+                <p className="mt-3 font-sans text-sm leading-relaxed text-ink-muted">
+                  Choisissez votre univers pour commencer.
+                </p>
+              </div>
+
+              {/* Tige verticale */}
+              <div className="h-8 w-px bg-accent/40" />
+
+              {/* Branche en V — toujours visible */}
+              <div className="flex w-full">
+                <div className="h-8 flex-1 rounded-tr-2xl border-r border-t border-accent/35" />
+                <div className="h-8 flex-1 rounded-tl-2xl border-l border-t border-accent/35" />
+              </div>
+
+              {/* Deux boutons — toujours côte à côte */}
+              <div className="flex w-full flex-row gap-3 sm:gap-6">
+
+                {/* Cérémonie */}
+                <Link
+                  href="/ceremonie"
+                  className="group flex flex-1 flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-accent/35 bg-surface-elevated px-3 py-8 text-center shadow-soft transition-all duration-300 hover:border-accent hover:shadow-[0_16px_48px_-16px_rgba(168,137,92,0.30)] sm:gap-6 sm:px-10 sm:py-12"
+                >
+                  <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-accent/50 shadow-soft ring-4 ring-accent/10 sm:h-28 sm:w-28">
+                    <Image
+                      src="/images/ceremonie/reception-barnum-nuit.jpeg"
+                      alt="Univers Cérémonie — Domaine des Élégances"
+                      fill
+                      sizes="(max-width: 640px) 80px, 112px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
+                    />
+                  </div>
+                  <p className="font-sans text-[0.55rem] font-semibold uppercase tracking-[0.22em] text-accent-strong sm:text-[0.63rem] sm:tracking-[0.30em]">
+                    Cérémonie
+                  </p>
+                  <h3 className="font-serif text-lg font-semibold leading-tight text-ink sm:text-[1.85rem]">
+                    Mariages &amp;<br />cérémonies
+                  </h3>
+                  <div className="h-px w-8 bg-accent/55 sm:w-10" />
+                  <ul className="flex flex-col gap-1 font-sans text-xs leading-relaxed text-ink-muted sm:gap-2 sm:text-sm">
+                    <li>Mariage</li>
+                    <li>Communion</li>
+                    <li>Bar Mitzvah</li>
+                  </ul>
+                  <span className="mt-1 font-sans text-[0.55rem] font-semibold uppercase tracking-[0.15em] text-accent-strong sm:mt-2 sm:text-[0.63rem] sm:tracking-[0.20em]">
+                    Préparer mon projet
+                    <span aria-hidden className="ml-1 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </span>
+                </Link>
+
+                {/* Festif */}
+                <Link
+                  href="/festif"
+                  className="group flex flex-1 flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-accent/35 bg-surface-elevated px-3 py-8 text-center shadow-soft transition-all duration-300 hover:border-accent hover:shadow-[0_16px_48px_-16px_rgba(168,137,92,0.30)] sm:gap-6 sm:px-10 sm:py-12"
+                >
+                  <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-accent/50 shadow-soft ring-4 ring-accent/10 sm:h-28 sm:w-28">
+                    <Image
+                      src="/images/ceremonie/pool-house-piscine-interieure.jpeg"
+                      alt="Univers Festif — Domaine des Élégances"
+                      fill
+                      sizes="(max-width: 640px) 80px, 112px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
+                    />
+                  </div>
+                  <p className="font-sans text-[0.55rem] font-semibold uppercase tracking-[0.22em] text-accent-strong sm:text-[0.63rem] sm:tracking-[0.30em]">
+                    Festif
+                  </p>
+                  <h3 className="font-serif text-lg font-semibold leading-tight text-ink sm:text-[1.85rem]">
+                    Réceptions &amp;<br />célébrations
+                  </h3>
+                  <div className="h-px w-8 bg-accent/55 sm:w-10" />
+                  <ul className="flex flex-col gap-1 font-sans text-xs leading-relaxed text-ink-muted sm:gap-2 sm:text-sm">
+                    <li>EVG · EVJF</li>
+                    <li>Anniversaire</li>
+                    <li>Fête entre amis</li>
+                  </ul>
+                  <span className="mt-1 font-sans text-[0.55rem] font-semibold uppercase tracking-[0.15em] text-accent-strong sm:mt-2 sm:text-[0.63rem] sm:tracking-[0.20em]">
+                    Découvrir le festif
+                    <span aria-hidden className="ml-1 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </span>
+                </Link>
+
+              </div>
+            </div>
           </div>
         </section>
 

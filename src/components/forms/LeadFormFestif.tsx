@@ -128,7 +128,7 @@ export function LeadFormFestif() {
               type="text"
               autoComplete="given-name"
               className={fieldBaseClass}
-              placeholder="Camille"
+              placeholder="Prénom"
               {...register("first_name")}
             />
           </FormField>
@@ -142,7 +142,7 @@ export function LeadFormFestif() {
               type="text"
               autoComplete="family-name"
               className={fieldBaseClass}
-              placeholder="Rousseau"
+              placeholder="Nom"
               {...register("last_name")}
             />
           </FormField>
@@ -158,7 +158,7 @@ export function LeadFormFestif() {
               type="email"
               autoComplete="email"
               className={fieldBaseClass}
-              placeholder="camille@email.fr"
+              placeholder="votre@email.fr"
               {...register("email")}
             />
           </FormField>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
-import { Header } from "@/components/layout/Header";
+import { HeaderThemed } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LeadFormFestif } from "@/components/forms/LeadFormFestif";
@@ -74,7 +74,7 @@ export default function FestifPage() {
       as="div"
       className="flex min-h-screen flex-col bg-surface"
     >
-      <Header />
+      <HeaderThemed theme="accueil" />
 
       <main className="flex-1">
         <Hero
@@ -89,8 +89,8 @@ export default function FestifPage() {
             variant: "primaryGlow",
           }}
           image={{
-            src: "/images/festif/barnum.jpg",
-            alt: "Réception festive nocturne au Domaine des Élégances",
+            src: "/images/ceremonie/pool-house-piscine-interieure.jpeg",
+            alt: "Pool house et piscine intérieure du Domaine des Élégances",
           }}
         />
 
@@ -217,7 +217,7 @@ export default function FestifPage() {
 
             <div className="overflow-hidden border border-line shadow-soft" style={{ aspectRatio: "16/9" }}>
               <iframe
-                src="https://www.youtube.com/embed/WNk1pnocuI4"
+                src="https://www.youtube-nocookie.com/embed/4u30fv4COk4"
                 title="Aperçu du Domaine des Élégances — ambiance festive"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen

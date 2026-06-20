@@ -141,7 +141,7 @@ export function LeadFormCeremonie() {
               type="text"
               autoComplete="given-name"
               className={fieldBaseClass}
-              placeholder="Jeanne"
+              placeholder="Prénom"
               {...register("first_name")}
             />
           </FormField>
@@ -155,7 +155,7 @@ export function LeadFormCeremonie() {
               type="text"
               autoComplete="family-name"
               className={fieldBaseClass}
-              placeholder="Dupont"
+              placeholder="Nom"
               {...register("last_name")}
             />
           </FormField>
@@ -171,7 +171,7 @@ export function LeadFormCeremonie() {
               type="email"
               autoComplete="email"
               className={fieldBaseClass}
-              placeholder="jeanne.dupont@email.fr"
+              placeholder="votre@email.fr"
               {...register("email")}
             />
           </FormField>

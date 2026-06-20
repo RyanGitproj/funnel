@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ThemeProvider } from "./ThemeProvider";
 
 /**
  * Header — commun à toutes les pages, agnostique du thème.
@@ -36,7 +35,7 @@ export function Header() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
         <Link
           href="/"
-          className="group flex flex-col leading-none"
+          className="group flex flex-col items-start gap-[4px] leading-none"
           aria-label="Domaine des Élégances — accueil"
           onClick={(e) => {
             if (window.location.pathname === "/") {
@@ -46,16 +45,19 @@ export function Header() {
           }}
         >
           <span
-            className="text-eyebrow text-ink"
-            style={{ letterSpacing: "0.22em" }}
+            className="font-serif text-[1.15rem] font-medium tracking-[0.12em] text-accent transition-colors duration-300 group-hover:text-accent-strong"
           >
-            Domaine
+            Domaine des Élégances
           </span>
+          <div className="flex w-full items-center gap-1.5">
+            <div className="h-px flex-1 bg-accent/40 transition-colors duration-300 group-hover:bg-accent/65" />
+            <span aria-hidden className="text-accent/50 transition-colors duration-300 group-hover:text-accent" style={{ fontSize: "0.36rem", lineHeight: 1 }}>◆</span>
+            <div className="h-px flex-1 bg-accent/40 transition-colors duration-300 group-hover:bg-accent/65" />
+          </div>
           <span
-            className="text-eyebrow text-accent-strong mt-1"
-            style={{ letterSpacing: "0.32em" }}
+            className="font-sans text-[0.52rem] font-medium uppercase tracking-[0.30em] text-accent-strong/80 transition-colors duration-300 group-hover:text-accent-strong"
           >
-            DES ÉLÉGANCES
+            Domaine privé · Yvelines
           </span>
         </Link>
 
@@ -96,8 +98,8 @@ export function Header() {
  */
 export function HeaderThemed({ theme }: { theme: "accueil" | "ceremonie" | "festif" }) {
   return (
-    <ThemeProvider theme={theme}>
+    <div data-theme={theme} style={{ display: "contents" }}>
       <Header />
-    </ThemeProvider>
+    </div>
   );
 }

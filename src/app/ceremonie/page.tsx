@@ -109,7 +109,7 @@ export default function CeremoniePage() {
           }}
           microReassurance="Réponse sous 24h ouvrées - Proposition personnalisée - Sous réserve de disponibilité"
           image={{
-            src: "/images/ceremonie/hero-bg.jpeg",
+            src: "/images/ceremonie/reception-barnum-nuit.jpeg",
             alt: "Domaine privé pour cérémonie familiale au Domaine des Élégances",
           }}
         />
@@ -261,6 +261,34 @@ export default function CeremoniePage() {
                   </figcaption>
                 </figure>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-surface py-20 md:py-28">
+          <div className="mx-auto max-w-4xl px-6 lg:px-10">
+            <div className="mx-auto mb-10 max-w-3xl text-center">
+              <Badge variant="accent" className="mb-6">
+                Ambiance en vidéo
+              </Badge>
+              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+                Ressentez le cadre avant de vous décider
+              </h2>
+              <p className="mt-6 text-base leading-relaxed text-ink-muted md:text-lg">
+                Une immersion dans le domaine pour vous projeter dans votre
+                cérémonie, au-delà des photos.
+              </p>
+            </div>
+
+            <div className="overflow-hidden border border-line shadow-soft" style={{ aspectRatio: "16/9" }}>
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/4u30fv4COk4"
+                title="Aperçu du Domaine des Élégances — ambiance cérémonie"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+                className="h-full w-full"
+              />
             </div>
           </div>
         </section>

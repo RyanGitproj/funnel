@@ -33,21 +33,16 @@ const buttonVariants = cva(
       variant: {
         // CTA principal — fond doré plein
         primary: [
-          "bg-accent-strong text-accent-foreground",
+          "bg-accent-strong text-white",
           "shadow-soft hover:brightness-95 active:brightness-90",
         ].join(" "),
-        // Variante « brillante » pour Festif : même fond doré mais
-        // avec un glow doré qui le fait flotter sur le fond sombre.
-        // Note : le glow est appliqué via la classe .glow-accent qui
-        // bascule automatiquement avec le thème (cf. globals.css —
-        // elle n'a d'effet visible que sur fond sombre).
         primaryGlow: [
-          "bg-accent-strong text-accent-foreground",
+          "bg-accent-strong text-white",
           "glow-accent hover:brightness-105 active:brightness-95",
         ].join(" "),
         // Action secondaire — outline fin doré
         outline: [
-          "border border-accent text-ink bg-transparent",
+          "border border-accent text-white bg-surface/15 backdrop-blur-sm",
           "hover:bg-accent/10",
         ].join(" "),
         // Lien discret (texte doré, underline au hover)

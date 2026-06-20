@@ -211,34 +211,34 @@ function HeroAccueil({
         />
       </div>
 
-      <div className="absolute inset-y-0 left-0 hidden w-[36%] opacity-90 md:block">
+      <div className="absolute inset-y-0 left-0 hidden w-[52%] opacity-95 md:block">
         <Image
           src={image.src}
           alt={image.alt}
           fill
           priority
-          sizes="36vw"
+          sizes="52vw"
           className="object-cover"
         />
       </div>
-      <div className="absolute inset-y-0 left-0 hidden w-[50%] bg-gradient-to-r from-transparent via-surface/55 to-surface md:block" />
+      <div className="absolute inset-y-0 left-0 hidden w-[62%] bg-gradient-to-r from-transparent via-surface/40 to-surface md:block" />
 
       {accentImage && (
         <>
-          <div className="absolute inset-y-0 right-0 hidden w-[35%] opacity-95 md:block">
+          <div className="absolute inset-y-0 right-0 hidden w-[48%] opacity-95 md:block">
             <Image
               src={accentImage.src}
               alt={accentImage.alt}
               fill
-              sizes="(max-width: 767px) 0vw, 35vw"
+              sizes="(max-width: 767px) 0vw, 48vw"
               className="object-cover"
             />
           </div>
-          <div className="absolute inset-y-0 right-0 hidden w-[50%] bg-gradient-to-l from-transparent via-surface/55 to-surface md:block" />
+          <div className="absolute inset-y-0 right-0 hidden w-[58%] bg-gradient-to-l from-transparent via-surface/40 to-surface md:block" />
         </>
       )}
 
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(250,246,238,0.86)_0%,rgba(250,246,238,0.62)_46%,rgba(250,246,238,0.9)_100%)] md:bg-[radial-gradient(circle_at_center,rgba(255,253,248,0.96)_0%,rgba(250,246,238,0.92)_43%,rgba(250,246,238,0.45)_72%,rgba(250,246,238,0)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(250,246,238,0.35)_0%,rgba(250,246,238,0.05)_50%,rgba(250,246,238,0.50)_100%)] md:bg-[radial-gradient(circle_at_center,rgba(255,253,248,0.96)_0%,rgba(250,246,238,0.86)_35%,rgba(250,246,238,0.20)_65%,rgba(250,246,238,0)_100%)]" />
 
       <div className="relative z-10 mx-auto w-full max-w-5xl px-6 py-20 text-center md:py-32">
         {eyebrow && (
@@ -249,11 +249,11 @@ function HeroAccueil({
             {eyebrow}
           </Badge>
         )}
-        <h1 className="mx-auto max-w-[22rem] break-words font-serif text-3xl font-semibold leading-[1.08] tracking-normal text-ink sm:max-w-2xl sm:text-4xl md:max-w-full md:text-6xl lg:text-[72px]">
+        <h1 className="mx-auto max-w-[22rem] break-words font-serif text-[2.1rem] font-bold leading-[1.08] tracking-normal text-[#120f0c] [text-shadow:0_0_18px_rgba(255,253,248,1),0_0_36px_rgba(255,253,248,0.85)] sm:max-w-2xl sm:text-4xl md:max-w-full md:text-6xl md:font-semibold md:text-ink md:[text-shadow:none] lg:text-[72px]">
           {title}
         </h1>
         {subtitle && (
-          <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-ink-muted md:text-lg">
+          <p className="mx-auto mt-8 max-w-2xl rounded-xl px-4 py-2 text-base leading-relaxed text-ink-muted backdrop-blur-sm bg-surface/65 md:bg-transparent md:backdrop-blur-none md:px-0 md:py-0 md:text-lg">
             {subtitle}
           </p>
         )}
