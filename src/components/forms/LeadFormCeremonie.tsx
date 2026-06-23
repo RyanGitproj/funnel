@@ -189,7 +189,9 @@ export function LeadFormCeremonie() {
                 </button>
                 <div className="flex flex-col items-center">
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     min={1}
                     max={2000}
                     value={field.value ?? ""}
