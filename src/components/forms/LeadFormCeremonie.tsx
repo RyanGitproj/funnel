@@ -25,6 +25,7 @@ import {
   checkboxInputClass,
   PhoneInputInner,
   CardSelect,
+  IconCardSelect,
   MultiCardSelect,
   PillSelect,
   CalendarPicker,
@@ -151,11 +152,11 @@ export function LeadFormCeremonie() {
             control={control}
             name="event_type"
             render={({ field }) => (
-              <CardSelect
+              <IconCardSelect
                 options={ceremonieEventTypeOptions}
                 value={field.value}
                 onChange={field.onChange}
-                cols={3}
+                iconSet="ceremonie"
               />
             )}
           />

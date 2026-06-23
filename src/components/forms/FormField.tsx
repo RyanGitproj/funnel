@@ -154,6 +154,278 @@ export function CardSelect({
   );
 }
 
+type IconSet = "festif" | "ceremonie";
+type EventIconName =
+  | "arch"
+  | "bow"
+  | "cake"
+  | "candle"
+  | "cloche"
+  | "cocktail"
+  | "droplet"
+  | "homeHeart"
+  | "parasol"
+  | "ring"
+  | "ribbon"
+  | "rings"
+  | "shoe"
+  | "star"
+  | "table"
+  | "users";
+type IconComponent = (props: React.SVGProps<SVGSVGElement>) => React.JSX.Element;
+
+function IconShell({
+  children,
+  ...props
+}: React.PropsWithChildren<React.SVGProps<SVGSVGElement>>) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      {children}
+    </svg>
+  );
+}
+
+const eventIcons: Record<EventIconName, IconComponent> = {
+  arch: (props) => (
+    <IconShell {...props}>
+      <path d="M12 40V22a12 12 0 0 1 24 0v18" />
+      <path d="M18 40V22a6 6 0 0 1 12 0v18" />
+      <path d="M9 40h30" />
+      <path d="M15 14h18" />
+    </IconShell>
+  ),
+  bow: (props) => (
+    <IconShell {...props}>
+      <path d="M21 19 8 13v22l13-6" />
+      <path d="m27 19 13-6v22l-13-6" />
+      <rect x="20" y="18" width="8" height="12" rx="2" />
+      <path d="M20 22h8" />
+      <path d="M20 26h8" />
+    </IconShell>
+  ),
+  cake: (props) => (
+    <IconShell {...props}>
+      <path d="M13 24h22v16H13z" />
+      <path d="M11 40h26" />
+      <path d="M13 30c4 3 7 3 11 0s7-3 11 0" />
+      <path d="M17 18v6M24 18v6M31 18v6" />
+      <path d="M17 14c-2 2-2 4 0 5 2-1 2-3 0-5Z" />
+      <path d="M24 14c-2 2-2 4 0 5 2-1 2-3 0-5Z" />
+      <path d="M31 14c-2 2-2 4 0 5 2-1 2-3 0-5Z" />
+    </IconShell>
+  ),
+  candle: (props) => (
+    <IconShell {...props}>
+      <path d="M24 8c-3 4-3 7 0 9 3-2 3-5 0-9Z" />
+      <path d="M19 18h10v22H19z" />
+      <path d="M15 40h18" />
+      <path d="M24 18v22" />
+      <path d="M18 26h12" />
+    </IconShell>
+  ),
+  cloche: (props) => (
+    <IconShell {...props}>
+      <path d="M10 34h28" />
+      <path d="M14 34a10 10 0 0 1 20 0" />
+      <path d="M24 17v-4" />
+      <path d="M20 13h8" />
+      <path d="M8 39h32" />
+    </IconShell>
+  ),
+  cocktail: (props) => (
+    <IconShell {...props}>
+      <path d="M13 12h22L24 25 13 12Z" />
+      <path d="M24 25v14" />
+      <path d="M17 39h14" />
+      <path d="m29 12 6-5" />
+      <circle cx="37" cy="6" r="2" />
+    </IconShell>
+  ),
+  droplet: (props) => (
+    <IconShell {...props}>
+      <path d="M24 7s11 12 11 21a11 11 0 0 1-22 0C13 19 24 7 24 7Z" />
+      <path d="M19 30a5 5 0 0 0 7 4" />
+      <path d="M18 18h12" />
+      <path d="M24 12v12" />
+    </IconShell>
+  ),
+  homeHeart: (props) => (
+    <IconShell {...props}>
+      <path d="m9 24 15-13 15 13" />
+      <path d="M14 22v18h20V22" />
+      <path d="M24 35s-7-4-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5-7 9-7 9Z" />
+    </IconShell>
+  ),
+  parasol: (props) => (
+    <IconShell {...props}>
+      <path d="M8 23a16 16 0 0 1 32 0H8Z" />
+      <path d="M12 23c3-7 7-10 12-10s9 3 12 10" />
+      <path d="M24 23v17" />
+      <path d="M24 40h9" />
+      <path d="M10 37c5-3 9-3 14 0s9 3 14 0" />
+    </IconShell>
+  ),
+  ring: (props) => (
+    <IconShell {...props}>
+      <path d="m20 13 4-5 4 5-4 5-4-5Z" />
+      <circle cx="24" cy="29" r="11" />
+      <path d="M18 21h12" />
+    </IconShell>
+  ),
+  ribbon: (props) => (
+    <IconShell {...props}>
+      <path d="M24 23c-5-8-14-9-16-4-2 6 8 9 16 4Z" />
+      <path d="M24 23c5-8 14-9 16-4 2 6-8 9-16 4Z" />
+      <path d="M24 23v17" />
+      <path d="m18 40 6-6 6 6" />
+    </IconShell>
+  ),
+  rings: (props) => (
+    <IconShell {...props}>
+      <circle cx="19" cy="28" r="10" />
+      <circle cx="29" cy="28" r="10" />
+      <path d="m24 8 5 6-5 5-5-5 5-6Z" />
+      <path d="M19 14h10" />
+    </IconShell>
+  ),
+  shoe: (props) => (
+    <IconShell {...props}>
+      <path d="M14 10c6 6 10 13 13 22h10c2 0 3 1 3 3v4H11v-5c0-6 2-14 3-24Z" />
+      <path d="M14 10h8" />
+      <path d="M12 34h28" />
+      <path d="M25 32c-2-4-5-7-9-9" />
+    </IconShell>
+  ),
+  star: (props) => (
+    <IconShell {...props}>
+      <path d="m24 8 5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1 5-11Z" />
+    </IconShell>
+  ),
+  table: (props) => (
+    <IconShell {...props}>
+      <path d="M10 20h28" />
+      <path d="M14 20v20" />
+      <path d="M34 20v20" />
+      <path d="M18 14h12a4 4 0 0 1 4 4v2H14v-2a4 4 0 0 1 4-4Z" />
+      <path d="M8 31h32" />
+      <path d="M18 31v9M30 31v9" />
+    </IconShell>
+  ),
+  users: (props) => (
+    <IconShell {...props}>
+      <circle cx="24" cy="17" r="6" />
+      <circle cx="13" cy="22" r="5" />
+      <circle cx="35" cy="22" r="5" />
+      <path d="M14 39v-3a10 10 0 0 1 20 0v3" />
+      <path d="M4 38v-3a8 8 0 0 1 10-8" />
+      <path d="M44 38v-3a8 8 0 0 0-10-8" />
+    </IconShell>
+  ),
+};
+
+const compactEventCardBase = cn(
+  "group relative flex min-h-[98px] flex-col items-center justify-center gap-2",
+  "rounded-[var(--radius-md)] border-2 px-2.5 py-3 text-center",
+  "transition-all duration-150 cursor-pointer select-none active:scale-[0.97]",
+);
+const compactEventCardActive =
+  "border-accent bg-accent/[0.13] text-ink shadow-[0_0_18px_var(--card-glow)]";
+const compactEventCardInactive =
+  "border-line bg-surface-elevated text-ink-muted hover:border-accent/60 hover:text-ink hover:shadow-[0_0_12px_var(--card-glow)]";
+
+function normalizeEventOption(option: string) {
+  return option
+    .toLocaleLowerCase("fr-FR")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/œ/g, "oe");
+}
+
+function getEventIconName(option: string, iconSet: IconSet): EventIconName {
+  const normalized = normalizeEventOption(option);
+
+  if (iconSet === "festif") {
+    if (normalized.includes("evjf")) return "shoe";
+    if (normalized.includes("evg")) return "bow";
+    if (normalized.includes("anniversaire")) return "cake";
+    if (normalized.includes("soiree")) return "cocktail";
+    if (normalized.includes("amis")) return "users";
+    if (normalized.includes("pool") || normalized.includes("garden")) return "parasol";
+    if (normalized.includes("reception")) return "cloche";
+    if (normalized.includes("familiale")) return "homeHeart";
+    return "star";
+  }
+
+  if (normalized.includes("mariage")) return "rings";
+  if (normalized.includes("laique")) return "arch";
+  if (normalized.includes("fiancailles")) return "ring";
+  if (normalized.includes("renouvellement") || normalized.includes("voeux")) return "ribbon";
+  if (normalized.includes("bapteme")) return "droplet";
+  if (normalized.includes("communion")) return "candle";
+  if (normalized.includes("bar mitzvah")) return "star";
+  if (normalized.includes("familiale")) return "table";
+  return "star";
+}
+
+export function IconCardSelect({
+  options,
+  value,
+  onChange,
+  iconSet,
+}: {
+  options: readonly string[];
+  value: string | undefined;
+  onChange: (v: string) => void;
+  iconSet: IconSet;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+      {options.map((opt) => {
+        const selected = value === opt;
+        const Icon = eventIcons[getEventIconName(opt, iconSet)];
+
+        return (
+          <button
+            key={opt}
+            type="button"
+            onClick={() => onChange(opt)}
+            aria-pressed={selected}
+            className={cn(
+              compactEventCardBase,
+              selected ? compactEventCardActive : compactEventCardInactive,
+            )}
+          >
+            <span
+              className={cn(
+                "absolute right-2 top-2 flex size-5 items-center justify-center rounded-full border text-[11px] font-bold leading-none",
+                selected
+                  ? "border-accent bg-accent text-accent-foreground"
+                  : "border-line text-transparent",
+              )}
+              aria-hidden="true"
+            >
+              ✓
+            </span>
+            <Icon className="size-8 text-accent sm:size-9" />
+            <span className="max-w-[13rem] text-[11px] font-semibold uppercase leading-snug text-current sm:text-xs">
+              {opt}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export function MultiCardSelect({
   options,
   value,
