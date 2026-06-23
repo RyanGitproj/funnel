@@ -13,13 +13,6 @@ const requiredSelect = <T extends readonly [string, ...string[]]>(
 
 const optionalString = z.string().trim().max(2000).optional().or(z.literal(""));
 
-const optionalPositiveInt = z
-  .number({ message: "Veuillez saisir un nombre valide." })
-  .int("Veuillez saisir un nombre entier.")
-  .min(0, "Le nombre ne peut pas être négatif.")
-  .max(2000, "Veuillez vérifier ce nombre.")
-  .optional();
-
 const positiveInt = z
   .number({ message: "Veuillez saisir un nombre valide." })
   .int("Veuillez saisir un nombre entier.")
@@ -41,12 +34,12 @@ const baseLeadFields = {
     .string()
     .trim()
     .min(1, "L'adresse e-mail est obligatoire.")
-    .email("L'adresse e-mail n'est pas valide."),
+    .email({ message: "L'adresse e-mail n'est pas valide." }),
   phone: z
     .string()
     .trim()
     .min(1, "Le numéro de téléphone est obligatoire.")
-    .regex(phoneRegex, "Le numéro de téléphone n'est pas valide."),
+    .regex(phoneRegex, { message: "Le numéro de téléphone n'est pas valide." }),
   event_date: z.string().trim().min(1, "Veuillez indiquer une date souhaitée."),
   date_flexibility: requiredSelect(
     ["oui", "non", "a_definir"] as const,
@@ -73,59 +66,74 @@ const baseLeadFields = {
     "Veuillez préciser où vous en êtes dans votre projet.",
   ),
   message: optionalString,
+  rgpd_consent: z.boolean().refine((v) => v === true, {
+    message: "Vous devez accepter la politique de confidentialité.",
+  }),
+  marketing_optin: z.boolean().optional(),
 } as const;
+
+// ─── Festif ──────────────────────────────────────────────────────────────────
 
 export const festifEventTypeOptions = [
   "EVJF",
   "EVG",
   "Anniversaire",
-  "Week-end entre amis",
-  "Fête privée",
+  "Soirée privée",
+  "Fête entre amis",
+  "Pool party / Garden party",
+  "Réception privée",
+  "Retrouvailles familiales",
   "Autre",
 ] as const;
 
 export const dateFlexibilityOptions = ["oui", "non", "a_definir"] as const;
 
-export const festifParticipantProfileOptions = [
-  "Adultes uniquement",
-  "Mixte adultes / enfants",
-  "À définir",
-] as const;
-
 export const festifDurationOptions = [
   "Journée",
   "Soirée",
-  "1 nuit",
-  "Week-end",
+  "Journée + soirée",
+  "Cocktail / réception",
+  "Dîner",
+  "Réception prolongée",
   "À définir",
 ] as const;
 
 export const festifSelectedOptions = [
-  "Hébergement",
-  "Restauration",
-  "Brunch / petit-déjeuner",
-  "Activités",
-  "Animation",
-  "Privatisation",
-  "Aucun besoin spécifique",
-  "Autre",
+  "DJ / musique",
+  "Brunch",
+  "Barbecue",
+  "Traiteur / chef",
+  "Karaoké",
+  "Activités / jeux",
+  "Chasse au trésor",
+  "Escape game apéro",
+  "Combat de sumo",
+  "Parcours d'énigmes",
+  "Navette",
+  "Sécurité",
+  "Décoration",
 ] as const;
 
 export const festifAmbianceOptions = [
-  "Chic",
-  "Fun",
-  "Relax",
-  "Intense",
-  "Surprise",
-  "Élégante mais festive",
+  "Chic & élégante",
+  "Festive & animée",
+  "Familiale & chaleureuse",
+  "Pool party / Garden party",
+  "Détente & cocooning",
+  "Défis & activités",
 ] as const;
+
+// ─── Cérémonie ───────────────────────────────────────────────────────────────
 
 export const ceremonieEventTypeOptions = [
   "Mariage",
+  "Cérémonie laïque",
+  "Fiançailles",
+  "Renouvellement de vœux",
   "Baptême",
   "Communion",
   "Bar Mitzvah",
-  "Événement familial",
+  "Réception familiale",
   "Autre",
 ] as const;
 
@@ -139,43 +147,36 @@ export const dateFlexibilityLabels: Record<
 };
 
 export const ceremonieFormatOptions = [
-  "Journée",
-  "Soirée",
-  "Week-end",
-  "Cérémonie + réception",
-  "Cérémonie + hébergement",
-  "À définir",
+  "Cérémonie seule",
+  "Cérémonie + cocktail",
+  "Cocktail + dîner",
+  "Dîner + soirée",
+  "Réception prolongée",
+  "Brunch du lendemain",
+  "À définir ensemble",
 ] as const;
 
 export const ceremonieSelectedOptions = [
-  "Réception",
-  "Restauration",
-  "Hébergement",
-  "Brunch / lendemain",
+  "Tente / barnum",
+  "Traiteur",
+  "DJ / musique",
   "Décoration",
-  "Mobilier",
-  "Animation",
-  "Espaces extérieurs",
-  "Autre",
+  "Photo / vidéo",
+  "Mobilier / art de table",
+  "Sécurité / accueil",
+  "Navette / transport",
+  "Coordination",
 ] as const;
 
-export const ceremonieProjectPriorityOptions = [
-  "Le cadre du lieu",
-  "L'élégance de la réception",
-  "L'hébergement des proches essentiels",
-  "La simplicité d'organisation",
-  "La confidentialité du domaine",
-  "La possibilité de privatiser le week-end",
+export const ceremonieAmbianceOptions = [
+  "Élégante & classique",
+  "Romantique & intime",
+  "Champêtre & naturelle",
+  "Moderne & épurée",
+  "Festive & chaleureuse",
 ] as const;
 
-export const ceremonieConstraintOptions = [
-  "Enfants",
-  "Accessibilité",
-  "Horaires spécifiques",
-  "Restauration spécifique",
-  "Besoins familiaux",
-  "Aucune pour le moment",
-] as const;
+// ─── Partagé ─────────────────────────────────────────────────────────────────
 
 export const budgetRangeOptions = [
   "À définir",
@@ -193,6 +194,8 @@ export const projectStageOptions = [
   "Je souhaite réserver rapidement",
 ] as const;
 
+// ─── Schemas ─────────────────────────────────────────────────────────────────
+
 export const festifLeadSchema = z
   .object({
     ...baseLeadFields,
@@ -203,7 +206,6 @@ export const festifLeadSchema = z
       "Veuillez choisir un type d'événement.",
     ),
     guest_count: positiveInt,
-    participant_profile: optionalSelect(festifParticipantProfileOptions),
     duration: requiredSelect(
       festifDurationOptions,
       "Veuillez choisir une durée souhaitée.",
@@ -223,15 +225,12 @@ export const ceremonieLeadSchema = z
       "Veuillez choisir un type de cérémonie.",
     ),
     guest_count: positiveInt,
-    adult_count: optionalPositiveInt,
-    children_count: optionalPositiveInt,
     ceremony_format: requiredSelect(
       ceremonieFormatOptions,
       "Veuillez choisir un format souhaité.",
     ),
     selected_options: z.array(z.enum(ceremonieSelectedOptions)).optional(),
-    project_priority: optionalSelect(ceremonieProjectPriorityOptions),
-    constraints: z.array(z.enum(ceremonieConstraintOptions)).optional(),
+    ambiance: optionalSelect(ceremonieAmbianceOptions),
   })
   .strict();
 

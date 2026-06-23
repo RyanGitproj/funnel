@@ -229,7 +229,7 @@ export default function FestifPage() {
         </section>
 
         <ThemeProvider
-          theme="ceremonie"
+          theme="festif"
           as="section"
           id="devis"
           className="bg-surface py-20 md:py-28"
@@ -249,7 +249,7 @@ export default function FestifPage() {
               </p>
             </div>
 
-            <div className="border border-line bg-surface-elevated p-6 shadow-soft md:p-10">
+            <div className="border border-line bg-surface-elevated p-6 glow-accent md:p-10">
               <LeadFormFestif />
             </div>
           </div>

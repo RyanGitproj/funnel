@@ -3,12 +3,34 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-const STEP_LABELS = ["Coordonnées", "Événement", "Projet"] as const;
+const BASE_LABELS = [
+  "Votre moment",
+  "Votre date",
+  "placeholder",
+  "Votre projet",
+  "Vos coordonnées",
+] as const;
 
-export function StepIndicator({ current }: { current: number }) {
+interface StepIndicatorProps {
+  current: number;
+  step3Label?: string;
+}
+
+export function StepIndicator({
+  current,
+  step3Label = "Votre réception",
+}: StepIndicatorProps) {
+  const labels = [
+    BASE_LABELS[0],
+    BASE_LABELS[1],
+    step3Label,
+    BASE_LABELS[3],
+    BASE_LABELS[4],
+  ];
+
   return (
-    <div className="flex items-start" aria-label={`Étape ${current} sur 3`}>
-      {STEP_LABELS.map((label, i) => {
+    <div className="flex items-start" aria-label={`Étape ${current} sur 5`}>
+      {labels.map((label, i) => {
         const n = i + 1;
         const done = n < current;
         const active = n === current;
@@ -17,7 +39,7 @@ export function StepIndicator({ current }: { current: number }) {
             <div className="flex flex-1 flex-col items-center gap-1.5">
               <div
                 className={cn(
-                  "flex size-8 items-center justify-center rounded-full text-sm font-bold transition-all",
+                  "flex size-7 items-center justify-center rounded-full text-xs font-bold transition-all",
                   done
                     ? "bg-accent text-accent-foreground"
                     : active
@@ -29,7 +51,7 @@ export function StepIndicator({ current }: { current: number }) {
               </div>
               <span
                 className={cn(
-                  "text-center text-[10px] font-semibold uppercase tracking-[0.14em]",
+                  "hidden text-center text-[9px] font-semibold uppercase tracking-[0.12em] sm:block",
                   active
                     ? "text-accent"
                     : done
@@ -40,10 +62,10 @@ export function StepIndicator({ current }: { current: number }) {
                 {label}
               </span>
             </div>
-            {i < STEP_LABELS.length - 1 && (
+            {i < labels.length - 1 && (
               <div
                 className={cn(
-                  "mx-1 mt-4 h-px flex-[2] transition-colors",
+                  "mx-1 mt-3.5 h-px flex-[2] transition-colors",
                   done ? "bg-accent" : "bg-line",
                 )}
               />

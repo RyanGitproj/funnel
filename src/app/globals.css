@@ -103,6 +103,7 @@ html {
   --accent-foreground: #2a2622;  /* anthracite sur or */
   --line: rgba(168, 137, 92, 0.22);
   --shadow-color: 42 35 25;      /* ombre chaude (RGB brut pour usage avec /opacité) */
+  --card-glow: rgba(201, 164, 74, 0.38);
   /* Overlay des heros : anthracite à faible opacité pour garder la
      texture de l'image visible derrière le texte (gradients, pas
      d'aplat). */
@@ -130,6 +131,7 @@ html {
   --accent-foreground: #0b1b2b;  /* bleu nuit sur or */
   --line: rgba(200, 169, 106, 0.34);
   --shadow-color: 0 0 0;         /* ombre neutre (légère) pour CTA doré */
+  --card-glow: rgba(242, 203, 106, 0.60);
   /* Overlay marine plus profond pour Festif : conserve l'ambiance
      nocturne tout en assurant la lisibilité. */
   --hero-overlay: linear-gradient(

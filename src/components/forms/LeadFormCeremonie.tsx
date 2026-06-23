@@ -1,18 +1,17 @@
 "use client";
 
 import * as React from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch, Controller } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import {
   budgetRangeOptions,
-  ceremonieConstraintOptions,
+  ceremonieAmbianceOptions,
   ceremonieEventTypeOptions,
   ceremonieFormatOptions,
   ceremonieLeadSchema,
-  ceremonieProjectPriorityOptions,
   ceremonieSelectedOptions,
   dateFlexibilityLabels,
   dateFlexibilityOptions,
@@ -23,10 +22,13 @@ import { submitCeremonieLead } from "@/actions/leads";
 import {
   FormField,
   fieldBaseClass,
-  fieldSelectClass,
-  optionCheckboxClass,
   checkboxInputClass,
   PhoneInputInner,
+  CardSelect,
+  MultiCardSelect,
+  PillSelect,
+  CalendarPicker,
+  stepperBtnClass,
 } from "./FormField";
 import { StepIndicator } from "./StepIndicator";
 import { Button } from "@/components/ui/button";
@@ -34,15 +36,31 @@ import { Button } from "@/components/ui/button";
 const FORM_ID = "lead-form-ceremonie";
 
 const STEP_FIELDS: (keyof CeremonieLeadInput)[][] = [
-  ["first_name", "last_name", "email", "phone"],
-  [
-    "event_type",
-    "event_date",
-    "date_flexibility",
-    "guest_count",
-    "ceremony_format",
-  ],
+  ["event_type", "guest_count"],
+  ["event_date", "date_flexibility"],
+  ["ceremony_format"],
+  ["budget_range", "project_stage"],
+  ["first_name", "last_name", "email", "phone", "rgpd_consent"],
 ];
+
+function SectionQuestion({
+  children,
+  required,
+}: {
+  children: React.ReactNode;
+  required?: boolean;
+}) {
+  return (
+    <p className="font-serif text-base font-medium leading-snug text-ink">
+      {children}
+      {required && (
+        <span className="ml-1 text-accent-strong" aria-hidden>
+          *
+        </span>
+      )}
+    </p>
+  );
+}
 
 export function LeadFormCeremonie() {
   const [step, setStep] = React.useState(1);
@@ -62,35 +80,29 @@ export function LeadFormCeremonie() {
     defaultValues: {
       funnel_type: "ceremonie",
       source_page: "/ceremonie",
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
       event_type: undefined,
       event_date: "",
       date_flexibility: undefined,
       guest_count: undefined,
-      adult_count: undefined,
-      children_count: undefined,
       ceremony_format: undefined,
       selected_options: [],
-      project_priority: undefined,
+      ambiance: undefined,
       budget_range: undefined,
       project_stage: undefined,
-      constraints: [],
       message: "",
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      rgpd_consent: false,
+      marketing_optin: false,
     },
   });
 
   const phoneValue = useWatch({ control, name: "phone", defaultValue: "" });
 
-  const numReg = (name: "guest_count" | "adult_count" | "children_count") =>
-    register(name, {
-      setValueAs: (v) => (v === "" || v === undefined ? undefined : Number(v)),
-    });
-
   const scrollToForm = () =>
-    formRef.current?.scrollIntoView({ behavior: "instant", block: "nearest" });
+    formRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
 
   const goNext = async () => {
     const fields = STEP_FIELDS[step - 1];
@@ -121,15 +133,275 @@ export function LeadFormCeremonie() {
       id={FORM_ID}
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="flex flex-col gap-5"
+      className="flex flex-col gap-4"
     >
       <input type="hidden" {...register("funnel_type")} value="ceremonie" />
       <input type="hidden" {...register("source_page")} value="/ceremonie" />
 
-      <StepIndicator current={step} />
+      <StepIndicator current={step} step3Label="Votre réception" />
 
-      {/* ── Étape 1 : Coordonnées ── */}
+      {/* ── Étape 1 : Votre moment ── */}
       <div className={cn("flex flex-col gap-4", step !== 1 && "hidden")}>
+        {/* event_type */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion required>
+            Quel moment souhaitez-vous célébrer ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="event_type"
+            render={({ field }) => (
+              <CardSelect
+                options={ceremonieEventTypeOptions}
+                value={field.value}
+                onChange={field.onChange}
+                cols={3}
+              />
+            )}
+          />
+          {errors.event_type && (
+            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+              {errors.event_type.message}
+            </p>
+          )}
+        </div>
+
+        {/* guest_count stepper */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion required>
+            Combien d&apos;invités imaginez-vous ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="guest_count"
+            render={({ field }) => (
+              <div className="flex items-center justify-between gap-4 rounded-[var(--radius-md)] border-2 border-line bg-surface-elevated px-5 py-4">
+                <button
+                  type="button"
+                  onClick={() =>
+                    field.onChange(Math.max(1, (field.value ?? 5) - 5))
+                  }
+                  className={stepperBtnClass}
+                  aria-label="Diminuer"
+                >
+                  −
+                </button>
+                <div className="flex flex-col items-center">
+                  <input
+                    type="number"
+                    min={1}
+                    max={2000}
+                    value={field.value ?? ""}
+                    placeholder="—"
+                    onChange={(e) => {
+                      const v = parseInt(e.target.value, 10);
+                      field.onChange(!isNaN(v) && v >= 1 ? Math.min(v, 2000) : undefined);
+                    }}
+                    className="w-20 bg-transparent text-center font-serif text-5xl font-semibold leading-none text-ink outline-none placeholder:text-ink-subtle [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  />
+                  <span className="mt-1 text-xs uppercase tracking-[0.14em] text-ink-subtle">
+                    {field.value === 1 ? "invité" : "invités"}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => field.onChange((field.value ?? 0) + 5)}
+                  className={stepperBtnClass}
+                  aria-label="Augmenter"
+                >
+                  +
+                </button>
+              </div>
+            )}
+          />
+          {errors.guest_count && (
+            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+              {errors.guest_count.message}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* ── Étape 2 : Votre date ── */}
+      <div className={cn("flex flex-col gap-4", step !== 2 && "hidden")}>
+        {/* event_date — calendrier */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion required>
+            Pour quelle date envisagez-vous votre cérémonie ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="event_date"
+            render={({ field }) => (
+              <CalendarPicker value={field.value} onChange={field.onChange} />
+            )}
+          />
+          {errors.event_date && (
+            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+              {errors.event_date.message}
+            </p>
+          )}
+        </div>
+
+        {/* date_flexibility */}
+        <div className="flex flex-col gap-2">
+          <SectionQuestion required>
+            La date est-elle flexible ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="date_flexibility"
+            render={({ field }) => (
+              <PillSelect
+                options={dateFlexibilityOptions}
+                value={field.value}
+                onChange={field.onChange}
+                getLabel={(v) =>
+                  dateFlexibilityLabels[v as (typeof dateFlexibilityOptions)[number]]
+                }
+              />
+            )}
+          />
+          {errors.date_flexibility && (
+            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+              {errors.date_flexibility.message}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* ── Étape 3 : Votre réception ── */}
+      <div className={cn("flex flex-col gap-4", step !== 3 && "hidden")}>
+        {/* ceremony_format */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion required>
+            Quel format ressemble le plus à votre idée ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="ceremony_format"
+            render={({ field }) => (
+              <CardSelect
+                options={ceremonieFormatOptions}
+                value={field.value}
+                onChange={field.onChange}
+                cols={2}
+              />
+            )}
+          />
+          {errors.ceremony_format && (
+            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+              {errors.ceremony_format.message}
+            </p>
+          )}
+        </div>
+
+        {/* selected_options */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion>
+            Quels éléments souhaitez-vous prévoir ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="selected_options"
+            render={({ field }) => (
+              <MultiCardSelect
+                options={ceremonieSelectedOptions}
+                value={field.value}
+                onChange={field.onChange}
+                cols={3}
+              />
+            )}
+          />
+        </div>
+
+        {/* ambiance */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion>
+            Quelle ambiance imaginez-vous ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="ambiance"
+            render={({ field }) => (
+              <CardSelect
+                options={ceremonieAmbianceOptions}
+                value={field.value ?? undefined}
+                onChange={field.onChange}
+                cols={2}
+              />
+            )}
+          />
+        </div>
+      </div>
+
+      {/* ── Étape 4 : Votre projet ── */}
+      <div className={cn("flex flex-col gap-4", step !== 4 && "hidden")}>
+        {/* budget_range */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion required>
+            Quel est votre budget global estimatif ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="budget_range"
+            render={({ field }) => (
+              <CardSelect
+                options={budgetRangeOptions}
+                value={field.value}
+                onChange={field.onChange}
+                cols={2}
+              />
+            )}
+          />
+          {errors.budget_range && (
+            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+              {errors.budget_range.message}
+            </p>
+          )}
+        </div>
+
+        {/* project_stage */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion required>
+            Où en êtes-vous dans votre projet ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="project_stage"
+            render={({ field }) => (
+              <CardSelect
+                options={projectStageOptions}
+                value={field.value}
+                onChange={field.onChange}
+                cols={2}
+              />
+            )}
+          />
+          {errors.project_stage && (
+            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+              {errors.project_stage.message}
+            </p>
+          )}
+        </div>
+
+        {/* message */}
+        <FormField
+          id="c-message"
+          label="Un message à ajouter ?"
+          error={errors.message?.message}
+        >
+          <textarea
+            rows={3}
+            className={fieldBaseClass}
+            placeholder="Partagez vos attentes, l'ambiance souhaitée ou tout point important."
+            {...register("message")}
+          />
+        </FormField>
+      </div>
+
+      {/* ── Étape 5 : Vos coordonnées ── */}
+      <div className={cn("flex flex-col gap-4", step !== 5 && "hidden")}>
         <div className="grid gap-4 sm:grid-cols-2">
           <FormField
             id="c-first-name"
@@ -160,6 +432,7 @@ export function LeadFormCeremonie() {
             />
           </FormField>
         </div>
+
         <div className="grid gap-4 sm:grid-cols-2">
           <FormField
             id="c-email"
@@ -200,248 +473,39 @@ export function LeadFormCeremonie() {
             />
           </FormField>
         </div>
-      </div>
 
-      {/* ── Étape 2 : Événement ── */}
-      <div className={cn("flex flex-col gap-4", step !== 2 && "hidden")}>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FormField
-            id="c-event-type"
-            label="Type de cérémonie"
-            required
-            error={errors.event_type?.message}
-          >
-            <select
-              className={fieldSelectClass}
-              defaultValue=""
-              {...register("event_type")}
-            >
-              <option value="" disabled>
-                Sélectionner...
-              </option>
-              {ceremonieEventTypeOptions.map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </FormField>
-          <FormField
-            id="c-format"
-            label="Format souhaité"
-            required
-            error={errors.ceremony_format?.message}
-          >
-            <select
-              className={fieldSelectClass}
-              defaultValue=""
-              {...register("ceremony_format")}
-            >
-              <option value="" disabled>
-                Sélectionner...
-              </option>
-              {ceremonieFormatOptions.map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </FormField>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FormField
-            id="c-event-date"
-            label="Date souhaitée"
-            required
-            error={errors.event_date?.message}
-          >
+        <div className="flex flex-col gap-3 pt-1">
+          <label className="flex cursor-pointer items-start gap-3">
             <input
-              type="date"
-              className={fieldBaseClass}
-              {...register("event_date")}
+              type="checkbox"
+              className={cn(checkboxInputClass, "mt-0.5 shrink-0")}
+              {...register("rgpd_consent")}
             />
-          </FormField>
-          <FormField
-            id="c-date-flex"
-            label="Date flexible ?"
-            required
-            error={errors.date_flexibility?.message}
-          >
-            <select
-              className={fieldSelectClass}
-              defaultValue=""
-              {...register("date_flexibility")}
-            >
-              <option value="" disabled>
-                Sélectionner...
-              </option>
-              {dateFlexibilityOptions.map((v) => (
-                <option key={v} value={v}>
-                  {dateFlexibilityLabels[v]}
-                </option>
-              ))}
-            </select>
-          </FormField>
-        </div>
-        <div className="grid grid-cols-3 gap-3">
-          <FormField
-            id="c-guests"
-            label="Total invités"
-            required
-            error={errors.guest_count?.message}
-          >
-            <input
-              type="number"
-              min={1}
-              inputMode="numeric"
-              className={fieldBaseClass}
-              placeholder="80"
-              {...numReg("guest_count")}
-            />
-          </FormField>
-          <FormField
-            id="c-adults"
-            label="Adultes"
-            error={errors.adult_count?.message}
-          >
-            <input
-              type="number"
-              min={0}
-              inputMode="numeric"
-              className={fieldBaseClass}
-              placeholder="60"
-              {...numReg("adult_count")}
-            />
-          </FormField>
-          <FormField
-            id="c-children"
-            label="Enfants"
-            error={errors.children_count?.message}
-          >
-            <input
-              type="number"
-              min={0}
-              inputMode="numeric"
-              className={fieldBaseClass}
-              placeholder="12"
-              {...numReg("children_count")}
-            />
-          </FormField>
-        </div>
-        <fieldset className="flex flex-col gap-2">
-          <legend className="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">
-            Besoins
-          </legend>
-          <div className="grid grid-cols-2 gap-2">
-            {ceremonieSelectedOptions.map((v) => (
-              <label key={v} className={optionCheckboxClass}>
-                <input
-                  type="checkbox"
-                  value={v}
-                  className={checkboxInputClass}
-                  {...register("selected_options")}
-                />
-                <span>{v}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-      </div>
+            <span className="text-sm leading-relaxed text-ink-muted">
+              J&apos;accepte que mes données soient traitées par le Domaine des
+              Élégances afin de répondre à ma demande et de me recontacter.{" "}
+              <span className="text-accent-strong" aria-hidden>*</span>
+            </span>
+          </label>
+          {errors.rgpd_consent && (
+            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+              {errors.rgpd_consent.message}
+            </p>
+          )}
 
-      {/* ── Étape 3 : Projet ── */}
-      <div className={cn("flex flex-col gap-4", step !== 3 && "hidden")}>
-        <FormField
-          id="c-priority"
-          label="Ce qui compte le plus"
-          error={errors.project_priority?.message}
-        >
-          <select
-            className={fieldSelectClass}
-            defaultValue=""
-            {...register("project_priority")}
-          >
-            <option value="">Sélectionner...</option>
-            {ceremonieProjectPriorityOptions.map((v) => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
-          </select>
-        </FormField>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FormField
-            id="c-budget"
-            label="Budget estimatif"
-            required
-            error={errors.budget_range?.message}
-          >
-            <select
-              className={fieldSelectClass}
-              defaultValue=""
-              {...register("budget_range")}
-            >
-              <option value="" disabled>
-                Sélectionner...
-              </option>
-              {budgetRangeOptions.map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </FormField>
-          <FormField
-            id="c-stage"
-            label="Où en êtes-vous ?"
-            required
-            error={errors.project_stage?.message}
-          >
-            <select
-              className={fieldSelectClass}
-              defaultValue=""
-              {...register("project_stage")}
-            >
-              <option value="" disabled>
-                Sélectionner...
-              </option>
-              {projectStageOptions.map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </FormField>
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              className={cn(checkboxInputClass, "mt-0.5 shrink-0")}
+              {...register("marketing_optin")}
+            />
+            <span className="text-sm leading-relaxed text-ink-muted">
+              J&apos;accepte de recevoir des informations et offres du Domaine
+              des Élégances par e-mail. (facultatif)
+            </span>
+          </label>
         </div>
-        <fieldset className="flex flex-col gap-2">
-          <legend className="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">
-            Contraintes
-          </legend>
-          <div className="grid grid-cols-2 gap-2">
-            {ceremonieConstraintOptions.map((v) => (
-              <label key={v} className={optionCheckboxClass}>
-                <input
-                  type="checkbox"
-                  value={v}
-                  className={checkboxInputClass}
-                  {...register("constraints")}
-                />
-                <span>{v}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-        <FormField
-          id="c-message"
-          label="Votre message"
-          error={errors.message?.message}
-        >
-          <textarea
-            rows={3}
-            className={fieldBaseClass}
-            placeholder="Expliquez-nous votre projet, vos attentes, vos contraintes ou les points importants à connaître."
-            {...register("message")}
-          />
-        </FormField>
+
         {serverError && (
           <p
             role="alert"
@@ -454,7 +518,7 @@ export function LeadFormCeremonie() {
 
       {/* ── Navigation ── */}
       <div className="flex flex-col gap-3 pt-1">
-        {step < 3 ? (
+        {step < 5 ? (
           <Button
             type="button"
             size="lg"
@@ -473,12 +537,12 @@ export function LeadFormCeremonie() {
               disabled={isPending}
               className="w-full"
             >
-              {isPending ? "Envoi en cours..." : "Préparer mon devis cérémonie →"}
+              {isPending ? "Envoi en cours..." : "Recevoir ma proposition cérémonie →"}
             </Button>
             <p className="text-center text-xs leading-relaxed text-ink-subtle">
               Réponse sous 24h ouvrées. Proposition transmise sous réserve de
-              disponibilité et de validation finale par l'équipe du Domaine des
-              Élégances.
+              disponibilité et de validation finale par l&apos;équipe du Domaine
+              des Élégances.
             </p>
           </>
         )}
