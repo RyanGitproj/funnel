@@ -41,6 +41,7 @@ Desktop.ini
 # Temp files that break eslint (see CLAUDE.md)
 chrome-profile*/
 screenshot*/
+docs/
 *.png
 *.jpg
 *.jpeg
