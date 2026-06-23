@@ -78,11 +78,8 @@ export const festifEventTypeOptions = [
   "EVJF",
   "EVG",
   "Anniversaire",
-  "Soirée privée",
   "Fête entre amis",
   "Pool party / Garden party",
-  "Réception privée",
-  "Retrouvailles familiales",
   "Autre",
 ] as const;
 
@@ -131,9 +128,6 @@ export const ceremonieEventTypeOptions = [
   "Fiançailles",
   "Renouvellement de vœux",
   "Baptême",
-  "Communion",
-  "Bar Mitzvah",
-  "Réception familiale",
   "Autre",
 ] as const;
 

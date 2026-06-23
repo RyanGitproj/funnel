@@ -333,8 +333,8 @@ const eventIcons: Record<EventIconName, IconComponent> = {
 };
 
 const compactEventCardBase = cn(
-  "group relative flex min-h-[98px] flex-col items-center justify-center gap-2",
-  "rounded-[var(--radius-md)] border-2 px-2.5 py-3 text-center",
+  "group relative flex min-h-[82px] flex-col items-center justify-center gap-1.5",
+  "rounded-[var(--radius-md)] border-2 px-2 py-2.5 text-center",
   "transition-all duration-150 cursor-pointer select-none active:scale-[0.97]",
 );
 const compactEventCardActive =
@@ -415,8 +415,8 @@ export function IconCardSelect({
             >
               ✓
             </span>
-            <Icon className="size-8 text-accent sm:size-9" />
-            <span className="max-w-[13rem] text-[11px] font-semibold uppercase leading-snug text-current sm:text-xs">
+            <Icon className="size-7 text-accent sm:size-8" />
+            <span className="max-w-[12rem] text-[10px] font-semibold uppercase leading-snug text-current sm:text-[11px]">
               {opt}
             </span>
           </button>
