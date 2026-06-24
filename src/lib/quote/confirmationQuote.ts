@@ -18,6 +18,18 @@ type ConfirmationQuoteManualItem = {
   reason: string;
 };
 
+type ConfirmationQuoteIncludedItem = {
+  id: string;
+  label: string;
+  category: string;
+};
+
+type ConfirmationQuoteInterestItem = {
+  id: string;
+  label: string;
+  indicativePrice?: string;
+};
+
 export type ConfirmationQuoteSnapshot = {
   universe: QuoteUniverse;
   universeLabel: string;
@@ -27,7 +39,9 @@ export type ConfirmationQuoteSnapshot = {
   displayLabel: string;
   baseAmountMin: number;
   baseAmountMax: number;
+  includedItems: ConfirmationQuoteIncludedItem[];
   calculatedOptions: ConfirmationQuoteOption[];
+  interestItems: ConfirmationQuoteInterestItem[];
   manualReviewItems: ConfirmationQuoteManualItem[];
   warnings: string[];
   disclaimer: string;
@@ -73,6 +87,11 @@ export function createConfirmationQuoteSnapshot(
     displayLabel: quote.displayLabel,
     baseAmountMin: quote.baseAmountMin,
     baseAmountMax: quote.baseAmountMax,
+    includedItems: quote.includedItems.map((item) => ({
+      id: item.id,
+      label: item.label,
+      category: item.category,
+    })),
     calculatedOptions: quote.calculatedOptions.map((option) => ({
       id: option.id,
       label: option.label,
@@ -81,6 +100,11 @@ export function createConfirmationQuoteSnapshot(
       unitPriceMax: option.unitPriceMax,
       totalMin: option.totalMin,
       totalMax: option.totalMax,
+    })),
+    interestItems: quote.interestItems.map((item) => ({
+      id: item.id,
+      label: item.label,
+      indicativePrice: item.indicativePrice,
     })),
     manualReviewItems: quote.manualReviewItems.map((item) => ({
       id: item.id,
@@ -113,7 +137,9 @@ export function parseConfirmationQuoteCookie(
       typeof parsed.displayLabel !== "string" ||
       typeof parsed.returnPath !== "string" ||
       typeof parsed.returnLabel !== "string" ||
+      !Array.isArray(parsed.includedItems) ||
       !Array.isArray(parsed.calculatedOptions) ||
+      !Array.isArray(parsed.interestItems) ||
       !Array.isArray(parsed.manualReviewItems) ||
       !Array.isArray(parsed.warnings)
     ) {

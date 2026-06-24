@@ -60,8 +60,15 @@ function formatOptionFormula(
 function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
   const hasBase = quote.baseAmountMin > 0 || quote.baseAmountMax > 0;
   const hasOptions = quote.calculatedOptions.length > 0;
+  const hasInterests = quote.interestItems.length > 0;
   const hasManualItems = quote.manualReviewItems.length > 0;
   const hasWarnings = quote.warnings.length > 0;
+  const domainItems = quote.includedItems.filter(
+    (item) => item.category === "included_domain",
+  );
+  const packItems = quote.includedItems.filter(
+    (item) => item.category === "included_pack",
+  );
 
   return (
     <section className="mt-14 border border-line bg-surface-elevated shadow-soft">
@@ -100,6 +107,11 @@ function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
                   <p className="font-serif text-lg font-medium text-ink">
                     {quote.pricingModeLabel}
                   </p>
+                  {packItems.length > 0 && (
+                    <p className="mt-1 text-xs text-ink-muted">
+                      Inclus : {packItems.map((i) => i.label).join(", ")}
+                    </p>
+                  )}
                   <p className="mt-1 text-xs uppercase tracking-[0.14em] text-ink-subtle">
                     Base de calcul
                   </p>
@@ -136,6 +148,23 @@ function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
             </p>
           )}
 
+          {hasInterests && (
+            <div className="mt-6 border border-line bg-surface-alt/60 p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-subtle">
+                Intérêts partenaires non additionnés
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-ink-muted">
+                {quote.interestItems
+                  .map((item) =>
+                    item.indicativePrice
+                      ? `${item.label} (${item.indicativePrice})`
+                      : item.label,
+                  )
+                  .join(", ")}
+              </p>
+            </div>
+          )}
+
           {(hasManualItems || hasWarnings) && (
             <div className="mt-6 border border-accent/30 bg-accent/10 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-strong">
@@ -163,6 +192,21 @@ function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {domainItems.length > 0 && (
+            <div className="mt-6 flex items-start gap-3 text-sm text-ink-muted">
+              <CheckCircle2
+                className="mt-0.5 size-4 shrink-0 text-accent-strong"
+                aria-hidden
+              />
+              <p>
+                <span className="font-medium text-ink">
+                  Votre séjour inclut l&apos;accès privatif :
+                </span>{" "}
+                {domainItems.map((i) => i.label).join(", ")}.
+              </p>
             </div>
           )}
         </div>

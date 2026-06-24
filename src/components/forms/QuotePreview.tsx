@@ -38,15 +38,19 @@ export function QuotePreview({ quote }: { quote: QuoteResult | null }) {
 
   const hasBase = quote.baseAmountMin > 0;
   const hasOptions = quote.calculatedOptions.length > 0;
+  const hasInterests = quote.interestItems.length > 0;
   const hasWarnings = quote.warnings.length > 0;
   const surDevisItems = quote.manualReviewItems.filter(
     (i) => i.reason === "sur_devis",
   );
-  const packIncludedItems = quote.manualReviewItems.filter((i) =>
-    i.id.endsWith("_pack_included"),
+  const domainItems = quote.includedItems.filter(
+    (i) => i.category === "included_domain",
+  );
+  const packItems = quote.includedItems.filter(
+    (i) => i.category === "included_pack",
   );
 
-  if (!hasBase && !hasWarnings) return null;
+  if (!hasBase && !hasInterests && !hasWarnings) return null;
 
   return (
     <div className="rounded-[var(--radius-md)] border border-accent/30 bg-surface-alt p-4 text-sm">
@@ -55,11 +59,18 @@ export function QuotePreview({ quote }: { quote: QuoteResult | null }) {
       </p>
 
       {hasBase && (
-        <Row
-          label="Base domaine"
-          min={quote.baseAmountMin}
-          max={quote.baseAmountMax}
-        />
+        <div>
+          <Row
+            label={quote.pricingMode === "pack" ? "Pack sélectionné" : "Base domaine"}
+            min={quote.baseAmountMin}
+            max={quote.baseAmountMax}
+          />
+          {packItems.length > 0 && (
+            <p className="pl-0 text-[10px] leading-relaxed text-ink-subtle">
+              ↳ Inclus : {packItems.map((i) => i.label).join(", ")}
+            </p>
+          )}
+        </div>
       )}
 
       {hasOptions &&
@@ -97,13 +108,18 @@ export function QuotePreview({ quote }: { quote: QuoteResult | null }) {
         </p>
       )}
 
-      {packIncludedItems.length > 0 && (
+      {hasInterests && (
         <p className="mt-1 text-xs leading-relaxed text-ink-subtle">
-          <span className="font-medium">Inclus selon pack :</span>{" "}
-          {packIncludedItems
-            .map((i) => i.label.replace(" (potentiellement inclus dans le pack — à confirmer)", ""))
+          <span className="font-medium">
+            Intérêts partenaires non additionnés :
+          </span>{" "}
+          {quote.interestItems
+            .map((item) =>
+              item.indicativePrice
+                ? `${item.label} (${item.indicativePrice})`
+                : item.label,
+            )
             .join(", ")}
-          {" "}— à confirmer
         </p>
       )}
 
@@ -114,9 +130,17 @@ export function QuotePreview({ quote }: { quote: QuoteResult | null }) {
           </p>
         ))}
 
-      <p className="mt-3 text-[10px] leading-relaxed text-ink-subtle">
+      {domainItems.length > 0 && (
+        <p className="mt-3 border-t border-line/60 pt-3 text-[10px] leading-relaxed text-ink-subtle">
+          <span className="font-medium">Accès privatif inclus :</span>{" "}
+          {domainItems.map((i) => i.label).join(", ")}.
+        </p>
+      )}
+
+      <p className="mt-2 text-[10px] leading-relaxed text-ink-subtle">
         {quote.disclaimer}
       </p>
     </div>
   );
 }
+

@@ -1,19 +1,25 @@
 import {
   CEREMONIE_BASE,
   CEREMONIE_CAPACITY,
+  CEREMONIE_INCLUDED_DOMAIN_ITEMS,
   CEREMONIE_MANUAL_OPTIONS,
   CEREMONIE_PRICED_OPTIONS,
 } from "@/config/pricing/ceremonie";
 import {
+  FESTIF_ACTIVITY_OPTIONS,
   FESTIF_CAPACITY,
+  FESTIF_INCLUDED_DOMAIN_ITEMS,
   FESTIF_MANUAL_OPTIONS,
   FESTIF_PACKS,
   FESTIF_PRICED_OPTIONS,
   FESTIF_STANDARD_RATES,
   getFestifOptionIdByLabel,
+  getFestifOptionLabelById,
 } from "@/config/pricing/festif";
 import type {
   CalculatedOption,
+  IncludedItem,
+  InterestItem,
   ManualReviewItem,
   QuoteResult,
 } from "./types";
@@ -89,6 +95,12 @@ export function computeCeremonieQuote(input: CeremonieQuoteInput): QuoteResult {
   const optionsMax = calculatedOptions.reduce((s, o) => s + o.totalMax, 0);
   const estimatedMin = CEREMONIE_BASE.min + optionsMin;
   const estimatedMax = CEREMONIE_BASE.max + optionsMax;
+  const includedItems: IncludedItem[] = CEREMONIE_INCLUDED_DOMAIN_ITEMS.map(
+    (item) => ({
+      ...item,
+      category: "included_domain",
+    }),
+  );
 
   return {
     universe: "ceremonie",
@@ -96,7 +108,9 @@ export function computeCeremonieQuote(input: CeremonieQuoteInput): QuoteResult {
     currency: "EUR",
     baseAmountMin: CEREMONIE_BASE.min,
     baseAmountMax: CEREMONIE_BASE.max,
+    includedItems,
     calculatedOptions,
+    interestItems: [],
     manualReviewItems,
     warnings,
     estimatedMin,
@@ -109,11 +123,17 @@ export function computeCeremonieQuote(input: CeremonieQuoteInput): QuoteResult {
 export type FestifQuoteInput = {
   guest_count?: number;
   selected_options?: string[];
+  activites_interest?: string[];
   festif_pack?: string;
 };
 
 export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
-  const { guest_count, selected_options = [], festif_pack } = input;
+  const {
+    guest_count,
+    selected_options = [],
+    activites_interest = [],
+    festif_pack,
+  } = input;
 
   const calculatedOptions: CalculatedOption[] = [];
   const manualReviewItems: ManualReviewItem[] = [];
@@ -170,11 +190,6 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
   for (const optLabel of selected_options) {
     const optionId = getFestifOptionIdByLabel(optLabel);
     if (optionId && packIncludedOptionIds.includes(optionId)) {
-      manualReviewItems.push({
-        id: optionId + "_pack_included",
-        label: `${optLabel} (déjà inclus dans le pack sélectionné)`,
-        reason: "missing_price",
-      });
       continue;
     }
 
@@ -227,13 +242,48 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
       ? "À définir"
       : formatRange(estimatedMin, estimatedMax);
 
+  const packIncludedItems: IncludedItem[] = packIncludedOptionIds.flatMap(
+    (id) => {
+      const label = getFestifOptionLabelById(id);
+      if (!label) return [];
+
+      return [
+        {
+          id,
+          label,
+          category: "included_pack",
+        },
+      ];
+    },
+  );
+  const includedItems: IncludedItem[] = [
+    ...FESTIF_INCLUDED_DOMAIN_ITEMS.map((item) => ({
+      ...item,
+      category: "included_domain" as const,
+    })),
+    ...packIncludedItems,
+  ];
+  const interestItems: InterestItem[] = activites_interest.map((label) => {
+    const activity = FESTIF_ACTIVITY_OPTIONS.find(
+      (option) => option.formLabel === label,
+    );
+
+    return {
+      id: activity?.id ?? label,
+      label,
+      indicativePrice: activity?.indicativePrice,
+    };
+  });
+
   return {
     universe: "festif",
     pricingMode,
     currency: "EUR",
     baseAmountMin,
     baseAmountMax,
+    includedItems,
     calculatedOptions,
+    interestItems,
     manualReviewItems,
     warnings,
     estimatedMin,

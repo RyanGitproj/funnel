@@ -6,6 +6,8 @@ export type ManualReviewReason =
   | "capacity_check"
   | "logistics_check";
 
+export type IncludedItemCategory = "included_domain" | "included_pack";
+
 export type CalculatedOption = {
   id: string;
   label: string;
@@ -22,13 +24,27 @@ export type ManualReviewItem = {
   reason: ManualReviewReason;
 };
 
+export type IncludedItem = {
+  id: string;
+  label: string;
+  category: IncludedItemCategory;
+};
+
+export type InterestItem = {
+  id: string;
+  label: string;
+  indicativePrice?: string;
+};
+
 export type QuoteResult = {
   universe: QuoteUniverse;
   pricingMode: PricingMode;
   currency: "EUR";
   baseAmountMin: number;
   baseAmountMax: number;
+  includedItems: IncludedItem[];
   calculatedOptions: CalculatedOption[];
+  interestItems: InterestItem[];
   manualReviewItems: ManualReviewItem[];
   warnings: string[];
   estimatedMin: number;

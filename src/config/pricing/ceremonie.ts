@@ -9,6 +9,15 @@ export const CEREMONIE_BASE = {
   max: 4200,
 } as const;
 
+export const CEREMONIE_INCLUDED_DOMAIN_ITEMS = [
+  { id: "domaine_prive", label: "Domaine privé et cadre de 5 hectares" },
+  { id: "espaces_reception", label: "Espaces de réception selon configuration" },
+  { id: "capacite_reception", label: "Capacité visible jusqu'à 80 invités" },
+  { id: "couchages", label: "Couchages sur place selon disponibilité" },
+  { id: "piscine_sauna", label: "Piscine couverte chauffée et sauna" },
+  { id: "exterieurs", label: "Jardin, terrasse et espaces extérieurs" },
+] as const;
+
 export type CeremoniePricedOption = {
   id: string;
   /** Valeur exacte dans ceremonieSelectedOptions */

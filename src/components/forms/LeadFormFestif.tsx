@@ -185,6 +185,7 @@ export function LeadFormFestif() {
   const phoneValue = useWatch({ control, name: "phone", defaultValue: "" });
   const guestCount = useWatch({ control, name: "guest_count" });
   const selectedOptions = useWatch({ control, name: "selected_options", defaultValue: [] });
+  const activitesInterest = useWatch({ control, name: "activites_interest", defaultValue: [] });
   const festifPack = useWatch({ control, name: "festif_pack" });
 
   const packIncludedLabels = React.useMemo(() => {
@@ -209,10 +210,11 @@ export function LeadFormFestif() {
         ? computeFestifQuote({
             guest_count: guestCount,
             selected_options: selectedOptions ?? [],
+            activites_interest: activitesInterest ?? [],
             festif_pack: festifPack,
           })
         : null,
-    [guestCount, selectedOptions, festifPack],
+    [guestCount, selectedOptions, activitesInterest, festifPack],
   );
 
   const scrollToForm = () =>

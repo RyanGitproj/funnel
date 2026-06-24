@@ -13,34 +13,44 @@ export type FestifPack = {
   includedOptionIds: string[];
 };
 
+export const FESTIF_INCLUDED_DOMAIN_ITEMS = [
+  { id: "couchages", label: "22 couchages sur place selon configuration" },
+  { id: "piscine", label: "Piscine couverte chauffée" },
+  { id: "sauna", label: "Sauna" },
+  { id: "tennis", label: "Tennis" },
+  { id: "basket", label: "Basket" },
+  { id: "petanque", label: "Pétanque" },
+  { id: "karaoke_jeux", label: "Karaoké avec micro et jeux festifs" },
+] as const;
+
 export const FESTIF_PACKS: FestifPack[] = [
   {
     id: "weekend_proches",
     label: "Week-end entre proches",
     price: 4640,
     persons: 22,
-    includedOptionIds: [],
+    includedOptionIds: ["petit_dejeuner"],
   },
   {
     id: "evg_fun_chill",
     label: "EVG Fun & Chill",
     price: 4860,
     persons: 22,
-    includedOptionIds: ["karaoke"],
+    includedOptionIds: ["petit_dejeuner"],
   },
   {
     id: "evjf_chic",
     label: "EVJF Chic",
     price: 5190,
     persons: 22,
-    includedOptionIds: ["karaoke"],
+    includedOptionIds: ["brunch"],
   },
   {
     id: "anniversaire_signature",
     label: "Anniversaire Signature",
     price: 5410,
     persons: 22,
-    includedOptionIds: [],
+    includedOptionIds: ["brunch"],
   },
 ];
 
@@ -106,7 +116,6 @@ export const FESTIF_MANUAL_OPTIONS: FestifManualOption[] = [
   { id: "dj", formLabel: "DJ / musique" },
   { id: "barbecue", formLabel: "Barbecue" },
   { id: "traiteur", formLabel: "Traiteur / chef" },
-  { id: "karaoke", formLabel: "Karaoké" },
   { id: "navette", formLabel: "Navette" },
   { id: "securite", formLabel: "Sécurité" },
   { id: "decoration", formLabel: "Décoration" },

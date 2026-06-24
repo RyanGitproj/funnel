@@ -103,7 +103,6 @@ export const festifSelectedOptions = [
   "Brunch",
   "Barbecue",
   "Traiteur / chef",
-  "Karaoké",
   "Navette",
   "Sécurité",
   "Décoration",
