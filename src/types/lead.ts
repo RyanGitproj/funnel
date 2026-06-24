@@ -12,12 +12,22 @@ export type { CeremonieLeadInput, FestifLeadInput } from "@/lib/validations/lead
 export type LeadInput = CeremonieLeadInput | FestifLeadInput;
 
 /**
- * Payload envoyé à la couche d'accès aux données (lib/supabase/leads.ts).
- * Tous les champs optionnels sont explicitement `undefined`-ables
- * (et non juste absents) pour bien mapper avec les colonnes nullable
- * de la table `elegance_leads`.
+ * Champs de devis calculés côté serveur, ajoutés au payload avant insertion.
+ * Nécessitent la migration SQL [Q1] dans TODO.md avant déploiement.
  */
-export type LeadInsertPayload = LeadInput;
+export type QuoteStorageFields = {
+  estimated_amount_min?: number | null;
+  estimated_amount_max?: number | null;
+  manual_review_required?: boolean | null;
+  quote_status?: string | null;
+  pricing_breakdown?: Record<string, unknown> | null;
+};
+
+/**
+ * Payload envoyé à la couche d'accès aux données (lib/supabase/leads.ts).
+ * Inclut les champs du formulaire + les champs de devis calculés.
+ */
+export type LeadInsertPayload = LeadInput & QuoteStorageFields;
 
 /**
  * Résultat typé d'une insertion — jamais d'exception, toujours un

@@ -33,6 +33,8 @@ import {
 } from "./FormField";
 import { StepIndicator } from "./StepIndicator";
 import { Button } from "@/components/ui/button";
+import { QuotePreview } from "./QuotePreview";
+import { computeCeremonieQuote } from "@/lib/quote/quoteCalculator";
 
 const FORM_ID = "lead-form-ceremonie";
 
@@ -67,6 +69,7 @@ export function LeadFormCeremonie() {
   const [step, setStep] = React.useState(1);
   const [serverError, setServerError] = React.useState<string | null>(null);
   const [isPending, startTransition] = React.useTransition();
+  const [validationAttempt, setValidationAttempt] = React.useState(0);
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const {
@@ -88,6 +91,7 @@ export function LeadFormCeremonie() {
       ceremony_format: undefined,
       selected_options: [],
       ambiance: undefined,
+      heater_count: undefined,
       budget_range: undefined,
       project_stage: undefined,
       message: "",
@@ -101,6 +105,23 @@ export function LeadFormCeremonie() {
   });
 
   const phoneValue = useWatch({ control, name: "phone", defaultValue: "" });
+  const guestCount = useWatch({ control, name: "guest_count" });
+  const selectedOptions = useWatch({ control, name: "selected_options", defaultValue: [] });
+  const heaterCount = useWatch({ control, name: "heater_count" });
+
+  const hasHeater = selectedOptions?.includes("Chauffage");
+
+  const quote = React.useMemo(
+    () =>
+      guestCount !== undefined
+        ? computeCeremonieQuote({
+            guest_count: guestCount,
+            selected_options: selectedOptions ?? [],
+            heater_count: heaterCount,
+          })
+        : null,
+    [guestCount, selectedOptions, heaterCount],
+  );
 
   const scrollToForm = () =>
     formRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
@@ -112,6 +133,12 @@ export function LeadFormCeremonie() {
     if (valid) {
       scrollToForm();
       setStep((s) => s + 1);
+    } else {
+      setValidationAttempt((n) => n + 1);
+      setTimeout(() => {
+        const firstAlert = formRef.current?.querySelector('[role="alert"]');
+        firstAlert?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 50);
     }
   };
 
@@ -161,7 +188,7 @@ export function LeadFormCeremonie() {
             )}
           />
           {errors.event_type && (
-            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.event_type.message}
             </p>
           )}
@@ -218,7 +245,7 @@ export function LeadFormCeremonie() {
             )}
           />
           {errors.guest_count && (
-            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.guest_count.message}
             </p>
           )}
@@ -240,7 +267,7 @@ export function LeadFormCeremonie() {
             )}
           />
           {errors.event_date && (
-            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.event_date.message}
             </p>
           )}
@@ -266,7 +293,7 @@ export function LeadFormCeremonie() {
             )}
           />
           {errors.date_flexibility && (
-            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.date_flexibility.message}
             </p>
           )}
@@ -293,7 +320,7 @@ export function LeadFormCeremonie() {
             )}
           />
           {errors.ceremony_format && (
-            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.ceremony_format.message}
             </p>
           )}
@@ -318,6 +345,59 @@ export function LeadFormCeremonie() {
           />
         </div>
 
+        {/* heater_count — conditionnel si "Chauffage" sélectionné */}
+        {hasHeater && (
+          <div className="flex flex-col gap-3">
+            <SectionQuestion>
+              Combien d&apos;appareils de chauffage prévoyez-vous ?
+            </SectionQuestion>
+            <Controller
+              control={control}
+              name="heater_count"
+              render={({ field }) => (
+                <div className="flex items-center justify-between gap-4 rounded-[var(--radius-md)] border-2 border-line bg-surface-elevated px-5 py-4">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      field.onChange(Math.max(1, (field.value ?? 1) - 1))
+                    }
+                    className={stepperBtnClass}
+                    aria-label="Diminuer"
+                  >
+                    −
+                  </button>
+                  <div className="flex flex-col items-center">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      value={field.value ?? 1}
+                      onChange={(e) => {
+                        const v = parseInt(e.target.value, 10);
+                        field.onChange(!isNaN(v) && v >= 1 ? Math.min(v, 20) : 1);
+                      }}
+                      className="w-20 bg-transparent text-center font-serif text-5xl font-semibold leading-none text-ink outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                    />
+                    <span className="mt-1 text-xs uppercase tracking-[0.14em] text-ink-subtle">
+                      {(field.value ?? 1) === 1 ? "appareil" : "appareils"}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      field.onChange(Math.min(20, (field.value ?? 1) + 1))
+                    }
+                    className={stepperBtnClass}
+                    aria-label="Augmenter"
+                  >
+                    +
+                  </button>
+                </div>
+              )}
+            />
+          </div>
+        )}
+
         {/* ambiance */}
         <div className="flex flex-col gap-3">
           <SectionQuestion>
@@ -336,10 +416,16 @@ export function LeadFormCeremonie() {
             )}
           />
         </div>
+
+        {/* Estimation indicative — visible dès l'étape 3 */}
+        <QuotePreview quote={quote} />
       </div>
 
       {/* ── Étape 4 : Votre projet ── */}
       <div className={cn("flex flex-col gap-4", step !== 4 && "hidden")}>
+        {/* Rappel estimation */}
+        <QuotePreview quote={quote} />
+
         {/* budget_range */}
         <div className="flex flex-col gap-3">
           <SectionQuestion required>
@@ -358,7 +444,7 @@ export function LeadFormCeremonie() {
             )}
           />
           {errors.budget_range && (
-            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.budget_range.message}
             </p>
           )}
@@ -382,7 +468,7 @@ export function LeadFormCeremonie() {
             )}
           />
           {errors.project_stage && (
-            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.project_stage.message}
             </p>
           )}
@@ -491,7 +577,7 @@ export function LeadFormCeremonie() {
             </span>
           </label>
           {errors.rgpd_consent && (
-            <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.rgpd_consent.message}
             </p>
           )}

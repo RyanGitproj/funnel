@@ -431,31 +431,56 @@ export function MultiCardSelect({
   value,
   onChange,
   cols = 2,
+  disabledOptions = [],
 }: {
   options: readonly string[];
   value: string[] | undefined;
   onChange: (v: string[]) => void;
   cols?: 2 | 3 | 4;
+  disabledOptions?: readonly string[];
 }) {
   const selected = value ?? [];
-  const toggle = (opt: string) =>
+  const toggle = (opt: string) => {
+    if (disabledOptions.includes(opt)) return;
     onChange(
       selected.includes(opt)
         ? selected.filter((v) => v !== opt)
         : [...selected, opt],
     );
+  };
   return (
     <div className={cn("grid gap-2", colsClass[cols])}>
-      {options.map((opt) => (
-        <button
-          key={opt}
-          type="button"
-          onClick={() => toggle(opt)}
-          className={cn(cardBase, selected.includes(opt) ? cardActive : cardInactive)}
-        >
-          {opt}
-        </button>
-      ))}
+      {options.map((opt) => {
+        const isDisabled = disabledOptions.includes(opt);
+        const isSelected = selected.includes(opt);
+        return (
+          <button
+            key={opt}
+            type="button"
+            onClick={() => toggle(opt)}
+            disabled={isDisabled}
+            className={cn(
+              cardBase,
+              isDisabled
+                ? "cursor-not-allowed border-line bg-surface-elevated opacity-50"
+                : isSelected
+                  ? cardActive
+                  : cardInactive,
+            )}
+          >
+            {isDisabled ? (
+              <span className="flex flex-col items-center gap-0.5">
+                <span>{opt}</span>
+                <span className="text-[9px] uppercase tracking-wider text-accent-strong">
+                  Inclus dans le pack
+                </span>
+              </span>
+            ) : (
+              opt
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }

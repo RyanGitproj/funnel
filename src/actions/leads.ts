@@ -7,6 +7,11 @@ import {
   normalizeEmptyToUndefined,
 } from "@/lib/validations/lead-schema";
 import { insertLead } from "@/lib/supabase/leads";
+import {
+  computeCeremonieQuote,
+  computeFestifQuote,
+} from "@/lib/quote/quoteCalculator";
+import { toStoragePayload } from "@/lib/quote/formatQuote";
 import type { ActionResult } from "@/types/lead";
 
 export async function submitCeremonieLead(
@@ -25,7 +30,16 @@ export async function submitCeremonieLead(
     };
   }
 
-  const result = await insertLead(normalizeEmptyToUndefined(parsed.data));
+  const quote = computeCeremonieQuote({
+    guest_count: parsed.data.guest_count,
+    selected_options: parsed.data.selected_options,
+    heater_count: parsed.data.heater_count,
+  });
+
+  const result = await insertLead({
+    ...normalizeEmptyToUndefined(parsed.data),
+    ...toStoragePayload(quote),
+  });
 
   if (!result.success) {
     return { success: false, error: result.error };
@@ -48,7 +62,16 @@ export async function submitFestifLead(values: unknown): Promise<ActionResult> {
     };
   }
 
-  const result = await insertLead(normalizeEmptyToUndefined(parsed.data));
+  const quote = computeFestifQuote({
+    guest_count: parsed.data.guest_count,
+    selected_options: parsed.data.selected_options,
+    festif_pack: parsed.data.festif_pack,
+  });
+
+  const result = await insertLead({
+    ...normalizeEmptyToUndefined(parsed.data),
+    ...toStoragePayload(quote),
+  });
 
   if (!result.success) {
     return { success: false, error: result.error };

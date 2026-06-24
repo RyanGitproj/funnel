@@ -95,21 +95,50 @@ export const festifDurationOptions = [
   "À définir",
 ] as const;
 
+/** TYPE A + options sur devis — incluses dans selected_options et dans le calcul ou le devis. */
 export const festifSelectedOptions = [
+  "Tente / Barnum professionnel haut standing",
   "DJ / musique",
+  "Petit-déjeuner",
   "Brunch",
   "Barbecue",
   "Traiteur / chef",
   "Karaoké",
-  "Activités / jeux",
-  "Chasse au trésor",
-  "Escape game apéro",
-  "Combat de sumo",
-  "Parcours d'énigmes",
   "Navette",
   "Sécurité",
   "Décoration",
 ] as const;
+
+/** TYPE B & C — Activités & Extras. Jamais dans le total. Stockées séparément. */
+export const festifActivitesInterestOptions = [
+  "Combat de sumo",
+  "Chasse au trésor",
+  "Escape game apéro",
+  "Parcours d'énigmes",
+  "Parcours gages & défis",
+  "Table de casino",
+  "Cocooning love",
+  "Magicien / mentaliste",
+  "Échassiers / cracheurs de feu",
+  "Activités extérieures",
+] as const;
+
+export const festifPackOptions = [
+  "weekend_proches",
+  "evg_fun_chill",
+  "evjf_chic",
+  "anniversaire_signature",
+] as const;
+
+export const festifPackLabels: Record<
+  (typeof festifPackOptions)[number],
+  string
+> = {
+  weekend_proches: "Week-end entre proches — 4 640 €",
+  evg_fun_chill: "EVG Fun & Chill — 4 860 €",
+  evjf_chic: "EVJF Chic — 5 190 €",
+  anniversaire_signature: "Anniversaire Signature — 5 410 €",
+};
 
 export const festifAmbianceOptions = [
   "Chic & élégante",
@@ -151,7 +180,10 @@ export const ceremonieFormatOptions = [
 ] as const;
 
 export const ceremonieSelectedOptions = [
-  "Tente / barnum",
+  "Tente / Barnum professionnel haut standing",
+  "Plancher bois",
+  "Éclairage / ambiance",
+  "Chauffage",
   "Traiteur",
   "DJ / musique",
   "Décoration",
@@ -205,7 +237,9 @@ export const festifLeadSchema = z
       "Veuillez choisir une durée souhaitée.",
     ),
     selected_options: z.array(z.enum(festifSelectedOptions)).optional(),
+    activites_interest: z.array(z.enum(festifActivitesInterestOptions)).optional(),
     ambiance: optionalSelect(festifAmbianceOptions),
+    festif_pack: optionalSelect(festifPackOptions),
   })
   .strict();
 
@@ -225,6 +259,7 @@ export const ceremonieLeadSchema = z
     ),
     selected_options: z.array(z.enum(ceremonieSelectedOptions)).optional(),
     ambiance: optionalSelect(ceremonieAmbianceOptions),
+    heater_count: z.number().int().min(1).max(20).optional(),
   })
   .strict();
 
