@@ -141,3 +141,30 @@ export const FESTIF_CAPACITY = {
   minPersons: 12,
   maxPersons: 22,
 } as const;
+
+export function getFestifOptionLabelById(id: string): string | undefined {
+  return (
+    FESTIF_PRICED_OPTIONS.find((option) => option.id === id)?.formLabel ??
+    FESTIF_MANUAL_OPTIONS.find((option) => option.id === id)?.formLabel ??
+    FESTIF_ACTIVITY_OPTIONS.find((option) => option.id === id)?.formLabel
+  );
+}
+
+export function getFestifOptionIdByLabel(label: string): string | undefined {
+  return (
+    FESTIF_PRICED_OPTIONS.find((option) => option.formLabel === label)?.id ??
+    FESTIF_MANUAL_OPTIONS.find((option) => option.formLabel === label)?.id ??
+    FESTIF_ACTIVITY_OPTIONS.find((option) => option.formLabel === label)?.id
+  );
+}
+
+export function getFestifPackIncludedLabels(packId?: string): string[] {
+  if (!packId) return [];
+
+  const pack = FESTIF_PACKS.find((item) => item.id === packId);
+  if (!pack) return [];
+
+  return pack.includedOptionIds
+    .map((id) => getFestifOptionLabelById(id))
+    .filter((label): label is string => Boolean(label));
+}

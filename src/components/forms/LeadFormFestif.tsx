@@ -23,8 +23,7 @@ import {
 } from "@/lib/validations/lead-schema";
 import {
   FESTIF_ACTIVITY_OPTIONS,
-  FESTIF_MANUAL_OPTIONS,
-  FESTIF_PACKS,
+  getFestifPackIncludedLabels,
 } from "@/config/pricing/festif";
 import { submitFestifLead } from "@/actions/leads";
 import {
@@ -189,13 +188,20 @@ export function LeadFormFestif() {
   const festifPack = useWatch({ control, name: "festif_pack" });
 
   const packIncludedLabels = React.useMemo(() => {
-    if (!festifPack) return [] as string[];
-    const pack = FESTIF_PACKS.find((p) => p.id === festifPack);
-    if (!pack) return [] as string[];
-    return pack.includedOptionIds
-      .map((id) => FESTIF_MANUAL_OPTIONS.find((m) => m.id === id)?.formLabel)
-      .filter((label): label is string => !!label);
+    return getFestifPackIncludedLabels(festifPack);
   }, [festifPack]);
+
+  React.useEffect(() => {
+    if (packIncludedLabels.length === 0 || !selectedOptions?.length) return;
+
+    const nextOptions = selectedOptions.filter(
+      (option) => !packIncludedLabels.includes(option),
+    );
+
+    if (nextOptions.length !== selectedOptions.length) {
+      setValue("selected_options", nextOptions, { shouldValidate: true });
+    }
+  }, [packIncludedLabels, selectedOptions, setValue]);
 
   const quote = React.useMemo(
     () =>

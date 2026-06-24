@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import {
   ceremonieLeadSchema,
   festifLeadSchema,
@@ -11,8 +12,30 @@ import {
   computeCeremonieQuote,
   computeFestifQuote,
 } from "@/lib/quote/quoteCalculator";
+import type { QuoteResult } from "@/lib/quote/types";
+import {
+  CONFIRMATION_QUOTE_COOKIE,
+  createConfirmationQuoteSnapshot,
+  encodeConfirmationQuoteCookie,
+} from "@/lib/quote/confirmationQuote";
 import { toStoragePayload } from "@/lib/quote/formatQuote";
 import type { ActionResult } from "@/types/lead";
+
+async function rememberConfirmationQuote(quote: QuoteResult) {
+  const cookieStore = await cookies();
+
+  cookieStore.set(
+    CONFIRMATION_QUOTE_COOKIE,
+    encodeConfirmationQuoteCookie(createConfirmationQuoteSnapshot(quote)),
+    {
+      httpOnly: true,
+      maxAge: 60 * 30,
+      path: "/confirmation",
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    },
+  );
+}
 
 export async function submitCeremonieLead(
   values: unknown,
@@ -45,6 +68,8 @@ export async function submitCeremonieLead(
     return { success: false, error: result.error };
   }
 
+  await rememberConfirmationQuote(quote);
+
   redirect("/confirmation");
 }
 
@@ -76,6 +101,8 @@ export async function submitFestifLead(values: unknown): Promise<ActionResult> {
   if (!result.success) {
     return { success: false, error: result.error };
   }
+
+  await rememberConfirmationQuote(quote);
 
   redirect("/confirmation");
 }

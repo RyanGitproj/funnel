@@ -10,6 +10,7 @@ import {
   FESTIF_PACKS,
   FESTIF_PRICED_OPTIONS,
   FESTIF_STANDARD_RATES,
+  getFestifOptionIdByLabel,
 } from "@/config/pricing/festif";
 import type {
   CalculatedOption,
@@ -167,17 +168,19 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
   }
 
   for (const optLabel of selected_options) {
+    const optionId = getFestifOptionIdByLabel(optLabel);
+    if (optionId && packIncludedOptionIds.includes(optionId)) {
+      manualReviewItems.push({
+        id: optionId + "_pack_included",
+        label: `${optLabel} (déjà inclus dans le pack sélectionné)`,
+        reason: "missing_price",
+      });
+      continue;
+    }
+
     const priced = FESTIF_PRICED_OPTIONS.find((p) => p.formLabel === optLabel);
 
     if (priced) {
-      if (packIncludedOptionIds.includes(priced.id)) {
-        manualReviewItems.push({
-          id: priced.id + "_pack_included",
-          label: `${priced.formLabel} (potentiellement inclus dans le pack — à confirmer)`,
-          reason: "missing_price",
-        });
-        continue;
-      }
       if (priced.priceMode === "flat_range") {
         calculatedOptions.push({
           id: priced.id,
