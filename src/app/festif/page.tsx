@@ -8,12 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Festif - EVJF, EVG & anniversaires chic",
+  title: "Festif - Enterrements de vie & anniversaires chic",
   description:
-    "EVJF, EVG, anniversaire ou week-end entre amis au Domaine des Élégances : un domaine privatisé pour célébrer entre proches dans un cadre élégant.",
+    "Enterrement de vie de jeune fille (EVJF), enterrement de vie de garçon (EVG), anniversaire ou soirée privée au Domaine des Élégances.",
   alternates: { canonical: "/festif" },
   openGraph: {
-    title: "Festif - EVJF, EVG & anniversaires au Domaine des Élégances",
+    title: "Festif - Enterrements de vie, EVJF, EVG & anniversaires",
     description:
       "Un domaine privatisé pour vivre un moment fort entre proches, sans complexité et sous réserve de disponibilité.",
     url: "/festif",
@@ -79,9 +79,9 @@ export default function FestifPage() {
       <main className="flex-1">
         <Hero
           variant="festif"
-          eyebrow="EVJF · EVG · Anniversaires · Week-ends"
+          eyebrow="EVJF vie de jeune fille · EVG vie de garçon · Anniversaires"
           title="Célébrez entre proches, sans sacrifier le raffinement."
-          subtitle="EVJF, EVG, anniversaire ou week-end entre amis : un domaine privatisé pensé pour vivre un moment fort sans complexité."
+          subtitle="Enterrement de vie de jeune fille, enterrement de vie de garçon, anniversaire ou soirée entre proches : un domaine privatisé pensé pour vivre un moment fort sans complexité."
           microReassurance="Réponse sous 24h · Proposition personnalisée · Sous réserve de disponibilité"
           primaryCta={{
             href: "#devis",
@@ -100,8 +100,11 @@ export default function FestifPage() {
           className="bg-surface py-20 md:py-28"
         >
           <div className="mx-auto max-w-4xl px-6 text-center lg:px-10">
-            <Badge variant="accent" className="mb-6">
-              EVJF · EVG · ANNIVERSAIRES
+            <Badge
+              variant="accent"
+              className="mb-6 max-w-full whitespace-normal text-center leading-relaxed"
+            >
+              EVJF rose fluo · EVG bleu électrique · ANNIVERSAIRES
             </Badge>
             <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
               Un lieu pensé pour profiter, sans gérer toute l'organisation
@@ -256,7 +259,7 @@ export default function FestifPage() {
         </ThemeProvider>
       </main>
 
-      <Footer description="Un domaine privé pour célébrer entre proches : EVJF, EVG, anniversaires et week-ends festifs dans un cadre élégant et confortable." />
+      <Footer description="Un domaine privé pour célébrer entre proches : enterrement de vie de jeune fille, enterrement de vie de garçon, anniversaires et soirées privées dans un cadre élégant et confortable." />
     </ThemeProvider>
   );
 }

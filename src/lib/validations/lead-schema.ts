@@ -125,8 +125,8 @@ export const festifPackLabels: Record<
   string
 > = {
   weekend_proches: "Week-end entre proches — 4 640 €",
-  evg_fun_chill: "EVG Fun & Chill — 4 860 €",
-  evjf_chic: "EVJF Chic — 5 190 €",
+  evg_fun_chill: "EVG Fun & Chill (vie de garçon) — 4 860 €",
+  evjf_chic: "EVJF Chic (vie de jeune fille) — 5 190 €",
   anniversaire_signature: "Anniversaire Signature — 5 410 €",
 };
 

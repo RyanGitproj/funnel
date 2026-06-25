@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s · Domaine des Élégances",
   },
   description:
-    "Domaine des Élégances : un lieu d'exception pour célébrer mariages, EVJF, EVG et événements festifs. Deux univers, une même exigence d'élégance.",
+    "Domaine des Élégances : un lieu d'exception pour célébrer mariages, enterrements de vie de jeune fille ou de garçon et événements festifs.",
   keywords: [
     "domaine mariage",
     "lieu de réception prestige",

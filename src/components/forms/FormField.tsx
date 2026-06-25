@@ -333,7 +333,7 @@ const eventIcons: Record<EventIconName, IconComponent> = {
 };
 
 const compactEventCardBase = cn(
-  "group relative flex min-h-[82px] flex-col items-center justify-center gap-1.5",
+  "group relative flex min-h-[104px] w-full min-w-0 flex-col items-center justify-center gap-1.5 overflow-hidden",
   "rounded-[var(--radius-md)] border-2 px-2 py-2.5 text-center",
   "transition-all duration-150 cursor-pointer select-none active:scale-[0.97]",
 );
@@ -341,6 +341,36 @@ const compactEventCardActive =
   "border-accent bg-accent/[0.13] text-ink shadow-[0_0_18px_var(--card-glow)]";
 const compactEventCardInactive =
   "border-line bg-surface-elevated text-ink-muted hover:border-accent/60 hover:text-ink hover:shadow-[0_0_12px_var(--card-glow)]";
+
+function getFestifEventTone(option: string) {
+  const normalized = normalizeEventOption(option);
+
+  if (normalized.includes("evjf")) {
+    return {
+      cardActive:
+        "border-[#ff2bd6] bg-[#ff2bd6]/20 text-white shadow-[0_0_28px_rgba(255,43,214,0.55)]",
+      cardInactive:
+        "border-[#ff2bd6]/70 bg-[#ff2bd6]/10 text-[#ffd9f8] hover:border-[#ff2bd6] hover:text-white hover:shadow-[0_0_24px_rgba(255,43,214,0.45)]",
+      icon: "text-[#ff2bd6] drop-shadow-[0_0_8px_rgba(255,43,214,0.75)]",
+      check: "border-[#ff2bd6] bg-[#ff2bd6] text-white",
+      subtitle: "Enterrement de vie de jeune fille",
+    };
+  }
+
+  if (normalized.includes("evg")) {
+    return {
+      cardActive:
+        "border-[#00a3ff] bg-[#00a3ff]/20 text-white shadow-[0_0_28px_rgba(0,163,255,0.55)]",
+      cardInactive:
+        "border-[#00a3ff]/70 bg-[#00a3ff]/10 text-[#d7f2ff] hover:border-[#00a3ff] hover:text-white hover:shadow-[0_0_24px_rgba(0,163,255,0.45)]",
+      icon: "text-[#00a3ff] drop-shadow-[0_0_8px_rgba(0,163,255,0.75)]",
+      check: "border-[#00a3ff] bg-[#00a3ff] text-white",
+      subtitle: "Enterrement de vie de garçon",
+    };
+  }
+
+  return null;
+}
 
 function normalizeEventOption(option: string) {
   return option
@@ -392,6 +422,7 @@ export function IconCardSelect({
       {options.map((opt) => {
         const selected = value === opt;
         const Icon = eventIcons[getEventIconName(opt, iconSet)];
+        const festifTone = iconSet === "festif" ? getFestifEventTone(opt) : null;
 
         return (
           <button
@@ -399,26 +430,40 @@ export function IconCardSelect({
             type="button"
             onClick={() => onChange(opt)}
             aria-pressed={selected}
+            aria-label={festifTone ? `${opt} - ${festifTone.subtitle}` : opt}
             className={cn(
               compactEventCardBase,
-              selected ? compactEventCardActive : compactEventCardInactive,
+              festifTone
+                ? selected
+                  ? festifTone.cardActive
+                  : festifTone.cardInactive
+                : selected
+                  ? compactEventCardActive
+                  : compactEventCardInactive,
             )}
           >
             <span
               className={cn(
                 "absolute right-2 top-2 flex size-5 items-center justify-center rounded-full border text-[11px] font-bold leading-none",
-                selected
-                  ? "border-accent bg-accent text-accent-foreground"
-                  : "border-line text-transparent",
+                selected && festifTone
+                  ? festifTone.check
+                  : selected
+                    ? "border-accent bg-accent text-accent-foreground"
+                    : "border-line text-transparent",
               )}
               aria-hidden="true"
             >
               ✓
             </span>
-            <Icon className="size-7 text-accent sm:size-8" />
-            <span className="max-w-[12rem] text-[10px] font-semibold uppercase leading-snug text-current sm:text-[11px]">
+            <Icon className={cn("size-7 sm:size-8", festifTone?.icon ?? "text-accent")} />
+            <span className="max-w-full break-words text-[10px] font-semibold uppercase leading-snug text-current sm:text-[11px]">
               {opt}
             </span>
+            {festifTone && (
+              <span className="max-w-full break-words text-[9px] font-semibold leading-tight text-current/80 [overflow-wrap:anywhere] sm:text-[10px]">
+                {festifTone.subtitle}
+              </span>
+            )}
           </button>
         );
       })}

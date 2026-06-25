@@ -68,7 +68,7 @@ export default function HomePage() {
               ce qui compte vraiment.
             </>
           }
-          subtitle="Mariage, cérémonie familiale, EVJF, EVG ou anniversaire : choisissez votre univers, nous préparons un parcours adapté à votre projet."
+          subtitle="Mariage, cérémonie familiale, enterrement de vie de jeune fille, enterrement de vie de garçon ou anniversaire : choisissez votre univers, nous préparons un parcours adapté à votre projet."
           primaryCta={{
             href: "#orientation",
             label: "CHOISIR MON UNIVERS",
@@ -173,7 +173,7 @@ export default function HomePage() {
                   </h3>
                   <div className="h-px w-8 bg-accent/55 sm:w-10" />
                   <ul className="flex flex-col gap-1 font-sans text-xs leading-relaxed text-ink-muted sm:gap-2 sm:text-sm">
-                    <li>EVG · EVJF</li>
+                    <li>Enterrements de vie</li>
                     <li>Anniversaire</li>
                     <li>Fête entre amis</li>
                   </ul>

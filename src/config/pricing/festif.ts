@@ -33,14 +33,14 @@ export const FESTIF_PACKS: FestifPack[] = [
   },
   {
     id: "evg_fun_chill",
-    label: "EVG Fun & Chill",
+    label: "EVG Fun & Chill - vie de garçon",
     price: 4860,
     persons: 22,
     includedOptionIds: ["petit_dejeuner"],
   },
   {
     id: "evjf_chic",
-    label: "EVJF Chic",
+    label: "EVJF Chic - vie de jeune fille",
     price: 5190,
     persons: 22,
     includedOptionIds: ["brunch"],

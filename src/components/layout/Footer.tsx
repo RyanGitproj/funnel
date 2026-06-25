@@ -11,7 +11,7 @@ import Link from "next/link";
 const currentYear = new Date().getFullYear();
 
 const defaultDescription =
-  "Un lieu d'exception pour célébrer les moments qui comptent. Mariages, EVJF, EVG, anniversaires — deux univers, une même exigence d'élégance.";
+  "Un lieu d'exception pour célébrer les moments qui comptent. Mariages, enterrements de vie de jeune fille ou de garçon, anniversaires — deux univers, une même exigence d'élégance.";
 
 export function Footer({ description = defaultDescription }: { description?: string }) {
   return (
@@ -56,7 +56,7 @@ export function Footer({ description = defaultDescription }: { description?: str
                   href="/festif"
                   className="text-ink-muted transition-colors hover:text-accent-strong"
                 >
-                  Festif — EVJF / EVG / anniversaires
+                  Festif — enterrements de vie / anniversaires
                 </Link>
               </li>
               <li>
