@@ -303,7 +303,7 @@ export function LeadFormFestif() {
                 <button
                   type="button"
                   onClick={() =>
-                    field.onChange(Math.max(1, (field.value ?? 5) - 5))
+                    field.onChange(Math.max(1, (field.value ?? 1) - 1))
                   }
                   className={stepperBtnClass}
                   aria-label="Diminuer"
@@ -331,7 +331,9 @@ export function LeadFormFestif() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => field.onChange((field.value ?? 0) + 5)}
+                  onClick={() =>
+                    field.onChange(Math.min(2000, (field.value ?? 0) + 1))
+                  }
                   className={stepperBtnClass}
                   aria-label="Augmenter"
                 >

@@ -240,7 +240,12 @@ export const ceremonieLeadSchema = z
     guest_count: positiveInt,
     selected_options: z.array(z.enum(ceremonieSelectedOptions)).optional(),
     ambiance: optionalSelect(ceremonieAmbianceOptions),
-    heater_count: z.number().int().min(1).max(20).optional(),
+    heater_count: z
+      .number()
+      .int()
+      .min(1)
+      .max(4, "Veuillez indiquer 4 appareils maximum pour le moment.")
+      .optional(),
   })
   .strict()
   .refine(dateRangeIsValid, {

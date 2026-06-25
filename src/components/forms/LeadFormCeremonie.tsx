@@ -209,7 +209,7 @@ export function LeadFormCeremonie() {
                 <button
                   type="button"
                   onClick={() =>
-                    field.onChange(Math.max(1, (field.value ?? 5) - 5))
+                    field.onChange(Math.max(1, (field.value ?? 1) - 1))
                   }
                   className={stepperBtnClass}
                   aria-label="Diminuer"
@@ -237,7 +237,9 @@ export function LeadFormCeremonie() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => field.onChange((field.value ?? 0) + 5)}
+                  onClick={() =>
+                    field.onChange(Math.min(2000, (field.value ?? 0) + 1))
+                  }
                   className={stepperBtnClass}
                   aria-label="Augmenter"
                 >
@@ -365,24 +367,25 @@ export function LeadFormCeremonie() {
                   </button>
                   <div className="flex flex-col items-center">
                     <input
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      value={field.value ?? 1}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                      value={field.value ?? ""}
+                      placeholder="—"
                       onChange={(e) => {
                         const v = parseInt(e.target.value, 10);
-                        field.onChange(!isNaN(v) && v >= 1 ? Math.min(v, 20) : 1);
+                        field.onChange(!isNaN(v) && v >= 1 ? Math.min(v, 4) : undefined);
                       }}
-                      className="w-20 bg-transparent text-center font-serif text-5xl font-semibold leading-none text-ink outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                      className="w-20 bg-transparent text-center font-serif text-5xl font-semibold leading-none text-ink outline-none placeholder:text-ink-subtle [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     />
                     <span className="mt-1 text-xs uppercase tracking-[0.14em] text-ink-subtle">
-                      {(field.value ?? 1) === 1 ? "appareil" : "appareils"}
+                      {field.value === 1 ? "appareil" : "appareils"}
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={() =>
-                      field.onChange(Math.min(20, (field.value ?? 1) + 1))
+                      field.onChange(Math.min(4, (field.value ?? 0) + 1))
                     }
                     className={stepperBtnClass}
                     aria-label="Augmenter"
