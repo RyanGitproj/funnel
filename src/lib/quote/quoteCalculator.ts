@@ -207,7 +207,11 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
           totalMax: priced.priceMax!,
         });
       } else {
-        const qty = priced.priceMode === "per_person" ? (guest_count ?? 22) : 1;
+        // En mode pack, les options per_person s'appliquent au nombre de personnes
+        // du pack (toujours 22), pas au guest_count saisi — évite l'incohérence
+        // base-22-pers vs options-18-pers quand l'utilisateur a modifié le champ.
+        const effectivePersons = pack?.persons ?? guest_count ?? 22;
+        const qty = priced.priceMode === "per_person" ? effectivePersons : 1;
         const total = priced.unitPrice! * qty;
         calculatedOptions.push({
           id: priced.id,
