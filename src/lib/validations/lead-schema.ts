@@ -40,7 +40,8 @@ const baseLeadFields = {
     .trim()
     .min(1, "Le numéro de téléphone est obligatoire.")
     .regex(phoneRegex, { message: "Le numéro de téléphone n'est pas valide." }),
-  event_date: z.string().trim().min(1, "Veuillez indiquer une date souhaitée."),
+  event_date: z.string().trim().min(1, "Veuillez indiquer une date de début."),
+  event_end_date: z.string().trim().min(1, "Veuillez indiquer une date de fin."),
   date_flexibility: requiredSelect(
     ["oui", "non", "a_definir"] as const,
     "Veuillez préciser si la date est flexible.",
@@ -84,16 +85,6 @@ export const festifEventTypeOptions = [
 ] as const;
 
 export const dateFlexibilityOptions = ["oui", "non", "a_definir"] as const;
-
-export const festifDurationOptions = [
-  "Journée",
-  "Soirée",
-  "Journée + soirée",
-  "Cocktail / réception",
-  "Dîner",
-  "Réception prolongée",
-  "À définir",
-] as const;
 
 /** TYPE A + options sur devis — incluses dans selected_options et dans le calcul ou le devis. */
 export const festifSelectedOptions = [
@@ -168,16 +159,6 @@ export const dateFlexibilityLabels: Record<
   a_definir: "À définir",
 };
 
-export const ceremonieFormatOptions = [
-  "Cérémonie seule",
-  "Cérémonie + cocktail",
-  "Cocktail + dîner",
-  "Dîner + soirée",
-  "Réception prolongée",
-  "Brunch du lendemain",
-  "À définir ensemble",
-] as const;
-
 export const ceremonieSelectedOptions = [
   "Tente / Barnum professionnel haut standing",
   "Plancher bois",
@@ -219,6 +200,11 @@ export const projectStageOptions = [
   "Je souhaite réserver rapidement",
 ] as const;
 
+function dateRangeIsValid(values: { event_date: string; event_end_date: string }) {
+  if (!values.event_date || !values.event_end_date) return true;
+  return values.event_end_date >= values.event_date;
+}
+
 // ─── Schemas ─────────────────────────────────────────────────────────────────
 
 export const festifLeadSchema = z
@@ -231,16 +217,16 @@ export const festifLeadSchema = z
       "Veuillez choisir un type d'événement.",
     ),
     guest_count: positiveInt,
-    duration: requiredSelect(
-      festifDurationOptions,
-      "Veuillez choisir une durée souhaitée.",
-    ),
     selected_options: z.array(z.enum(festifSelectedOptions)).optional(),
     activites_interest: z.array(z.enum(festifActivitesInterestOptions)).optional(),
     ambiance: optionalSelect(festifAmbianceOptions),
     festif_pack: optionalSelect(festifPackOptions),
   })
-  .strict();
+  .strict()
+  .refine(dateRangeIsValid, {
+    path: ["event_end_date"],
+    message: "La date de fin doit être égale ou postérieure à la date de début.",
+  });
 
 export const ceremonieLeadSchema = z
   .object({
@@ -252,15 +238,15 @@ export const ceremonieLeadSchema = z
       "Veuillez choisir un type de cérémonie.",
     ),
     guest_count: positiveInt,
-    ceremony_format: requiredSelect(
-      ceremonieFormatOptions,
-      "Veuillez choisir un format souhaité.",
-    ),
     selected_options: z.array(z.enum(ceremonieSelectedOptions)).optional(),
     ambiance: optionalSelect(ceremonieAmbianceOptions),
     heater_count: z.number().int().min(1).max(20).optional(),
   })
-  .strict();
+  .strict()
+  .refine(dateRangeIsValid, {
+    path: ["event_end_date"],
+    message: "La date de fin doit être égale ou postérieure à la date de début.",
+  });
 
 export type CeremonieLeadInput = z.infer<typeof ceremonieLeadSchema>;
 export type FestifLeadInput = z.infer<typeof festifLeadSchema>;

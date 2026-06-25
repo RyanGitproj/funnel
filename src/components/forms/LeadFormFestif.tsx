@@ -12,7 +12,6 @@ import {
   dateFlexibilityOptions,
   festifAmbianceOptions,
   festifActivitesInterestOptions,
-  festifDurationOptions,
   festifEventTypeOptions,
   festifLeadSchema,
   festifPackLabels,
@@ -116,8 +115,8 @@ const ACTIVITY_ICONS: Record<string, React.ReactElement> = {
 
 const STEP_FIELDS: (keyof FestifLeadInput)[][] = [
   ["event_type", "guest_count"],
-  ["event_date", "date_flexibility"],
-  ["duration"],
+  ["event_date", "event_end_date", "date_flexibility"],
+  [],
   ["budget_range", "project_stage"],
   ["first_name", "last_name", "email", "phone", "rgpd_consent"],
 ];
@@ -163,9 +162,9 @@ export function LeadFormFestif() {
       source_page: "/festif",
       event_type: undefined,
       event_date: "",
+      event_end_date: "",
       date_flexibility: undefined,
       guest_count: undefined,
-      duration: undefined,
       selected_options: [],
       activites_interest: [],
       ambiance: undefined,
@@ -223,7 +222,10 @@ export function LeadFormFestif() {
   const goNext = async () => {
     const fields = STEP_FIELDS[step - 1];
     if (!fields) return;
-    const valid = await trigger(fields as Parameters<typeof trigger>[0]);
+    const valid =
+      fields.length === 0
+        ? true
+        : await trigger(fields as Parameters<typeof trigger>[0]);
     if (valid) {
       scrollToForm();
       setStep((s) => s + 1);
@@ -351,7 +353,7 @@ export function LeadFormFestif() {
         {/* event_date — calendrier */}
         <div className="flex flex-col gap-3">
           <SectionQuestion required>
-            Pour quelle date envisagez-vous votre événement ?
+            Quelle serait la date de début ?
           </SectionQuestion>
           <Controller
             control={control}
@@ -363,6 +365,25 @@ export function LeadFormFestif() {
           {errors.event_date && (
             <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.event_date.message}
+            </p>
+          )}
+        </div>
+
+        {/* event_end_date — calendrier */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion required>
+            Quelle serait la date de fin ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="event_end_date"
+            render={({ field }) => (
+              <CalendarPicker value={field.value} onChange={field.onChange} />
+            )}
+          />
+          {errors.event_end_date && (
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
+              {errors.event_end_date.message}
             </p>
           )}
         </div>
@@ -396,30 +417,6 @@ export function LeadFormFestif() {
 
       {/* ── Étape 3 : Votre ambiance ── */}
       <div className={cn("flex flex-col gap-4", step !== 3 && "hidden")}>
-        {/* duration */}
-        <div className="flex flex-col gap-3">
-          <SectionQuestion required>
-            Quel format vous correspond le mieux ?
-          </SectionQuestion>
-          <Controller
-            control={control}
-            name="duration"
-            render={({ field }) => (
-              <CardSelect
-                options={festifDurationOptions}
-                value={field.value}
-                onChange={field.onChange}
-                cols={2}
-              />
-            )}
-          />
-          {errors.duration && (
-            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
-              {errors.duration.message}
-            </p>
-          )}
-        </div>
-
         {/* Pack Festif — sélection optionnelle */}
         <div className="flex flex-col gap-3">
           <SectionQuestion>

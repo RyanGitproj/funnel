@@ -23,11 +23,15 @@ export type QuoteStorageFields = {
   pricing_breakdown?: Record<string, unknown> | null;
 };
 
+export type CalculatedLeadFields = {
+  duration?: string | null;
+};
+
 /**
  * Payload envoyé à la couche d'accès aux données (lib/supabase/leads.ts).
  * Inclut les champs du formulaire + les champs de devis calculés.
  */
-export type LeadInsertPayload = LeadInput & QuoteStorageFields;
+export type LeadInsertPayload = LeadInput & QuoteStorageFields & CalculatedLeadFields;
 
 /**
  * Résultat typé d'une insertion — jamais d'exception, toujours un

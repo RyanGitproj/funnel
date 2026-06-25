@@ -10,7 +10,6 @@ import {
   budgetRangeOptions,
   ceremonieAmbianceOptions,
   ceremonieEventTypeOptions,
-  ceremonieFormatOptions,
   ceremonieLeadSchema,
   ceremonieSelectedOptions,
   dateFlexibilityLabels,
@@ -40,8 +39,8 @@ const FORM_ID = "lead-form-ceremonie";
 
 const STEP_FIELDS: (keyof CeremonieLeadInput)[][] = [
   ["event_type", "guest_count"],
-  ["event_date", "date_flexibility"],
-  ["ceremony_format"],
+  ["event_date", "event_end_date", "date_flexibility"],
+  [],
   ["budget_range", "project_stage"],
   ["first_name", "last_name", "email", "phone", "rgpd_consent"],
 ];
@@ -86,9 +85,9 @@ export function LeadFormCeremonie() {
       source_page: "/ceremonie",
       event_type: undefined,
       event_date: "",
+      event_end_date: "",
       date_flexibility: undefined,
       guest_count: undefined,
-      ceremony_format: undefined,
       selected_options: [],
       ambiance: undefined,
       heater_count: undefined,
@@ -129,7 +128,10 @@ export function LeadFormCeremonie() {
   const goNext = async () => {
     const fields = STEP_FIELDS[step - 1];
     if (!fields) return;
-    const valid = await trigger(fields as Parameters<typeof trigger>[0]);
+    const valid =
+      fields.length === 0
+        ? true
+        : await trigger(fields as Parameters<typeof trigger>[0]);
     if (valid) {
       scrollToForm();
       setStep((s) => s + 1);
@@ -257,7 +259,7 @@ export function LeadFormCeremonie() {
         {/* event_date — calendrier */}
         <div className="flex flex-col gap-3">
           <SectionQuestion required>
-            Pour quelle date envisagez-vous votre cérémonie ?
+            Quelle serait la date de début ?
           </SectionQuestion>
           <Controller
             control={control}
@@ -269,6 +271,25 @@ export function LeadFormCeremonie() {
           {errors.event_date && (
             <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.event_date.message}
+            </p>
+          )}
+        </div>
+
+        {/* event_end_date — calendrier */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion required>
+            Quelle serait la date de fin ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="event_end_date"
+            render={({ field }) => (
+              <CalendarPicker value={field.value} onChange={field.onChange} />
+            )}
+          />
+          {errors.event_end_date && (
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
+              {errors.event_end_date.message}
             </p>
           )}
         </div>
@@ -302,30 +323,6 @@ export function LeadFormCeremonie() {
 
       {/* ── Étape 3 : Votre réception ── */}
       <div className={cn("flex flex-col gap-4", step !== 3 && "hidden")}>
-        {/* ceremony_format */}
-        <div className="flex flex-col gap-3">
-          <SectionQuestion required>
-            Quel format ressemble le plus à votre idée ?
-          </SectionQuestion>
-          <Controller
-            control={control}
-            name="ceremony_format"
-            render={({ field }) => (
-              <CardSelect
-                options={ceremonieFormatOptions}
-                value={field.value}
-                onChange={field.onChange}
-                cols={2}
-              />
-            )}
-          />
-          {errors.ceremony_format && (
-            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
-              {errors.ceremony_format.message}
-            </p>
-          )}
-        </div>
-
         {/* selected_options */}
         <div className="flex flex-col gap-3">
           <SectionQuestion>

@@ -21,6 +21,15 @@ import {
 import { toStoragePayload } from "@/lib/quote/formatQuote";
 import type { ActionResult } from "@/types/lead";
 
+function getCalculatedDuration(startDate: string, endDate: string): string {
+  const start = new Date(`${startDate}T00:00:00`);
+  const end = new Date(`${endDate}T00:00:00`);
+  const diffMs = end.getTime() - start.getTime();
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
+
+  return days <= 1 ? "1 jour" : `${days} jours`;
+}
+
 async function rememberConfirmationQuote(quote: QuoteResult) {
   const cookieStore = await cookies();
 
@@ -61,6 +70,10 @@ export async function submitCeremonieLead(
 
   const result = await insertLead({
     ...normalizeEmptyToUndefined(parsed.data),
+    duration: getCalculatedDuration(
+      parsed.data.event_date,
+      parsed.data.event_end_date,
+    ),
     ...toStoragePayload(quote),
   });
 
@@ -96,6 +109,10 @@ export async function submitFestifLead(values: unknown): Promise<ActionResult> {
 
   const result = await insertLead({
     ...normalizeEmptyToUndefined(parsed.data),
+    duration: getCalculatedDuration(
+      parsed.data.event_date,
+      parsed.data.event_end_date,
+    ),
     ...toStoragePayload(quote),
   });
 
