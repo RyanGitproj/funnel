@@ -34,12 +34,12 @@ const baseLeadFields = {
     .string()
     .trim()
     .min(1, "L'adresse e-mail est obligatoire.")
-    .email({ message: "L'adresse e-mail n'est pas valide." }),
+    .email("L'adresse e-mail n'est pas valide."),
   phone: z
     .string()
     .trim()
     .min(1, "Le numéro de téléphone est obligatoire.")
-    .regex(phoneRegex, { message: "Le numéro de téléphone n'est pas valide." }),
+    .regex(phoneRegex, "Le numéro de téléphone n'est pas valide."),
   event_date: z.string().trim().min(1, "Veuillez indiquer une date de début."),
   date_flexibility: requiredSelect(
     ["oui", "non", "a_definir"] as const,
