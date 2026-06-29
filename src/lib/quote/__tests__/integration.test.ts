@@ -63,8 +63,7 @@ describe("Integration : pipeline quote → storage payload", () => {
     test("grille weekend_2_nuits 22 pers → payload avec pricingMode=grid", () => {
       const quote = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
-        guest_count: 22,
-        selected_options: [],
+        guest_count: 22
       });
       const payload = toStoragePayload(quote);
 
@@ -75,7 +74,7 @@ describe("Integration : pipeline quote → storage payload", () => {
     });
 
     test("hors barème → estimated_amount null (base=0)", () => {
-      const quote = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 5, selected_options: [] });
+      const quote = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 5 });
       const payload = toStoragePayload(quote);
 
       expect(payload.estimated_amount_min).toBeNull();
@@ -86,7 +85,7 @@ describe("Integration : pipeline quote → storage payload", () => {
       const quote = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 16,
-        selected_options: ["Brunch"],
+        repas_upgrade: "brunch_sucre_sale",
       });
       const payload = toStoragePayload(quote);
       const breakdown = payload.pricing_breakdown as Record<string, unknown>;
@@ -99,8 +98,7 @@ describe("Integration : pipeline quote → storage payload", () => {
     test("weekend_long_3_nuits → pricingMode=pending dans le breakdown", () => {
       const quote = computeFestifQuote({
         festif_duration: "weekend_long_3_nuits",
-        guest_count: 20,
-        selected_options: [],
+        guest_count: 20
       });
       const payload = toStoragePayload(quote);
       const breakdown = payload.pricing_breakdown as Record<string, unknown>;
@@ -113,8 +111,7 @@ describe("Integration : pipeline quote → storage payload", () => {
       const quote = computeFestifQuote({
         festif_duration: "semaine_1_nuit",
         guest_count: 22,
-        activites_interest: ["Combat de sumo", "Chasse au trésor"],
-        selected_options: [],
+        activites_interest: ["Combat de sumo", "Chasse au trésor"]
       });
       const payload = toStoragePayload(quote);
       const breakdown = payload.pricing_breakdown as Record<string, unknown>;
@@ -128,7 +125,7 @@ describe("Integration : pipeline quote → storage payload", () => {
       const quote = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: ["Brunch"],
+        repas_upgrade: "brunch_sucre_sale",
       });
       const payload = toStoragePayload(quote);
 
@@ -139,7 +136,7 @@ describe("Integration : pipeline quote → storage payload", () => {
   describe("Cohérence cross-univers", () => {
     test("quote_status toujours 'indicative'", () => {
       const qc = computeCeremonieQuote({ guest_count: 50, selected_options: [] });
-      const qf = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22, selected_options: [] });
+      const qf = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22 });
 
       expect(toStoragePayload(qc).quote_status).toBe("indicative");
       expect(toStoragePayload(qf).quote_status).toBe("indicative");
@@ -147,7 +144,7 @@ describe("Integration : pipeline quote → storage payload", () => {
 
     test("manual_review_required toujours true (validation humaine obligatoire)", () => {
       const qc = computeCeremonieQuote({ guest_count: 50, selected_options: [] });
-      const qf = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 12, selected_options: [] });
+      const qf = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 12 });
 
       expect(toStoragePayload(qc).manual_review_required).toBe(true);
       expect(toStoragePayload(qf).manual_review_required).toBe(true);

@@ -41,7 +41,6 @@ const baseLeadFields = {
     .min(1, "Le numéro de téléphone est obligatoire.")
     .regex(phoneRegex, { message: "Le numéro de téléphone n'est pas valide." }),
   event_date: z.string().trim().min(1, "Veuillez indiquer une date de début."),
-  event_end_date: z.string().trim().min(1, "Veuillez indiquer une date de fin."),
   date_flexibility: requiredSelect(
     ["oui", "non", "a_definir"] as const,
     "Veuillez préciser si la date est flexible.",
@@ -78,26 +77,10 @@ const baseLeadFields = {
 export const festifEventTypeOptions = [
   "EVJF",
   "EVG",
-  "Anniversaire",
-  "Fête entre amis",
-  "Pool party / Garden party",
-  "Autre",
+  "Anniversaire & week-end entre proches",
 ] as const;
 
 export const dateFlexibilityOptions = ["oui", "non", "a_definir"] as const;
-
-/** TYPE A + options sur devis — incluses dans selected_options et dans le calcul ou le devis. */
-export const festifSelectedOptions = [
-  "Tente / Barnum professionnel haut standing",
-  "DJ / musique",
-  "Petit-déjeuner",
-  "Brunch",
-  "Barbecue",
-  "Traiteur / chef",
-  "Navette",
-  "Sécurité",
-  "Décoration",
-] as const;
 
 /** TYPE B & C — Activités & Extras. Jamais dans le total. Stockées séparément. */
 export const festifActivitesInterestOptions = [
@@ -142,6 +125,12 @@ export const festifBuffetOptions = [
   "none",
   "buffet_traiteur",
   "apero_dinatoire",
+] as const;
+
+export const festifServiceCoursesOptions = [
+  "none",
+  "service_courses",
+  "plus_tard",
 ] as const;
 
 export const festifIntervenantOptions = [
@@ -242,19 +231,13 @@ export const projectStageOptions = [
   "Je souhaite réserver rapidement",
 ] as const;
 
-function dateRangeIsValid(values: { event_date: string; event_end_date: string }) {
-  if (!values.event_date || !values.event_end_date) return true;
-  return values.event_end_date >= values.event_date;
-}
-
 // ─── Schemas ─────────────────────────────────────────────────────────────────
 
 export const festifLeadSchema = z
   .object({
     ...baseLeadFields,
-    // event_date stocke une ou plusieurs dates (CSV ISO), event_end_date non utilisé dans ce funnel
+    // event_date stocke une ou plusieurs dates (CSV ISO)
     event_date: z.string().trim().min(1, "Veuillez sélectionner au moins une date."),
-    event_end_date: z.string().trim().optional().or(z.literal("")),
     funnel_type: z.literal("festif"),
     source_page: z.literal("/festif"),
     event_type: requiredSelect(
@@ -266,28 +249,40 @@ export const festifLeadSchema = z
       "Veuillez choisir une durée de séjour.",
     ),
     guest_count: positiveInt,
-    selected_options: z.array(z.enum(festifSelectedOptions)).optional(),
     activites_interest: z.array(z.enum(festifActivitesInterestOptions)).optional(),
     ambiance: optionalSelect(festifAmbianceOptions),
     // Phase 2
     loisirs_pack: optionalSelect(festifLoisirsPackOptions),
     repas_upgrade: optionalSelect(festifRepasOptions),
     buffet_choice: optionalSelect(festifBuffetOptions),
-    service_courses: z.boolean().optional().default(false),
+    service_courses: optionalSelect(festifServiceCoursesOptions).default("none"),
     intervenants: z.array(z.enum(festifIntervenantOptions)).optional().default([]),
     materiel: z.array(z.enum(festifMaterielOptions)).optional().default([]),
     dietary_notes: z.string().trim().max(500).optional().or(z.literal("")),
+    autre_intervenant_notes: z.string().trim().max(500).optional().or(z.literal("")),
     autre_materiel_notes: z.string().trim().max(500).optional().or(z.literal("")),
     cadeau_choice: optionalSelect(festifCadeauOptions),
   })
-  .strict();
+  .strict()
+  .superRefine((values, ctx) => {
+    if (
+      values.buffet_choice &&
+      values.buffet_choice !== "none" &&
+      !values.dietary_notes?.trim()
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["dietary_notes"],
+        message: "Veuillez préciser vos préférences alimentaires.",
+      });
+    }
+  });
 
 export const ceremonieLeadSchema = z
   .object({
     ...baseLeadFields,
-    // event_date stocke une ou plusieurs dates (CSV ISO), event_end_date non utilisé dans ce funnel
+    // event_date stocke une ou plusieurs dates (CSV ISO)
     event_date: z.string().trim().min(1, "Veuillez sélectionner au moins une date."),
-    event_end_date: z.string().trim().optional().or(z.literal("")),
     funnel_type: z.literal("ceremonie"),
     source_page: z.literal("/ceremonie"),
     event_type: requiredSelect(

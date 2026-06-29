@@ -133,6 +133,20 @@ function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
                   </p>
                 </div>
               ))}
+
+            {quote.cadeauChoiceLabel && (
+              <div className="flex items-start justify-between gap-5 border-b border-line pb-4">
+                <div>
+                  <p className="font-medium text-ink">Cadeau débloqué</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.14em] text-ink-subtle">
+                    Confirmé après réservation validée et acompte reçu
+                  </p>
+                </div>
+                <p className="shrink-0 text-right text-sm text-ink-muted">
+                  {quote.cadeauChoiceLabel}
+                </p>
+              </div>
+            )}
           </div>
 
           {!hasBase && !hasOptions && (
@@ -212,6 +226,14 @@ function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
                     {quote.guestCount - 22 > 1 ? "s" : ""} bivouac. Au-delà
                     de 22 personnes, des places bivouac peuvent être ajoutées en
                     tentes 4 personnes, avec matelas gonflable et duvet fournis.
+                  </p>
+                </div>
+              )}
+              {quote.guestCount !== undefined && quote.guestCount <= 22 && (
+                <div className="mt-4 flex items-start gap-3 text-sm text-ink-muted">
+                  <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-strong" aria-hidden />
+                  <p>
+                    22 couchages intérieurs maximum, lits doubles et lits simples confondus.
                   </p>
                 </div>
               )}

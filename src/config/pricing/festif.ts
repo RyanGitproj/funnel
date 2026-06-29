@@ -112,58 +112,6 @@ export const FESTIF_INCLUDED_DOMAIN_ITEMS = [
   { id: "karaoke_jeux", label: "Karaoké avec micro et jeux festifs" },
 ] as const;
 
-export type FestifPricedOption = {
-  id: string;
-  formLabel: string;
-  priceMode: "per_person" | "per_unit" | "flat_range";
-  unitPrice?: number;   // per_person / per_unit
-  unitLabel?: string;
-  priceMin?: number;    // flat_range
-  priceMax?: number;    // flat_range
-};
-
-/**
- * TYPE A — Options incluses dans le total estimatif automatique.
- * Conditions : prix connu + s'applique à TOUS les participants sans exception,
- * ou forfait fixe (flat_range) avec fourchette connue.
- */
-export const FESTIF_PRICED_OPTIONS: FestifPricedOption[] = [
-  {
-    id: "tente",
-    formLabel: "Tente / Barnum professionnel haut standing",
-    priceMode: "flat_range",
-    priceMin: 2500,
-    priceMax: 6000,
-  },
-  {
-    id: "petit_dejeuner",
-    formLabel: "Petit-déjeuner",
-    priceMode: "per_person",
-    unitPrice: 10,
-  },
-  {
-    id: "brunch",
-    formLabel: "Brunch",
-    priceMode: "per_person",
-    unitPrice: 20,
-  },
-];
-
-export type FestifManualOption = {
-  id: string;
-  formLabel: string;
-};
-
-/** Options festives sans prix connu — sur devis partenaire. Présentes dans selected_options. */
-export const FESTIF_MANUAL_OPTIONS: FestifManualOption[] = [
-  { id: "dj", formLabel: "DJ / musique" },
-  { id: "barbecue", formLabel: "Barbecue" },
-  { id: "traiteur", formLabel: "Traiteur / chef" },
-  { id: "navette", formLabel: "Navette" },
-  { id: "securite", formLabel: "Sécurité" },
-  { id: "decoration", formLabel: "Décoration" },
-];
-
 /**
  * TYPE B & C — Activités & Extras.
  * Jamais additionnées au total estimatif (nombre de participants réels inconnu
@@ -189,22 +137,6 @@ export const FESTIF_ACTIVITY_OPTIONS: FestifActivityOption[] = [
   { id: "activites_ext",   formLabel: "Activités extérieures" },
 ];
 
-export function getFestifOptionLabelById(id: string): string | undefined {
-  return (
-    FESTIF_PRICED_OPTIONS.find((option) => option.id === id)?.formLabel ??
-    FESTIF_MANUAL_OPTIONS.find((option) => option.id === id)?.formLabel ??
-    FESTIF_ACTIVITY_OPTIONS.find((option) => option.id === id)?.formLabel
-  );
-}
-
-export function getFestifOptionIdByLabel(label: string): string | undefined {
-  return (
-    FESTIF_PRICED_OPTIONS.find((option) => option.formLabel === label)?.id ??
-    FESTIF_MANUAL_OPTIONS.find((option) => option.formLabel === label)?.id ??
-    FESTIF_ACTIVITY_OPTIONS.find((option) => option.formLabel === label)?.id
-  );
-}
-
 // ─── Phase 2 — Packs loisirs conditionnels, repas, intervenants, matériel ────
 
 export type FestifLoisirsPackKey =
@@ -227,9 +159,7 @@ export function toEventTypeFestif(raw: string | undefined): EventTypeFestif {
   switch (raw) {
     case "EVJF": return "evjf";
     case "EVG": return "evg";
-    case "Anniversaire": return "anniversaire";
-    case "Week-end entre amis":
-    case "Fête privée": return "weekend_proches";
+    case "Anniversaire & week-end entre proches": return "anniversaire";
     default: return "other";
   }
 }
@@ -247,13 +177,13 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "evjf_chic_fun",
       label: "Pack EVJF Chic & Fun",
-      description: "Activités détente, piscine, spa & instants girly au Domaine.",
+      description: "Loisirs mis à disposition, sans encadrement. Le groupe organise librement ses activités.",
       pricePerPerson: 12,
     },
     {
       key: "evjf_pool_party",
       label: "Pack Pool Party",
-      description: "Ambiance festive autour de la piscine, accessoires fournis.",
+      description: "Loisirs pool party mis à disposition autour du Domaine, sans animateur inclus.",
       pricePerPerson: 12,
     },
     {
@@ -267,13 +197,13 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "evg_challenge",
       label: "Pack EVG Challenge",
-      description: "Défis collectifs, jeux de terrain, compétition entre amis.",
+      description: "Jeux et défis mis à disposition. Le groupe organise librement ses activités.",
       pricePerPerson: 12,
     },
     {
       key: "evg_casino_apero",
       label: "Pack Casino & Apéro",
-      description: "Tables de jeux, ambiance casino privé, apéritif préparé.",
+      description: "Ambiance casino et apéro en autonomie, sans encadrement inclus.",
       pricePerPerson: 12,
     },
     {
@@ -287,13 +217,13 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "anniversaire_signature",
       label: "Pack Anniversaire Signature",
-      description: "Décoration, mise en scène festive et accueil soigné pour le/la fêté(e).",
+      description: "Loisirs et attentions festives mis à disposition pour le groupe.",
       pricePerPerson: 12,
     },
     {
       key: "loisirs_convivial",
       label: "Pack Loisirs Convivial",
-      description: "Jeux extérieurs, accès pool & détente, ambiance conviviale.",
+      description: "Jeux extérieurs, piscine et détente en autonomie.",
       pricePerPerson: 12,
     },
     {
@@ -390,7 +320,7 @@ export const FESTIF_SERVICE_COURSES = {
   id: "service_courses",
   label: "Service courses installé",
   description:
-    "Notre équipe récupère votre drive, range vos courses au frais et prépare la cuisine avant votre arrivée. Les 25 € correspondent au service — le montant des courses reste à votre charge.",
+    "Gagnez du temps et arrivez l'esprit libre. Notre équipe récupère votre drive, range vos courses au frais et prépare la cuisine avant votre arrivée. Les 25 € correspondent au service — le montant des courses reste à votre charge.",
   priceFlatRate: 25,
 } as const;
 
@@ -439,7 +369,7 @@ export const FESTIF_INTERVENANTS: Record<
   },
   animation_adulte: {
     id: "animation_adulte",
-    label: "Animation privée adulte",
+    label: "Animation privée adulte sur demande",
     description:
       "Sur demande uniquement. Validation commerciale obligatoire. Groupe majeur, cadre privé, selon disponibilité.",
     priceFlat: 0,
@@ -473,7 +403,7 @@ export const FESTIF_MATERIEL: Record<
 
 export const FESTIF_CADEAU_OPTIONS = [
   { key: "massage_bien_etre", label: "Massage bien-être offert" },
-  { key: "massage_temoin", label: "Massage témoin / meilleure ami(e) offert" },
+  { key: "massage_temoin", label: "Massage témoin / meilleure amie / ami proche offert" },
   { key: "pack_celebration", label: "Pack célébration offert" },
 ] as const;
 

@@ -25,6 +25,7 @@ export function toStoragePayload(quote: QuoteResult): QuoteStoragePayload {
       manualReviewItems: quote.manualReviewItems,
       warnings: quote.warnings,
       displayLabel: quote.displayLabel,
+      cadeauChoiceLabel: quote.cadeauChoiceLabel,
     },
   };
 }

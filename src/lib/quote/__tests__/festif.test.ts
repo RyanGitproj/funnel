@@ -8,36 +8,36 @@ import {
 describe("computeFestifQuote", () => {
   describe("grille semaine_1_nuit", () => {
     test("12 pers (min) → 1 140 €, mode grid", () => {
-      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 12, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 12 });
       expect(q.baseAmountMin).toBe(1140);
       expect(q.baseAmountMax).toBe(1140);
       expect(q.pricingMode).toBe("grid");
     });
 
     test("22 pers → 1 738 €", () => {
-      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 22, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 22 });
       expect(q.baseAmountMin).toBe(1738);
     });
 
     test("23 pers (premier bivouac) → 1 813 €", () => {
-      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 23, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 23 });
       expect(q.baseAmountMin).toBe(1813);
     });
 
     test("34 pers (max) → 2 572 €", () => {
-      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 34, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 34 });
       expect(q.baseAmountMin).toBe(2572);
     });
 
     test("11 pers (< min=12) → baseAmountMin=0 + capacity_check", () => {
-      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 11, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 11 });
       expect(q.baseAmountMin).toBe(0);
       expect(q.warnings).toHaveLength(1);
       expect(q.manualReviewItems.some((m) => m.reason === "capacity_check")).toBe(true);
     });
 
     test("35 pers (> max=34) → baseAmountMin=0 + capacity_check", () => {
-      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 35, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 35 });
       expect(q.baseAmountMin).toBe(0);
       expect(q.manualReviewItems.some((m) => m.reason === "capacity_check")).toBe(true);
     });
@@ -45,22 +45,22 @@ describe("computeFestifQuote", () => {
 
   describe("grille weekend_2_nuits", () => {
     test("10 pers (min) → 2 800 €", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 10, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 10 });
       expect(q.baseAmountMin).toBe(2800);
     });
 
     test("22 pers → 4 840 €", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22 });
       expect(q.baseAmountMin).toBe(4840);
     });
 
     test("34 pers (max) → 6 970 €", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 34, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 34 });
       expect(q.baseAmountMin).toBe(6970);
     });
 
     test("9 pers (< min=10) → baseAmountMin=0 + capacity_check", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 9, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 9 });
       expect(q.baseAmountMin).toBe(0);
       expect(q.manualReviewItems.some((m) => m.reason === "capacity_check")).toBe(true);
     });
@@ -68,39 +68,39 @@ describe("computeFestifQuote", () => {
 
   describe("weekend_long_3_nuits (barème non validé)", () => {
     test("peu importe le nombre de pers → pricingMode=pending, base=0, duration_pending", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_long_3_nuits", guest_count: 20, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_long_3_nuits", guest_count: 20 });
       expect(q.pricingMode).toBe("pending");
       expect(q.baseAmountMin).toBe(0);
       expect(q.manualReviewItems.some((m) => m.reason === "duration_pending")).toBe(true);
     });
 
     test("sans guest_count → pricingMode=pending, base=0", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_long_3_nuits", selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_long_3_nuits" });
       expect(q.pricingMode).toBe("pending");
       expect(q.baseAmountMin).toBe(0);
     });
   });
 
-  describe("options per_person sur grille", () => {
-    test("weekend_2_nuits + 22 pers + Brunch → 4 840 + 440", () => {
+  describe("options repas sur grille", () => {
+    test("weekend_2_nuits + 22 pers + Brunch gourmand sucré ou salé → 4 840 + 440", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: ["Brunch"],
+        repas_upgrade: "brunch_sucre_sale",
       });
       expect(q.estimatedMin).toBe(4840 + 20 * 22);
-      const opt = q.calculatedOptions.find((o) => o.id === "brunch");
+      const opt = q.calculatedOptions.find((o) => o.id === "brunch_sucre_sale");
       expect(opt?.quantity).toBe(22);
       expect(opt?.totalMin).toBe(20 * 22);
     });
 
-    test("semaine_1_nuit + 14 pers + Petit-déjeuner → 1 274 + 140", () => {
+    test("semaine_1_nuit + 14 pers + Petit-déjeuner continental amélioré → 1 274 + 70", () => {
       const q = computeFestifQuote({
         festif_duration: "semaine_1_nuit",
         guest_count: 14,
-        selected_options: ["Petit-déjeuner"],
+        repas_upgrade: "petit_dejeuner_continental",
       });
-      expect(q.estimatedMin).toBe(1274 + 10 * 14);
+      expect(q.estimatedMin).toBe(1274 + 5 * 14);
     });
   });
 
@@ -110,7 +110,6 @@ describe("computeFestifQuote", () => {
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
         activites_interest: ["Combat de sumo", "Escape game apéro"],
-        selected_options: [],
       });
       expect(q.interestItems).toHaveLength(2);
       expect(q.estimatedMin).toBe(4840);
@@ -121,7 +120,6 @@ describe("computeFestifQuote", () => {
         festif_duration: "semaine_1_nuit",
         guest_count: 12,
         activites_interest: ["Combat de sumo"],
-        selected_options: [],
       });
       expect(q.interestItems[0]?.indicativePrice).toBe("150 € / jour");
     });
@@ -131,7 +129,6 @@ describe("computeFestifQuote", () => {
         festif_duration: "semaine_1_nuit",
         guest_count: 12,
         activites_interest: ["Escape game apéro"],
-        selected_options: [],
       });
       expect(q.interestItems[0]?.indicativePrice).toBe("25 € / pers.");
     });
@@ -141,21 +138,8 @@ describe("computeFestifQuote", () => {
         festif_duration: "semaine_1_nuit",
         guest_count: 12,
         activites_interest: ["Table de casino"],
-        selected_options: [],
       });
       expect(q.interestItems[0]?.indicativePrice).toBeUndefined();
-    });
-  });
-
-  describe("options sur devis (manual)", () => {
-    test("DJ → manualReviewItems, total inchangé", () => {
-      const q = computeFestifQuote({
-        festif_duration: "weekend_2_nuits",
-        guest_count: 22,
-        selected_options: ["DJ / musique"],
-      });
-      expect(q.estimatedMin).toBe(4840);
-      expect(q.manualReviewItems.some((m) => m.id === "dj")).toBe(true);
     });
   });
 
@@ -168,14 +152,8 @@ describe("computeFestifQuote", () => {
     test("'EVG' → 'evg'", () => {
       expect(toEventTypeFestif("EVG")).toBe("evg");
     });
-    test("'Anniversaire' → 'anniversaire'", () => {
-      expect(toEventTypeFestif("Anniversaire")).toBe("anniversaire");
-    });
-    test("'Week-end entre amis' → 'weekend_proches'", () => {
-      expect(toEventTypeFestif("Week-end entre amis")).toBe("weekend_proches");
-    });
-    test("'Fête privée' → 'weekend_proches'", () => {
-      expect(toEventTypeFestif("Fête privée")).toBe("weekend_proches");
+    test("'Anniversaire & week-end entre proches' → 'anniversaire'", () => {
+      expect(toEventTypeFestif("Anniversaire & week-end entre proches")).toBe("anniversaire");
     });
     test("undefined → 'other'", () => {
       expect(toEventTypeFestif(undefined)).toBe("other");
@@ -211,15 +189,15 @@ describe("computeFestifQuote", () => {
 
   describe("cadeauEligible via computeFestifQuote", () => {
     test("weekend_2_nuits + 22 pers (≥20) → cadeauEligible = true", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22 });
       expect(q.cadeauEligible).toBe(true);
     });
     test("weekend_2_nuits + 10 pers, total < 4500 → cadeauEligible = false", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 10, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 10 });
       expect(q.cadeauEligible).toBe(false);
     });
     test("semaine_1_nuit + 34 pers → cadeauEligible = false (mauvaise durée)", () => {
-      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 34, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 34 });
       expect(q.cadeauEligible).toBe(false);
     });
   });
@@ -229,7 +207,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 20,
-        selected_options: [],
         loisirs_pack: "evjf_chic_fun",
       });
       const opt = q.calculatedOptions.find((o) => o.id === "evjf_chic_fun");
@@ -241,7 +218,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 20,
-        selected_options: [],
         loisirs_pack: "loisirs_domaine_only",
       });
       expect(q.calculatedOptions.find((o) => o.id === "loisirs_domaine_only")).toBeUndefined();
@@ -253,7 +229,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "semaine_1_nuit",
         guest_count: 15,
-        selected_options: [],
         repas_upgrade: "brunch_sucre_sale",
       });
       const opt = q.calculatedOptions.find((o) => o.id === "brunch_sucre_sale");
@@ -264,7 +239,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 20,
-        selected_options: [],
         repas_upgrade: "none",
       });
       expect(q.calculatedOptions.find((o) => o.id === "brunch_sucre_sale" || o.id === "brunch_complet")).toBeUndefined();
@@ -276,7 +250,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 10,
-        selected_options: [],
         buffet_choice: "buffet_traiteur",
       });
       const opt = q.calculatedOptions.find((o) => o.id === "buffet_traiteur");
@@ -288,7 +261,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: [],
         buffet_choice: "apero_dinatoire",
       });
       const opt = q.calculatedOptions.find((o) => o.id === "apero_dinatoire");
@@ -297,24 +269,22 @@ describe("computeFestifQuote", () => {
   });
 
   describe("service_courses (forfait fixe)", () => {
-    test("service_courses: true → +25€ fixe", () => {
+    test("service_courses choisi → +25€ fixe", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: [],
-        service_courses: true,
+        service_courses: "service_courses",
       });
       const opt = q.calculatedOptions.find((o) => o.id === "service_courses");
       expect(opt?.totalMin).toBe(25);
       expect(opt?.quantity).toBe(1);
     });
 
-    test("service_courses: false → aucun CalculatedOption ajouté", () => {
+    test("service_courses none → aucun CalculatedOption ajouté", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: [],
-        service_courses: false,
+        service_courses: "none",
       });
       expect(q.calculatedOptions.find((o) => o.id === "service_courses")).toBeUndefined();
     });
@@ -325,7 +295,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: [],
         intervenants: ["dj_son_lumiere"],
       });
       const opt = q.calculatedOptions.find((o) => o.id === "dj_son_lumiere");
@@ -336,7 +305,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: [],
         intervenants: ["cracheur_de_feu"],
       });
       const opt = q.calculatedOptions.find((o) => o.id === "cracheur_de_feu");
@@ -344,11 +312,10 @@ describe("computeFestifQuote", () => {
     });
 
     test("animation_adulte → manualReviewItem (reason='intervenant_on_demand'), total inchangé", () => {
-      const baseQ = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22, selected_options: [] });
+      const baseQ = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22 });
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: [],
         intervenants: ["animation_adulte"],
       });
       expect(q.estimatedMin).toBe(baseQ.estimatedMin);
@@ -360,7 +327,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: [],
         intervenants: ["dj_son_lumiere", "bien_etre_energie", "animation_adulte"],
       });
       expect(q.calculatedOptions.filter((o) => ["dj_son_lumiere", "bien_etre_energie"].includes(o.id))).toHaveLength(2);
@@ -373,7 +339,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: [],
         materiel: ["tente_barnum"],
       });
       const opt = q.calculatedOptions.find((o) => o.id === "tente_barnum");
@@ -384,7 +349,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: [],
         materiel: ["tables_chaises"],
       });
       const opt = q.calculatedOptions.find((o) => o.id === "tables_chaises");
@@ -395,7 +359,6 @@ describe("computeFestifQuote", () => {
       const q = computeFestifQuote({
         festif_duration: "weekend_2_nuits",
         guest_count: 22,
-        selected_options: [],
         materiel: ["tente_barnum", "tables_chaises"],
       });
       const materielTotal = q.calculatedOptions
@@ -407,33 +370,33 @@ describe("computeFestifQuote", () => {
 
   describe("guestCount dans QuoteResult", () => {
     test("guestCount propagé dans le résultat", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22 });
       expect(q.guestCount).toBe(22);
     });
     test("sans guest_count → guestCount undefined", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits" });
       expect(q.guestCount).toBeUndefined();
     });
   });
 
   describe("displayLabel", () => {
     test("sans durée ni guest_count → 'À définir'", () => {
-      const q = computeFestifQuote({ selected_options: [] });
+      const q = computeFestifQuote({});
       expect(q.displayLabel).toBe("À définir");
     });
 
     test("durée sans guest_count → 'À définir'", () => {
-      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit" });
       expect(q.displayLabel).toBe("À définir");
     });
 
     test("durée + guest_count valide → displayLabel contient €", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22 });
       expect(q.displayLabel).toContain("€");
     });
 
     test("weekend_long_3_nuits → 'À définir'", () => {
-      const q = computeFestifQuote({ festif_duration: "weekend_long_3_nuits", guest_count: 20, selected_options: [] });
+      const q = computeFestifQuote({ festif_duration: "weekend_long_3_nuits", guest_count: 20 });
       expect(q.displayLabel).toBe("À définir");
     });
   });

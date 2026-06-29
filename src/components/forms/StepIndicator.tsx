@@ -13,14 +13,16 @@ const BASE_LABELS = [
 
 interface StepIndicatorProps {
   current: number;
+  labels?: readonly string[];
   step3Label?: string;
 }
 
 export function StepIndicator({
   current,
+  labels: customLabels,
   step3Label = "Votre réception",
 }: StepIndicatorProps) {
-  const labels = [
+  const labels = customLabels ?? [
     BASE_LABELS[0],
     BASE_LABELS[1],
     step3Label,
@@ -29,7 +31,7 @@ export function StepIndicator({
   ];
 
   return (
-    <div className="flex items-start" aria-label={`Étape ${current} sur 5`}>
+    <div className="flex items-start" aria-label={`Étape ${current} sur ${labels.length}`}>
       {labels.map((label, i) => {
         const n = i + 1;
         const done = n < current;

@@ -116,6 +116,12 @@ export function QuotePreview({
       )}
 
       {/* Message bivouac */}
+      {isFestif && gc !== undefined && gc <= 22 && (
+        <p className="mt-2 text-xs leading-relaxed text-ink-muted">
+          22 couchages intérieurs maximum, lits doubles et lits simples confondus.
+        </p>
+      )}
+
       {isFestif && gc !== undefined && gc > 22 && (
         <p className="mt-2 text-xs leading-relaxed text-ink-muted">
           22 couchages intérieurs + {gc - 22} place{gc - 22 > 1 ? "s" : ""} bivouac.
@@ -128,6 +134,13 @@ export function QuotePreview({
         <p className="mt-3 text-xs leading-relaxed text-ink-subtle">
           <span className="font-medium">Sur devis partenaire :</span>{" "}
           {surDevisItems.map((i) => i.label).join(", ")}
+        </p>
+      )}
+
+      {isFestif && quote.cadeauChoiceLabel && (
+        <p className="mt-3 text-xs leading-relaxed text-ink-muted">
+          <span className="font-medium">Cadeau débloqué :</span>{" "}
+          {quote.cadeauChoiceLabel}
         </p>
       )}
 

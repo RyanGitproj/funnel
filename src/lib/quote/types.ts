@@ -57,4 +57,6 @@ export type QuoteResult = {
   guestCount?: number;
   /** Festif only — true si le cadeau de réservation est éligible. */
   cadeauEligible?: boolean;
+  /** Festif only — cadeau choisi si le groupe est éligible. */
+  cadeauChoiceLabel?: string;
 };

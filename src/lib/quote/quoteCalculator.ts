@@ -8,12 +8,11 @@ import {
 import {
   FESTIF_ACTIVITY_OPTIONS,
   FESTIF_BUFFET_OPTIONS,
+  FESTIF_CADEAU_OPTIONS,
   FESTIF_DURATION_CAPACITY,
   FESTIF_INCLUDED_DOMAIN_ITEMS,
   FESTIF_INTERVENANTS,
-  FESTIF_MANUAL_OPTIONS,
   FESTIF_MATERIEL,
-  FESTIF_PRICED_OPTIONS,
   FESTIF_REPAS_OPTIONS,
   FESTIF_SERVICE_COURSES,
   getFestifDurationRate,
@@ -32,7 +31,7 @@ import type {
 } from "./types";
 
 const DISCLAIMER =
-  "Estimation indicative avant validation commerciale, disponibilité, configuration et confirmation partenaire.";
+  "Estimation indicative avant validation de la date, des disponibilités, de la configuration, des options et des prestations partenaires.";
 
 function formatEur(amount: number): string {
   return new Intl.NumberFormat("fr-FR", {
@@ -130,7 +129,6 @@ export function computeCeremonieQuote(input: CeremonieQuoteInput): QuoteResult {
 export type FestifQuoteInput = {
   // Phase 1
   guest_count?: number;
-  selected_options?: string[];
   activites_interest?: string[];
   festif_duration?: FestifDuration;
   // Phase 2
@@ -138,15 +136,15 @@ export type FestifQuoteInput = {
   loisirs_pack?: string;
   repas_upgrade?: string;
   buffet_choice?: string;
-  service_courses?: boolean;
+  service_courses?: string;
   intervenants?: string[];
   materiel?: string[];
+  cadeau_choice?: string;
 };
 
 export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
   const {
     guest_count,
-    selected_options = [],
     activites_interest = [],
     festif_duration,
   } = input;
@@ -186,46 +184,6 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
         baseAmountMin = rate.total;
         baseAmountMax = rate.total;
       }
-    }
-  }
-
-  for (const optLabel of selected_options) {
-    const priced = FESTIF_PRICED_OPTIONS.find((p) => p.formLabel === optLabel);
-
-    if (priced) {
-      if (priced.priceMode === "flat_range") {
-        calculatedOptions.push({
-          id: priced.id,
-          label: priced.formLabel,
-          quantity: 1,
-          unitPriceMin: priced.priceMin!,
-          unitPriceMax: priced.priceMax!,
-          totalMin: priced.priceMin!,
-          totalMax: priced.priceMax!,
-        });
-      } else {
-        const qty = priced.priceMode === "per_person" ? (guest_count ?? 0) : 1;
-        const total = priced.unitPrice! * qty;
-        calculatedOptions.push({
-          id: priced.id,
-          label: priced.formLabel,
-          quantity: qty,
-          unitPriceMin: priced.unitPrice!,
-          unitPriceMax: priced.unitPrice!,
-          totalMin: total,
-          totalMax: total,
-        });
-      }
-      continue;
-    }
-
-    const manual = FESTIF_MANUAL_OPTIONS.find((m) => m.formLabel === optLabel);
-    if (manual) {
-      manualReviewItems.push({
-        id: manual.id,
-        label: manual.formLabel,
-        reason: "sur_devis",
-      });
     }
   }
 
@@ -283,7 +241,7 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
   }
 
   // Service courses (forfait fixe)
-  if (input.service_courses) {
+  if (input.service_courses === "service_courses") {
     calculatedOptions.push({
       id: FESTIF_SERVICE_COURSES.id,
       label: FESTIF_SERVICE_COURSES.label,
@@ -342,6 +300,10 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
   const estimatedMax = baseAmountMax + optionsMax;
 
   const cadeauEligible = isCadeauEligible(festif_duration, guest_count, estimatedMin);
+  const cadeauChoiceLabel =
+    cadeauEligible && input.cadeau_choice
+      ? FESTIF_CADEAU_OPTIONS.find((option) => option.key === input.cadeau_choice)?.label
+      : undefined;
 
   const displayLabel = baseAmountMin === 0 ? "À définir" : formatRange(estimatedMin, estimatedMax);
 
@@ -378,5 +340,6 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
     disclaimer: DISCLAIMER,
     guestCount: guest_count,
     cadeauEligible,
+    cadeauChoiceLabel,
   };
 }

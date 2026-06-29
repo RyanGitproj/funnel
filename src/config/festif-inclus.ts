@@ -9,7 +9,7 @@ export const INCLUS_DOMAINE = [
   "Pétanque",
   "Grands espaces extérieurs",
   "Chevaux à proximité",
-  "Cadre isolé, sans nuisance directe",
+  "Cadre isolé pensé pour profiter sans nuisance directe",
   "Petit-déjeuner essentiel inclus",
   "Nettoyage inclus",
   "Couchages selon configuration",

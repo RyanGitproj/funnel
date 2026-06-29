@@ -85,7 +85,6 @@ export function LeadFormCeremonie() {
       source_page: "/ceremonie",
       event_type: undefined,
       event_date: "",
-      event_end_date: "",
       date_flexibility: undefined,
       guest_count: undefined,
       selected_options: [],

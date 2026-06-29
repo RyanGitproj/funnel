@@ -15,7 +15,6 @@ import {
   festifDurationOptions,
   festifEventTypeOptions,
   festifLeadSchema,
-  festifSelectedOptions,
   projectStageOptions,
   type FestifLeadFormValues,
   type FestifLeadInput,
@@ -39,7 +38,6 @@ import {
   PhoneInputInner,
   CardSelect,
   IconCardSelect,
-  MultiCardSelect,
   PillSelect,
   CalendarPicker,
   RichCardSelect,
@@ -52,7 +50,15 @@ import { QuotePreview } from "./QuotePreview";
 import { computeFestifQuote } from "@/lib/quote/quoteCalculator";
 
 const FORM_ID = "lead-form-festif";
-const LAST_OPTIONS_STEP = 3;
+const LAST_OPTIONS_STEP = 4;
+const FESTIF_STEP_LABELS = [
+  "Votre moment",
+  "Votre formule",
+  "Votre date",
+  "Votre ambiance",
+  "Votre projet",
+  "Vos coordonnées",
+] as const;
 
 const ACTIVITY_ICONS: Record<string, React.ReactElement> = {
   "Combat de sumo": (
@@ -124,9 +130,10 @@ const ACTIVITY_ICONS: Record<string, React.ReactElement> = {
 };
 
 const STEP_FIELDS: (keyof FestifLeadFormValues)[][] = [
-  ["event_type", "festif_duration", "guest_count"],
+  ["event_type", "guest_count"],
+  ["festif_duration"],
   ["event_date", "date_flexibility"],
-  [],
+  ["buffet_choice", "dietary_notes"],
   ["budget_range", "project_stage"],
   ["first_name", "last_name", "email", "phone", "rgpd_consent"],
 ];
@@ -138,14 +145,14 @@ const FESTIF_DURATION_CARDS = [
     label: "Offre semaine — 1 nuit",
     priceHighlight: "Dès 95 € / personne",
     priceGolden: true,
-    description: "Petit-déjeuner essentiel + nettoyage inclus.",
+    description: "Une nuit privée au Domaine, petit-déjeuner essentiel et nettoyage inclus, à un tarif exclusif en semaine.",
     conditions: "Du lundi au jeudi · Hors vacances scolaires · Hors jours fériés · Minimum 12 personnes · Selon disponibilité.",
     note: "Même hors période classique, vous pouvez demander une disponibilité — l'équipe confirmera si l'offre peut être appliquée.",
   },
   {
     value: "weekend_2_nuits" as const,
     label: "Week-end — 2 nuits",
-    priceHighlight: "À partir de 205 € / personne",
+    priceHighlight: "À partir de 205 € / personne en groupe complet",
     priceGolden: false,
     description: "Petit-déjeuner essentiel + nettoyage inclus. Format principal du Domaine.",
     note: "Le prix affiché correspond au groupe complet (34 pers.). Le compteur s'ajuste automatiquement au nombre réel de participants.",
@@ -201,10 +208,8 @@ export function LeadFormFestif() {
       source_page: "/festif",
       event_type: undefined,
       event_date: "",
-      event_end_date: "",
       date_flexibility: undefined,
       guest_count: undefined,
-      selected_options: [],
       activites_interest: [],
       ambiance: undefined,
       festif_duration: undefined,
@@ -221,10 +226,11 @@ export function LeadFormFestif() {
       loisirs_pack: undefined,
       repas_upgrade: undefined,
       buffet_choice: undefined,
-      service_courses: false,
+      service_courses: "none",
       intervenants: [],
       materiel: [],
       dietary_notes: "",
+      autre_intervenant_notes: "",
       autre_materiel_notes: "",
       cadeau_choice: undefined,
     },
@@ -232,7 +238,6 @@ export function LeadFormFestif() {
 
   const phoneValue = useWatch({ control, name: "phone", defaultValue: "" });
   const guestCount = useWatch({ control, name: "guest_count" });
-  const selectedOptions = useWatch({ control, name: "selected_options", defaultValue: [] });
   const activitesInterest = useWatch({ control, name: "activites_interest", defaultValue: [] });
   const festifDuration = useWatch({ control, name: "festif_duration" });
   // Phase 2
@@ -243,6 +248,7 @@ export function LeadFormFestif() {
   const serviceCourses = useWatch({ control, name: "service_courses" });
   const intervenants = useWatch({ control, name: "intervenants", defaultValue: [] });
   const materiel = useWatch({ control, name: "materiel", defaultValue: [] });
+  const cadeauChoice = useWatch({ control, name: "cadeau_choice" });
 
   // Réinitialiser loisirs_pack si event_type change
   React.useEffect(() => {
@@ -251,25 +257,25 @@ export function LeadFormFestif() {
 
   const quote = React.useMemo(
     () =>
-      festifDuration !== undefined
+          festifDuration !== undefined
         ? computeFestifQuote({
             guest_count: guestCount,
-            selected_options: selectedOptions ?? [],
             activites_interest: activitesInterest ?? [],
             festif_duration: festifDuration,
             event_type: eventType,
             loisirs_pack: loisirsPackVal ?? undefined,
             repas_upgrade: repasUpgrade ?? undefined,
             buffet_choice: buffetChoice ?? undefined,
-            service_courses: serviceCourses ?? false,
+            service_courses: serviceCourses ?? "none",
             intervenants: intervenants ?? [],
             materiel: materiel ?? [],
+            cadeau_choice: cadeauChoice ?? undefined,
           })
         : null,
     [
-      festifDuration, guestCount, selectedOptions, activitesInterest,
+      festifDuration, guestCount, activitesInterest,
       eventType, loisirsPackVal, repasUpgrade, buffetChoice,
-      serviceCourses, intervenants, materiel,
+      serviceCourses, intervenants, materiel, cadeauChoice,
     ],
   );
 
@@ -330,7 +336,7 @@ export function LeadFormFestif() {
       <input type="hidden" {...register("funnel_type")} value="festif" />
       <input type="hidden" {...register("source_page")} value="/festif" />
 
-      <StepIndicator current={step} step3Label="Votre ambiance" />
+      <StepIndicator current={step} labels={FESTIF_STEP_LABELS} />
 
       {/* ── Étape 1 : Votre événement ── */}
       <div className={cn("flex flex-col gap-4", step !== 1 && "hidden")}>
@@ -354,64 +360,6 @@ export function LeadFormFestif() {
           {errors.event_type && (
             <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.event_type.message}
-            </p>
-          )}
-        </div>
-
-        {/* festif_duration — cartes enrichies */}
-        <div className="flex flex-col gap-3">
-          <SectionQuestion required>
-            Quelle durée souhaitez-vous ?
-          </SectionQuestion>
-          <Controller
-            control={control}
-            name="festif_duration"
-            render={({ field }) => (
-              <div className="flex flex-col gap-2">
-                {FESTIF_DURATION_CARDS.map((card) => {
-                  const selected = field.value === card.value;
-                  return (
-                    <button
-                      key={card.value}
-                      type="button"
-                      onClick={() => field.onChange(card.value)}
-                      className={cn(
-                        "flex flex-col items-start gap-1 rounded-[var(--radius-md)] border-2 px-4 py-3 text-left transition-all duration-150 cursor-pointer select-none active:scale-[0.99]",
-                        selected
-                          ? "border-accent bg-accent/[0.12] shadow-[0_0_22px_var(--card-glow)]"
-                          : "border-line bg-surface-elevated hover:border-accent/50 hover:scale-[1.01]",
-                      )}
-                    >
-                      <div className="flex w-full items-center justify-between gap-2">
-                        <span className="text-sm font-semibold text-ink">{card.label}</span>
-                        <span className={cn("text-sm font-bold", card.priceGolden && "price-golden-pulse")}>
-                          {card.priceHighlight}
-                        </span>
-                      </div>
-                      {card.description && (
-                        <span className="text-xs leading-relaxed text-ink-muted">
-                          {card.description}
-                        </span>
-                      )}
-                      {card.conditions && (
-                        <span className="text-[10px] leading-relaxed text-ink-subtle">
-                          {card.conditions}
-                        </span>
-                      )}
-                      {card.note && (
-                        <span className="text-[10px] italic leading-relaxed text-ink-subtle opacity-80">
-                          {card.note}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          />
-          {errors.festif_duration && (
-            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
-              {errors.festif_duration.message}
             </p>
           )}
         </div>
@@ -474,6 +422,72 @@ export function LeadFormFestif() {
             </p>
           )}
         </div>
+      </div>
+
+      {/* ── Étape 2 : Votre formule ── */}
+      <div className={cn("flex flex-col gap-4", step !== 2 && "hidden")}>
+        {/* festif_duration — cartes enrichies */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion required>
+            Quelle durée souhaitez-vous ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="festif_duration"
+            render={({ field }) => (
+              <div className="flex flex-col gap-2">
+                {FESTIF_DURATION_CARDS.map((card) => {
+                  const selected = field.value === card.value;
+                  return (
+                    <button
+                      key={card.value}
+                      type="button"
+                      onClick={() => field.onChange(card.value)}
+                      className={cn(
+                        "flex flex-col items-start gap-1 rounded-[var(--radius-md)] border-2 px-4 py-3 text-left transition-all duration-150 cursor-pointer select-none active:scale-[0.99]",
+                        selected
+                          ? "border-accent bg-accent/[0.12] shadow-[0_0_22px_var(--card-glow)]"
+                          : "border-line bg-surface-elevated hover:border-accent/50 hover:scale-[1.01]",
+                      )}
+                    >
+                      <div className="flex w-full items-center justify-between gap-2">
+                        <span className="text-sm font-semibold text-ink">{card.label}</span>
+                        <span
+                          className={cn(
+                            "text-right text-xs font-bold leading-snug text-accent-strong sm:text-sm",
+                            card.priceGolden && "price-golden-pulse",
+                          )}
+                        >
+                          {card.priceHighlight}
+                        </span>
+                      </div>
+                      {card.description && (
+                        <span className="text-xs leading-relaxed text-ink-muted">
+                          {card.description}
+                        </span>
+                      )}
+                      {card.conditions && (
+                        <span className="text-[10px] leading-relaxed text-ink-subtle">
+                          {card.conditions}
+                        </span>
+                      )}
+                      {card.note && (
+                        <span className="text-[10px] italic leading-relaxed text-ink-subtle opacity-80">
+                          {card.note}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          />
+          {errors.festif_duration && (
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
+              {errors.festif_duration.message}
+            </p>
+          )}
+        </div>
 
         {/* Packs loisirs — conditionnel sur event_type */}
         {eventType && (
@@ -500,8 +514,8 @@ export function LeadFormFestif() {
         )}
       </div>
 
-      {/* ── Étape 2 : Votre date ── */}
-      <div className={cn("flex flex-col gap-4", step !== 2 && "hidden")}>
+      {/* ── Étape 3 : Votre date ── */}
+      <div className={cn("flex flex-col gap-4", step !== 3 && "hidden")}>
         <div className="flex flex-col gap-3">
           <SectionQuestion required>
             Quelles sont vos dates envisagées ?
@@ -550,8 +564,8 @@ export function LeadFormFestif() {
         </div>
       </div>
 
-      {/* ── Étape 3 : Votre ambiance & options ── */}
-      <div className={cn("flex flex-col gap-6", step !== 3 && "hidden")}>
+      {/* ── Étape 4 : Votre ambiance & options ── */}
+      <div className={cn("flex flex-col gap-6", step !== 4 && "hidden")}>
         {/* ambiance */}
         <div className="flex flex-col gap-3">
           <SectionQuestion>
@@ -571,30 +585,10 @@ export function LeadFormFestif() {
           />
         </div>
 
-        {/* selected_options */}
-        <div className="flex flex-col gap-3">
-          <SectionQuestion>
-            Quelles expériences vous intéressent ?
-          </SectionQuestion>
-          <Controller
-            control={control}
-            name="selected_options"
-            render={({ field }) => (
-              <MultiCardSelect
-                options={festifSelectedOptions}
-                value={field.value}
-                onChange={field.onChange}
-                cols={3}
-                disabledOptions={[]}
-              />
-            )}
-          />
-        </div>
-
         {/* Repas upgrade */}
         <div className="flex flex-col gap-3">
           <SectionQuestion>
-            Souhaitez-vous améliorer votre petit-déjeuner ?
+            Souhaitez-vous améliorer votre petit-déjeuner ou ajouter un repas ?
           </SectionQuestion>
           <p className="text-xs leading-relaxed text-ink-subtle">
             Le petit-déjeuner essentiel (baguette, beurre, confiture, café, chocolat chaud,
@@ -671,8 +665,13 @@ export function LeadFormFestif() {
           {buffetChoice && buffetChoice !== "none" && (
             <FormField
               id="f-dietary-notes"
-              label="Précisez votre demande (facultatif)"
+              label="Précisez votre demande"
+              required
+              error={errors.dietary_notes?.message}
             >
+              <p className="mb-2 text-xs leading-relaxed text-ink-subtle">
+                Indiquez vos préférences alimentaires pour que l'équipe puisse vous orienter rapidement.
+              </p>
               <textarea
                 rows={3}
                 className={fieldBaseClass}
@@ -694,16 +693,17 @@ export function LeadFormFestif() {
             render={({ field }) => (
               <RichCardSelect
                 options={[
-                  { value: "false", label: "Pas pour le moment" },
+                  { value: "none", label: "Pas pour le moment" },
                   {
-                    value: "true",
+                    value: "service_courses",
                     label: FESTIF_SERVICE_COURSES.label,
                     description: FESTIF_SERVICE_COURSES.description,
                     badge: `${FESTIF_SERVICE_COURSES.priceFlatRate} €`,
                   },
+                  { value: "plus_tard", label: "Je préciserai plus tard" },
                 ]}
-                value={field.value ? "true" : "false"}
-                onChange={(val) => field.onChange(val === "true")}
+                value={field.value ?? "none"}
+                onChange={field.onChange}
               />
             )}
           />
@@ -759,6 +759,17 @@ export function LeadFormFestif() {
               />
             )}
           />
+          <FormField
+            id="f-autre-intervenant"
+            label="Autre intervenant souhaité (facultatif)"
+          >
+            <textarea
+              rows={2}
+              className={fieldBaseClass}
+              placeholder="Décrivez l'intervenant souhaité…"
+              {...register("autre_intervenant_notes")}
+            />
+          </FormField>
         </div>
 
         {/* Matériel complémentaire */}
@@ -917,8 +928,8 @@ export function LeadFormFestif() {
         <QuotePreview quote={quote} guestCount={guestCount} />
       </div>
 
-      {/* ── Étape 4 : Budget & timing ── */}
-      <div className={cn("flex flex-col gap-4", step !== 4 && "hidden")}>
+      {/* ── Étape 5 : Budget & timing ── */}
+      <div className={cn("flex flex-col gap-4", step !== 5 && "hidden")}>
         <QuotePreview quote={quote} guestCount={guestCount} />
 
         <div className="flex flex-col gap-3">
@@ -981,8 +992,8 @@ export function LeadFormFestif() {
         </FormField>
       </div>
 
-      {/* ── Étape 5 : Vos coordonnées ── */}
-      <div className={cn("flex flex-col gap-4", step !== 5 && "hidden")}>
+      {/* ── Étape 6 : Vos coordonnées ── */}
+      <div className={cn("flex flex-col gap-4", step !== 6 && "hidden")}>
         <div className="grid gap-4 sm:grid-cols-2">
           <FormField
             id="f-first-name"
@@ -1099,7 +1110,7 @@ export function LeadFormFestif() {
 
       {/* ── Navigation ── */}
       <div className="flex flex-col gap-3 pt-1">
-        {step < 5 ? (
+        {step < 6 ? (
           <Button
             type="button"
             size="lg"
