@@ -289,14 +289,14 @@ export const ceremonieLeadSchema = z
       ceremonieEventTypeOptions,
       "Veuillez choisir un type de cérémonie.",
     ),
-    guest_count: positiveInt,
+    guest_count: positiveInt.max(80, "Le domaine accueille jusqu'à 80 invités."),
     selected_options: z.array(z.enum(ceremonieSelectedOptions)).optional(),
     ambiance: optionalSelect(ceremonieAmbianceOptions),
     heater_count: z
       .number()
       .int()
       .min(1)
-      .max(4, "Veuillez indiquer 4 appareils maximum pour le moment.")
+      .max(10, "Veuillez indiquer 10 appareils maximum.")
       .optional(),
   })
   .strict();

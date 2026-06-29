@@ -365,7 +365,7 @@ export default async function ConfirmationPage() {
               <h2 className="text-eyebrow mb-8">Une question immédiate&nbsp;?</h2>
               <div className="grid gap-6 sm:grid-cols-2">
                 <a
-                  href="tel:+33000000000"
+                  href="tel:+33788808194"
                   className="group flex items-start gap-4 border border-line bg-surface-elevated p-6 rounded-[var(--radius-lg)] transition-colors hover:border-accent-strong"
                 >
                   <span className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-md)] border border-accent/40 bg-accent/10 text-accent-strong">
@@ -376,7 +376,7 @@ export default async function ConfirmationPage() {
                       Téléphone
                     </p>
                     <p className="mt-1 font-serif text-lg text-ink">
-                      +33 (0)0 00 00 00 00
+                      07 88 80 81 94
                     </p>
                   </div>
                 </a>

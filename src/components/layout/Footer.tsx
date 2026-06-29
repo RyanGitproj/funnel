@@ -33,6 +33,14 @@ export function Footer({ description = defaultDescription }: { description?: str
               >
                 DES ÉLÉGANCES
               </span>
+              <div className="mt-2 flex items-center gap-1.5">
+                <div className="h-px flex-1 bg-accent/35" />
+                <span aria-hidden className="text-accent/45" style={{ fontSize: "0.32rem", lineHeight: 1 }}>◆</span>
+                <div className="h-px flex-1 bg-accent/35" />
+              </div>
+              <p className="mt-2 font-serif text-xs italic leading-snug text-ink-subtle">
+                Lieu d&rsquo;exception pour moments inoubliables.
+              </p>
             </div>
             <p className="max-w-xs text-sm leading-relaxed text-ink-muted">
               {description}
@@ -76,10 +84,10 @@ export function Footer({ description = defaultDescription }: { description?: str
             <ul className="space-y-2 text-sm">
               <li className="text-ink-muted">
                 <a
-                  href="tel:+33000000000"
+                  href="tel:+33788808194"
                   className="transition-colors hover:text-accent-strong"
                 >
-                  +33 (0)0 00 00 00 00
+                  07 88 80 81 94
                 </a>
               </li>
               <li className="text-ink-muted">

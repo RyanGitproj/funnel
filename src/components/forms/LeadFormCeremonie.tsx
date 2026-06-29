@@ -221,12 +221,12 @@ export function LeadFormCeremonie() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     min={1}
-                    max={2000}
+                    max={80}
                     value={field.value ?? ""}
                     placeholder="—"
                     onChange={(e) => {
                       const v = parseInt(e.target.value, 10);
-                      field.onChange(!isNaN(v) && v >= 1 ? Math.min(v, 2000) : undefined);
+                      field.onChange(!isNaN(v) && v >= 1 ? Math.min(v, 80) : undefined);
                     }}
                     className="w-20 bg-transparent text-center font-serif text-5xl font-semibold leading-none text-ink outline-none placeholder:text-ink-subtle [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
@@ -237,7 +237,7 @@ export function LeadFormCeremonie() {
                 <button
                   type="button"
                   onClick={() =>
-                    field.onChange(Math.min(2000, (field.value ?? 0) + 1))
+                    field.onChange(Math.min(80, (field.value ?? 0) + 1))
                   }
                   className={stepperBtnClass}
                   aria-label="Augmenter"
@@ -358,7 +358,7 @@ export function LeadFormCeremonie() {
                       placeholder="—"
                       onChange={(e) => {
                         const v = parseInt(e.target.value, 10);
-                        field.onChange(!isNaN(v) && v >= 1 ? Math.min(v, 4) : undefined);
+                        field.onChange(!isNaN(v) && v >= 1 ? Math.min(v, 10) : undefined);
                       }}
                       className="w-20 bg-transparent text-center font-serif text-5xl font-semibold leading-none text-ink outline-none placeholder:text-ink-subtle [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     />
@@ -369,7 +369,7 @@ export function LeadFormCeremonie() {
                   <button
                     type="button"
                     onClick={() =>
-                      field.onChange(Math.min(4, (field.value ?? 0) + 1))
+                      field.onChange(Math.min(10, (field.value ?? 0) + 1))
                     }
                     className={stepperBtnClass}
                     aria-label="Augmenter"
