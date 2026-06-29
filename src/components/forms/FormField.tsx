@@ -587,20 +587,19 @@ const calNavBtn = cn(
   "hover:border-accent hover:text-accent active:scale-90 cursor-pointer",
 );
 
-export function CalendarPicker({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
+type CalendarPickerProps =
+  | { multi?: false; value: string; onChange: (v: string) => void }
+  | { multi: true; value: string[]; onChange: (v: string[]) => void };
+
+export function CalendarPicker(props: CalendarPickerProps) {
   const today = React.useMemo(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
     return d;
   }, []);
 
-  const initFrom = value ? new Date(value + "T00:00:00") : today;
+  const firstIso = props.multi ? props.value[0] : props.value;
+  const initFrom = firstIso ? new Date(firstIso + "T00:00:00") : today;
   const [viewYear, setViewYear] = React.useState(initFrom.getFullYear());
   const [viewMonth, setViewMonth] = React.useState(initFrom.getMonth());
   const [view, setView] = React.useState<"days" | "months">("days");
@@ -619,14 +618,28 @@ export function CalendarPicker({
   const cells: (number | null)[] = Array.from({ length: firstDayOffset }, () => null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
-  const selectedDate = value ? new Date(value + "T00:00:00") : null;
+  const toIso = (day: number) =>
+    `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+  const isDaySelected = (day: number): boolean => {
+    const iso = toIso(day);
+    return props.multi ? props.value.includes(iso) : props.value === iso;
+  };
 
   const handleDay = (day: number) => {
     const d = new Date(viewYear, viewMonth, day);
     if (d < today) return;
-    onChange(
-      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`,
-    );
+    const iso = toIso(day);
+    if (props.multi) {
+      const current = props.value;
+      props.onChange(
+        current.includes(iso)
+          ? current.filter((s) => s !== iso)
+          : [...current, iso].sort(),
+      );
+    } else {
+      props.onChange(iso);
+    }
   };
 
   const selectMonth = (m: number) => {
@@ -701,8 +714,7 @@ export function CalendarPicker({
               if (!day) return <div key={`e-${i}`} />;
               const thisDate = new Date(viewYear, viewMonth, day);
               const isPast = thisDate < today;
-              const isSelected =
-                !!selectedDate && thisDate.getTime() === selectedDate.getTime();
+              const isSelected = isDaySelected(day);
               return (
                 <button
                   key={day}

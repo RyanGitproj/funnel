@@ -210,6 +210,9 @@ function dateRangeIsValid(values: { event_date: string; event_end_date: string }
 export const festifLeadSchema = z
   .object({
     ...baseLeadFields,
+    // event_date stocke une ou plusieurs dates (CSV ISO), event_end_date non utilisé dans ce funnel
+    event_date: z.string().trim().min(1, "Veuillez sélectionner au moins une date."),
+    event_end_date: z.string().trim().optional().or(z.literal("")),
     funnel_type: z.literal("festif"),
     source_page: z.literal("/festif"),
     event_type: requiredSelect(
@@ -222,15 +225,14 @@ export const festifLeadSchema = z
     ambiance: optionalSelect(festifAmbianceOptions),
     festif_pack: optionalSelect(festifPackOptions),
   })
-  .strict()
-  .refine(dateRangeIsValid, {
-    path: ["event_end_date"],
-    message: "La date de fin doit être égale ou postérieure à la date de début.",
-  });
+  .strict();
 
 export const ceremonieLeadSchema = z
   .object({
     ...baseLeadFields,
+    // event_date stocke une ou plusieurs dates (CSV ISO), event_end_date non utilisé dans ce funnel
+    event_date: z.string().trim().min(1, "Veuillez sélectionner au moins une date."),
+    event_end_date: z.string().trim().optional().or(z.literal("")),
     funnel_type: z.literal("ceremonie"),
     source_page: z.literal("/ceremonie"),
     event_type: requiredSelect(
@@ -247,11 +249,7 @@ export const ceremonieLeadSchema = z
       .max(4, "Veuillez indiquer 4 appareils maximum pour le moment.")
       .optional(),
   })
-  .strict()
-  .refine(dateRangeIsValid, {
-    path: ["event_end_date"],
-    message: "La date de fin doit être égale ou postérieure à la date de début.",
-  });
+  .strict();
 
 export type CeremonieLeadInput = z.infer<typeof ceremonieLeadSchema>;
 export type FestifLeadInput = z.infer<typeof festifLeadSchema>;

@@ -115,7 +115,7 @@ const ACTIVITY_ICONS: Record<string, React.ReactElement> = {
 
 const STEP_FIELDS: (keyof FestifLeadInput)[][] = [
   ["event_type", "guest_count"],
-  ["event_date", "event_end_date", "date_flexibility"],
+  ["event_date", "date_flexibility"],
   [],
   ["budget_range", "project_stage"],
   ["first_name", "last_name", "email", "phone", "rgpd_consent"],
@@ -352,40 +352,25 @@ export function LeadFormFestif() {
 
       {/* ── Étape 2 : Votre date ── */}
       <div className={cn("flex flex-col gap-4", step !== 2 && "hidden")}>
-        {/* event_date — calendrier */}
+        {/* event_date — calendrier multi-dates */}
         <div className="flex flex-col gap-3">
           <SectionQuestion required>
-            Quelle serait la date de début ?
+            Quelles sont vos dates envisagées ?
           </SectionQuestion>
           <Controller
             control={control}
             name="event_date"
             render={({ field }) => (
-              <CalendarPicker value={field.value} onChange={field.onChange} />
+              <CalendarPicker
+                multi
+                value={field.value ? field.value.split(",").map((s) => s.trim()).filter(Boolean) : []}
+                onChange={(dates) => field.onChange(dates.join(","))}
+              />
             )}
           />
           {errors.event_date && (
             <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.event_date.message}
-            </p>
-          )}
-        </div>
-
-        {/* event_end_date — calendrier */}
-        <div className="flex flex-col gap-3">
-          <SectionQuestion required>
-            Quelle serait la date de fin ?
-          </SectionQuestion>
-          <Controller
-            control={control}
-            name="event_end_date"
-            render={({ field }) => (
-              <CalendarPicker value={field.value} onChange={field.onChange} />
-            )}
-          />
-          {errors.event_end_date && (
-            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
-              {errors.event_end_date.message}
             </p>
           )}
         </div>

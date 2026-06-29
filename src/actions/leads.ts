@@ -70,10 +70,9 @@ export async function submitCeremonieLead(
 
   const result = await insertLead({
     ...normalizeEmptyToUndefined(parsed.data),
-    duration: getCalculatedDuration(
-      parsed.data.event_date,
-      parsed.data.event_end_date,
-    ),
+    ...(parsed.data.event_end_date
+      ? { duration: getCalculatedDuration(parsed.data.event_date, parsed.data.event_end_date) }
+      : {}),
     ...toStoragePayload(quote),
   });
 
@@ -109,10 +108,9 @@ export async function submitFestifLead(values: unknown): Promise<ActionResult> {
 
   const result = await insertLead({
     ...normalizeEmptyToUndefined(parsed.data),
-    duration: getCalculatedDuration(
-      parsed.data.event_date,
-      parsed.data.event_end_date,
-    ),
+    ...(parsed.data.event_end_date
+      ? { duration: getCalculatedDuration(parsed.data.event_date, parsed.data.event_end_date) }
+      : {}),
     ...toStoragePayload(quote),
   });
 
