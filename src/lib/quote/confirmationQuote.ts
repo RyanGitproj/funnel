@@ -45,6 +45,8 @@ export type ConfirmationQuoteSnapshot = {
   manualReviewItems: ConfirmationQuoteManualItem[];
   warnings: string[];
   disclaimer: string;
+  /** Festif only — pour afficher le message bivouac si > 22. */
+  guestCount?: number;
 };
 
 const UNIVERSE_COPY: Record<
@@ -113,6 +115,7 @@ export function createConfirmationQuoteSnapshot(
     })),
     warnings: quote.warnings,
     disclaimer: quote.disclaimer,
+    guestCount: quote.guestCount,
   };
 }
 

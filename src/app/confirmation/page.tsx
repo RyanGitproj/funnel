@@ -12,6 +12,7 @@ import {
   parseConfirmationQuoteCookie,
   type ConfirmationQuoteSnapshot,
 } from "@/lib/quote/confirmationQuote";
+import { INCLUS_DOMAINE } from "@/config/festif-inclus";
 import {
   ArrowRight,
   Calculator,
@@ -63,6 +64,7 @@ function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
   const hasInterests = quote.interestItems.length > 0;
   const hasManualItems = quote.manualReviewItems.length > 0;
   const hasWarnings = quote.warnings.length > 0;
+  const isFestif = quote.universe === "festif";
   const domainItems = quote.includedItems.filter(
     (item) => item.category === "included_domain",
   );
@@ -187,19 +189,48 @@ function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
             </div>
           )}
 
-          {domainItems.length > 0 && (
-            <div className="mt-6 flex items-start gap-3 text-sm text-ink-muted">
-              <CheckCircle2
-                className="mt-0.5 size-4 shrink-0 text-accent-strong"
-                aria-hidden
-              />
-              <p>
-                <span className="font-medium text-ink">
-                  Votre séjour inclut l&apos;accès privatif :
-                </span>{" "}
-                {domainItems.map((i) => i.label).join(", ")}.
-              </p>
-            </div>
+          {isFestif ? (
+            <>
+              <div className="mt-6 border border-line/60 bg-surface-alt/40 p-5">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-ink-subtle">
+                  Inclus dans votre privatisation
+                </p>
+                <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
+                  {INCLUS_DOMAINE.map((item) => (
+                    <li key={item} className="flex items-start gap-1.5 text-xs leading-relaxed text-ink-muted">
+                      <CheckCircle2 className="mt-0.5 size-3 shrink-0 text-accent-strong" aria-hidden />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {quote.guestCount !== undefined && quote.guestCount > 22 && (
+                <div className="mt-4 flex items-start gap-3 text-sm text-ink-muted">
+                  <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent-strong" aria-hidden />
+                  <p>
+                    22 couchages intérieurs + {quote.guestCount - 22} place
+                    {quote.guestCount - 22 > 1 ? "s" : ""} bivouac. Au-delà
+                    de 22 personnes, des places bivouac peuvent être ajoutées en
+                    tentes 4 personnes, avec matelas gonflable et duvet fournis.
+                  </p>
+                </div>
+              )}
+            </>
+          ) : (
+            domainItems.length > 0 && (
+              <div className="mt-6 flex items-start gap-3 text-sm text-ink-muted">
+                <CheckCircle2
+                  className="mt-0.5 size-4 shrink-0 text-accent-strong"
+                  aria-hidden
+                />
+                <p>
+                  <span className="font-medium text-ink">
+                    Votre séjour inclut l&apos;accès privatif :
+                  </span>{" "}
+                  {domainItems.map((i) => i.label).join(", ")}.
+                </p>
+              </div>
+            )
           )}
         </div>
       </div>

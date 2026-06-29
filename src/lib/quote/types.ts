@@ -5,7 +5,8 @@ export type ManualReviewReason =
   | "sur_devis"
   | "capacity_check"
   | "logistics_check"
-  | "duration_pending";
+  | "duration_pending"
+  | "intervenant_on_demand";
 
 export type IncludedItemCategory = "included_domain";
 
@@ -52,4 +53,8 @@ export type QuoteResult = {
   estimatedMax: number;
   displayLabel: string;
   disclaimer: string;
+  /** Festif only — nombre de participants pour calcul bivouac et cadeau. */
+  guestCount?: number;
+  /** Festif only — true si le cadeau de réservation est éligible. */
+  cadeauEligible?: boolean;
 };

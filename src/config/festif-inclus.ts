@@ -1,0 +1,16 @@
+export const INCLUS_DOMAINE = [
+  "Domaine privé de 5 hectares",
+  "Ancienne propriété de prestige",
+  "Piscine",
+  "Sauna",
+  "Tennis privé",
+  "City stade privé",
+  "Terrain de basket privé",
+  "Pétanque",
+  "Grands espaces extérieurs",
+  "Chevaux à proximité",
+  "Cadre isolé, sans nuisance directe",
+  "Petit-déjeuner essentiel inclus",
+  "Nettoyage inclus",
+  "Couchages selon configuration",
+] as const;

@@ -563,6 +563,132 @@ export function PillSelect({
   );
 }
 
+/* ───────────────────────────────────────────────────────────────
+   RichCardSelect — sélecteur unique avec label, description et badge
+   ─────────────────────────────────────────────────────────────── */
+
+export type RichCardOption = {
+  value: string;
+  label: string;
+  description?: string;
+  badge?: string;
+};
+
+export function RichCardSelect({
+  options,
+  value,
+  onChange,
+}: {
+  options: RichCardOption[];
+  value: string | undefined;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      {options.map((opt) => {
+        const selected = value === opt.value;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value)}
+            className={cn(
+              "flex items-start justify-between gap-3 rounded-[var(--radius-md)] border-2 px-4 py-3 text-left transition-all duration-150 cursor-pointer select-none active:scale-[0.99]",
+              selected
+                ? "border-accent bg-accent/[0.12] text-ink shadow-[0_0_22px_var(--card-glow)]"
+                : "border-line bg-surface-elevated text-ink-muted hover:border-accent/50 hover:text-ink hover:scale-[1.01]",
+            )}
+          >
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className={cn("text-sm font-medium leading-snug", selected ? "text-ink" : "text-ink")}>
+                {opt.label}
+              </span>
+              {opt.description && (
+                <span className="text-xs leading-relaxed text-ink-subtle">
+                  {opt.description}
+                </span>
+              )}
+            </div>
+            {opt.badge && (
+              <span
+                className={cn(
+                  "shrink-0 rounded-[var(--radius-sm)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em]",
+                  selected
+                    ? "bg-accent/20 text-accent-strong"
+                    : "bg-surface-alt text-ink-subtle",
+                )}
+              >
+                {opt.badge}
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────
+   RichMultiCardSelect — sélecteur multiple avec label, description, badge
+   ─────────────────────────────────────────────────────────────── */
+
+export function RichMultiCardSelect({
+  options,
+  value,
+  onChange,
+}: {
+  options: RichCardOption[];
+  value: string[];
+  onChange: (v: string[]) => void;
+}) {
+  const toggle = (v: string) =>
+    onChange(value.includes(v) ? value.filter((x) => x !== v) : [...value, v]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      {options.map((opt) => {
+        const selected = value.includes(opt.value);
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => toggle(opt.value)}
+            className={cn(
+              "flex items-start justify-between gap-3 rounded-[var(--radius-md)] border-2 px-4 py-3 text-left transition-all duration-150 cursor-pointer select-none active:scale-[0.99]",
+              selected
+                ? "border-accent bg-accent/[0.12] text-ink shadow-[0_0_22px_var(--card-glow)]"
+                : "border-line bg-surface-elevated text-ink-muted hover:border-accent/50 hover:text-ink hover:scale-[1.01]",
+            )}
+          >
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-sm font-medium leading-snug text-ink">
+                {opt.label}
+              </span>
+              {opt.description && (
+                <span className="text-xs leading-relaxed text-ink-subtle">
+                  {opt.description}
+                </span>
+              )}
+            </div>
+            {opt.badge && (
+              <span
+                className={cn(
+                  "shrink-0 rounded-[var(--radius-sm)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em]",
+                  selected
+                    ? "bg-accent/20 text-accent-strong"
+                    : "bg-surface-alt text-ink-subtle",
+                )}
+              >
+                {opt.badge}
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export const stepperBtnClass = cn(
   "flex size-11 shrink-0 items-center justify-center rounded-full",
   "border-2 border-line text-xl font-bold text-ink-muted",

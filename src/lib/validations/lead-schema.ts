@@ -119,6 +119,50 @@ export const festifDurationOptions = [
   "weekend_long_3_nuits",
 ] as const;
 
+// ─── Phase 2 — nouvelles options festif ──────────────────────────────────────
+
+export const festifLoisirsPackOptions = [
+  "evjf_chic_fun",
+  "evjf_pool_party",
+  "evg_challenge",
+  "evg_casino_apero",
+  "anniversaire_signature",
+  "loisirs_convivial",
+  "loisirs_domaine_only",
+] as const;
+
+export const festifRepasOptions = [
+  "none",
+  "petit_dejeuner_continental",
+  "brunch_sucre_sale",
+  "brunch_complet",
+] as const;
+
+export const festifBuffetOptions = [
+  "none",
+  "buffet_traiteur",
+  "apero_dinatoire",
+] as const;
+
+export const festifIntervenantOptions = [
+  "dj_son_lumiere",
+  "bien_etre_energie",
+  "cracheur_de_feu",
+  "echassier_lumineux",
+  "animation_adulte",
+] as const;
+
+export const festifMaterielOptions = [
+  "tente_barnum",
+  "tables_chaises",
+] as const;
+
+export const festifCadeauOptions = [
+  "massage_bien_etre",
+  "massage_temoin",
+  "pack_celebration",
+] as const;
+
 export const festifDurationLabels: Record<
   (typeof festifDurationOptions)[number],
   string
@@ -225,6 +269,16 @@ export const festifLeadSchema = z
     selected_options: z.array(z.enum(festifSelectedOptions)).optional(),
     activites_interest: z.array(z.enum(festifActivitesInterestOptions)).optional(),
     ambiance: optionalSelect(festifAmbianceOptions),
+    // Phase 2
+    loisirs_pack: optionalSelect(festifLoisirsPackOptions),
+    repas_upgrade: optionalSelect(festifRepasOptions),
+    buffet_choice: optionalSelect(festifBuffetOptions),
+    service_courses: z.boolean().optional().default(false),
+    intervenants: z.array(z.enum(festifIntervenantOptions)).optional().default([]),
+    materiel: z.array(z.enum(festifMaterielOptions)).optional().default([]),
+    dietary_notes: z.string().trim().max(500).optional().or(z.literal("")),
+    autre_materiel_notes: z.string().trim().max(500).optional().or(z.literal("")),
+    cadeau_choice: optionalSelect(festifCadeauOptions),
   })
   .strict();
 
@@ -253,6 +307,7 @@ export const ceremonieLeadSchema = z
   .strict();
 
 export type CeremonieLeadInput = z.infer<typeof ceremonieLeadSchema>;
+export type FestifLeadFormValues = z.input<typeof festifLeadSchema>;
 export type FestifLeadInput = z.infer<typeof festifLeadSchema>;
 export type FunnelType = "ceremonie" | "festif";
 
@@ -261,8 +316,7 @@ export function normalizeEmptyToUndefined<T extends Record<string, unknown>>(
 ): T {
   const out: Record<string, unknown> = { ...values };
   for (const [key, value] of Object.entries(out)) {
-    if (value === "" || (Array.isArray(value) && value.length === 0))
-      out[key] = undefined;
+    if (value === "") out[key] = undefined;
   }
   return out as T;
 }

@@ -205,3 +205,292 @@ export function getFestifOptionIdByLabel(label: string): string | undefined {
   );
 }
 
+// ─── Phase 2 — Packs loisirs conditionnels, repas, intervenants, matériel ────
+
+export type FestifLoisirsPackKey =
+  | "evjf_chic_fun"
+  | "evjf_pool_party"
+  | "evg_challenge"
+  | "evg_casino_apero"
+  | "anniversaire_signature"
+  | "loisirs_convivial"
+  | "loisirs_domaine_only";
+
+export type EventTypeFestif =
+  | "evjf"
+  | "evg"
+  | "anniversaire"
+  | "weekend_proches"
+  | "other";
+
+export function toEventTypeFestif(raw: string | undefined): EventTypeFestif {
+  switch (raw) {
+    case "EVJF": return "evjf";
+    case "EVG": return "evg";
+    case "Anniversaire": return "anniversaire";
+    case "Week-end entre amis":
+    case "Fête privée": return "weekend_proches";
+    default: return "other";
+  }
+}
+
+export type FestifLoisirsPack = {
+  key: FestifLoisirsPackKey;
+  label: string;
+  description: string;
+  /** 0 = inclus sans supplément. */
+  pricePerPerson: number;
+};
+
+export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisirsPack[]> = {
+  evjf: [
+    {
+      key: "evjf_chic_fun",
+      label: "Pack EVJF Chic & Fun",
+      description: "Activités détente, piscine, spa & instants girly au Domaine.",
+      pricePerPerson: 12,
+    },
+    {
+      key: "evjf_pool_party",
+      label: "Pack Pool Party",
+      description: "Ambiance festive autour de la piscine, accessoires fournis.",
+      pricePerPerson: 12,
+    },
+    {
+      key: "loisirs_domaine_only",
+      label: "Je garde uniquement les loisirs inclus du Domaine",
+      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      pricePerPerson: 0,
+    },
+  ],
+  evg: [
+    {
+      key: "evg_challenge",
+      label: "Pack EVG Challenge",
+      description: "Défis collectifs, jeux de terrain, compétition entre amis.",
+      pricePerPerson: 12,
+    },
+    {
+      key: "evg_casino_apero",
+      label: "Pack Casino & Apéro",
+      description: "Tables de jeux, ambiance casino privé, apéritif préparé.",
+      pricePerPerson: 12,
+    },
+    {
+      key: "loisirs_domaine_only",
+      label: "Je garde uniquement les loisirs inclus du Domaine",
+      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      pricePerPerson: 0,
+    },
+  ],
+  anniversaire: [
+    {
+      key: "anniversaire_signature",
+      label: "Pack Anniversaire Signature",
+      description: "Décoration, mise en scène festive et accueil soigné pour le/la fêté(e).",
+      pricePerPerson: 12,
+    },
+    {
+      key: "loisirs_convivial",
+      label: "Pack Loisirs Convivial",
+      description: "Jeux extérieurs, accès pool & détente, ambiance conviviale.",
+      pricePerPerson: 12,
+    },
+    {
+      key: "loisirs_domaine_only",
+      label: "Je garde uniquement les loisirs inclus du Domaine",
+      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      pricePerPerson: 0,
+    },
+  ],
+  weekend_proches: [
+    {
+      key: "loisirs_convivial",
+      label: "Pack Loisirs Convivial",
+      description: "Jeux extérieurs, accès pool & détente, ambiance conviviale.",
+      pricePerPerson: 12,
+    },
+    {
+      key: "loisirs_domaine_only",
+      label: "Je garde uniquement les loisirs inclus du Domaine",
+      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      pricePerPerson: 0,
+    },
+  ],
+  other: [
+    {
+      key: "loisirs_convivial",
+      label: "Pack Loisirs Convivial",
+      description: "Jeux extérieurs, accès pool & détente, ambiance conviviale.",
+      pricePerPerson: 12,
+    },
+    {
+      key: "loisirs_domaine_only",
+      label: "Je garde uniquement les loisirs inclus du Domaine",
+      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      pricePerPerson: 0,
+    },
+  ],
+};
+
+export function getFestifLoisirsPack(key: string): FestifLoisirsPack | undefined {
+  const all = Object.values(FESTIF_LOISIRS_PACKS_BY_EVENT).flat();
+  return all.find((p) => p.key === key);
+}
+
+// ─── Options repas ────────────────────────────────────────────────────────────
+
+/**
+ * Le "petit-déjeuner essentiel" (baguette, beurre, confiture, café, chocolat chaud,
+ * jus d'orange) est DÉJÀ INCLUS dans le tarif de base. Ces options sont des
+ * AMÉLIORATIONS facultatives — ne jamais appeler l'inclus "basique".
+ */
+export const FESTIF_REPAS_OPTIONS = {
+  petit_dejeuner_continental: {
+    id: "petit_dejeuner_continental",
+    label: "Petit-déjeuner continental amélioré",
+    description:
+      "Viennoiseries, croissants, pains au chocolat, jus de fruits, présentation améliorée.",
+    pricePerPerson: 5,
+  },
+  brunch_sucre_sale: {
+    id: "brunch_sucre_sale",
+    label: "Brunch gourmand sucré ou salé",
+    description:
+      "Viennoiseries, fruits, yaourts, boissons chaudes, jus, œufs, jambon ou éléments salés.",
+    pricePerPerson: 20,
+  },
+  brunch_complet: {
+    id: "brunch_complet",
+    label: "Brunch gourmand sucré-salé complet",
+    description:
+      "Formule complète : sucré + salé, œufs, jambon, omelette, fruits, yaourts, viennoiseries, boissons chaudes, jus.",
+    pricePerPerson: 22,
+  },
+} as const;
+
+export const FESTIF_BUFFET_OPTIONS = {
+  buffet_traiteur: {
+    id: "buffet_traiteur",
+    label: "Buffet traiteur",
+    description: "Boissons soft incluses. Alcool non inclus.",
+    pricePerPerson: 35,
+  },
+  apero_dinatoire: {
+    id: "apero_dinatoire",
+    label: "Apéro dînatoire",
+    description: "Boissons soft incluses. Alcool non inclus.",
+    pricePerPerson: 35,
+  },
+} as const;
+
+// ─── Service courses ──────────────────────────────────────────────────────────
+
+export const FESTIF_SERVICE_COURSES = {
+  id: "service_courses",
+  label: "Service courses installé",
+  description:
+    "Notre équipe récupère votre drive, range vos courses au frais et prépare la cuisine avant votre arrivée. Les 25 € correspondent au service — le montant des courses reste à votre charge.",
+  priceFlatRate: 25,
+} as const;
+
+// ─── Intervenants ─────────────────────────────────────────────────────────────
+
+export type FestifIntervenantKey =
+  | "dj_son_lumiere"
+  | "bien_etre_energie"
+  | "cracheur_de_feu"
+  | "echassier_lumineux"
+  | "animation_adulte";
+
+export const FESTIF_INTERVENANTS: Record<
+  FestifIntervenantKey,
+  {
+    id: FestifIntervenantKey;
+    label: string;
+    description: string;
+    priceFlat: number;
+    requiresManualReview?: boolean;
+  }
+> = {
+  dj_son_lumiere: {
+    id: "dj_son_lumiere",
+    label: "DJ son & lumière",
+    description: "Ambiance musicale et éclairage pour votre soirée.",
+    priceFlat: 250,
+  },
+  bien_etre_energie: {
+    id: "bien_etre_energie",
+    label: "Bien-être / énergie",
+    description: "Masseuse à domicile ou coach sportif, selon disponibilité des partenaires.",
+    priceFlat: 150,
+  },
+  cracheur_de_feu: {
+    id: "cracheur_de_feu",
+    label: "Cracheur de feu",
+    description: "Spectacle événementiel, selon disponibilité des partenaires.",
+    priceFlat: 300,
+  },
+  echassier_lumineux: {
+    id: "echassier_lumineux",
+    label: "Échassier lumineux",
+    description: "Animation scénique, selon disponibilité des partenaires.",
+    priceFlat: 250,
+  },
+  animation_adulte: {
+    id: "animation_adulte",
+    label: "Animation privée adulte",
+    description:
+      "Sur demande uniquement. Validation commerciale obligatoire. Groupe majeur, cadre privé, selon disponibilité.",
+    priceFlat: 0,
+    requiresManualReview: true,
+  },
+};
+
+// ─── Matériel complémentaire ─────────────────────────────────────────────────
+
+export type FestifMaterielKey = "tente_barnum" | "tables_chaises";
+
+export const FESTIF_MATERIEL: Record<
+  FestifMaterielKey,
+  { id: FestifMaterielKey; label: string; description: string; priceFlat: number }
+> = {
+  tente_barnum: {
+    id: "tente_barnum",
+    label: "Tente / barnum",
+    description: "Structure supplémentaire pour vos espaces extérieurs.",
+    priceFlat: 350,
+  },
+  tables_chaises: {
+    id: "tables_chaises",
+    label: "Tables & chaises supplémentaires",
+    description: "Mobilier complémentaire selon configuration.",
+    priceFlat: 200,
+  },
+};
+
+// ─── Cadeau offert ────────────────────────────────────────────────────────────
+
+export const FESTIF_CADEAU_OPTIONS = [
+  { key: "massage_bien_etre", label: "Massage bien-être offert" },
+  { key: "massage_temoin", label: "Massage témoin / meilleure ami(e) offert" },
+  { key: "pack_celebration", label: "Pack célébration offert" },
+] as const;
+
+export type FestifCadeauKey = (typeof FESTIF_CADEAU_OPTIONS)[number]["key"];
+
+/**
+ * Détermine si le cadeau offert peut être proposé.
+ * Conditions : durée = weekend_2_nuits ET (guestCount >= 20 OU estimatedTotal >= 4500).
+ */
+export function isCadeauEligible(
+  duration: FestifDuration | undefined,
+  guestCount: number | undefined,
+  estimatedTotal: number | undefined,
+): boolean {
+  if (duration !== "weekend_2_nuits") return false;
+  if (guestCount !== undefined && guestCount >= 20) return true;
+  if (estimatedTotal !== undefined && estimatedTotal >= 4500) return true;
+  return false;
+}
+

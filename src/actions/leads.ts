@@ -104,6 +104,13 @@ export async function submitFestifLead(values: unknown): Promise<ActionResult> {
     guest_count: parsed.data.guest_count,
     selected_options: parsed.data.selected_options,
     activites_interest: parsed.data.activites_interest,
+    event_type: parsed.data.event_type,
+    loisirs_pack: parsed.data.loisirs_pack,
+    repas_upgrade: parsed.data.repas_upgrade,
+    buffet_choice: parsed.data.buffet_choice,
+    service_courses: parsed.data.service_courses,
+    intervenants: parsed.data.intervenants,
+    materiel: parsed.data.materiel,
   });
 
   const result = await insertLead({

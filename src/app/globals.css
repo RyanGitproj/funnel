@@ -230,6 +230,24 @@ html {
   animation: fade-in-up 600ms ease-out both;
 }
 
+/* Prix doré animé — uniquement sur la carte "Offre semaine" du festif */
+@keyframes golden-glow {
+  0%, 100% {
+    opacity: 1;
+    text-shadow: 0 0 4px rgba(212, 175, 55, 0.35);
+  }
+  50% {
+    opacity: 0.88;
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.75);
+  }
+}
+
+.price-golden-pulse {
+  color: #d4af37;
+  font-weight: 700;
+  animation: golden-glow 3s ease-in-out infinite;
+}
+
 /* ─────────────────────────────────────────────────────────────
    react-phone-number-input — surcharges thème
    ───────────────────────────────────────────────────────────── */
