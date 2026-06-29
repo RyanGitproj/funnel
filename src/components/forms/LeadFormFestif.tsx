@@ -12,7 +12,6 @@ import {
   dateFlexibilityOptions,
   festifAmbianceOptions,
   festifActivitesInterestOptions,
-  festifDurationOptions,
   festifEventTypeOptions,
   festifLeadSchema,
   projectStageOptions,
@@ -226,7 +225,7 @@ export function LeadFormFestif() {
       loisirs_pack: undefined,
       repas_upgrade: undefined,
       buffet_choice: undefined,
-      service_courses: "none",
+      service_courses: undefined,
       intervenants: [],
       materiel: [],
       dietary_notes: "",
@@ -390,12 +389,12 @@ export function LeadFormFestif() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     min={1}
-                    max={2000}
+                    max={34}
                     value={field.value ?? ""}
                     placeholder="—"
                     onChange={(e) => {
                       const v = parseInt(e.target.value, 10);
-                      field.onChange(!isNaN(v) && v >= 1 ? Math.min(v, 2000) : undefined);
+                      field.onChange(!isNaN(v) && v >= 1 ? Math.min(v, 34) : undefined);
                     }}
                     className="w-20 bg-transparent text-center font-serif text-5xl font-semibold leading-none text-ink outline-none placeholder:text-ink-subtle [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
@@ -406,7 +405,7 @@ export function LeadFormFestif() {
                 <button
                   type="button"
                   onClick={() =>
-                    field.onChange(Math.min(2000, (field.value ?? 0) + 1))
+                    field.onChange(Math.min(34, (field.value ?? 0) + 1))
                   }
                   className={stepperBtnClass}
                   aria-label="Augmenter"
@@ -592,7 +591,8 @@ export function LeadFormFestif() {
           </SectionQuestion>
           <p className="text-xs leading-relaxed text-ink-subtle">
             Le petit-déjeuner essentiel (baguette, beurre, confiture, café, chocolat chaud,
-            jus d&apos;orange) est déjà inclus dans votre tarif.
+            jus d&apos;orange) est déjà inclus dans votre tarif. Choisissez ici seulement
+            si vous souhaitez une formule plus généreuse.
           </p>
           <Controller
             control={control}
@@ -600,12 +600,6 @@ export function LeadFormFestif() {
             render={({ field }) => (
               <RichCardSelect
                 options={[
-                  {
-                    value: "none",
-                    label: "Petit-déjeuner essentiel uniquement",
-                    description: "Inclus dans votre tarif.",
-                    badge: "Inclus",
-                  },
                   {
                     value: "petit_dejeuner_continental",
                     label: FESTIF_REPAS_OPTIONS.petit_dejeuner_continental.label,
@@ -624,8 +618,14 @@ export function LeadFormFestif() {
                     description: FESTIF_REPAS_OPTIONS.brunch_complet.description,
                     badge: `+${FESTIF_REPAS_OPTIONS.brunch_complet.pricePerPerson} €/pers.`,
                   },
+                  {
+                    value: "none",
+                    label: "Petit-déjeuner essentiel uniquement",
+                    description: "Inclus dans votre tarif.",
+                    badge: "Inclus",
+                  },
                 ]}
-                value={field.value ?? "none"}
+                value={field.value}
                 onChange={field.onChange}
               />
             )}
@@ -643,7 +643,6 @@ export function LeadFormFestif() {
             render={({ field }) => (
               <RichCardSelect
                 options={[
-                  { value: "none", label: "Pas pour le moment" },
                   {
                     value: "buffet_traiteur",
                     label: FESTIF_BUFFET_OPTIONS.buffet_traiteur.label,
@@ -656,8 +655,9 @@ export function LeadFormFestif() {
                     description: FESTIF_BUFFET_OPTIONS.apero_dinatoire.description,
                     badge: `+${FESTIF_BUFFET_OPTIONS.apero_dinatoire.pricePerPerson} €/pers.`,
                   },
+                  { value: "none", label: "Pas pour le moment" },
                 ]}
-                value={field.value ?? "none"}
+                value={field.value}
                 onChange={field.onChange}
               />
             )}
@@ -693,16 +693,16 @@ export function LeadFormFestif() {
             render={({ field }) => (
               <RichCardSelect
                 options={[
-                  { value: "none", label: "Pas pour le moment" },
                   {
                     value: "service_courses",
                     label: FESTIF_SERVICE_COURSES.label,
                     description: FESTIF_SERVICE_COURSES.description,
                     badge: `${FESTIF_SERVICE_COURSES.priceFlatRate} €`,
                   },
+                  { value: "none", label: "Pas pour le moment" },
                   { value: "plus_tard", label: "Je préciserai plus tard" },
                 ]}
-                value={field.value ?? "none"}
+                value={field.value}
                 onChange={field.onChange}
               />
             )}
