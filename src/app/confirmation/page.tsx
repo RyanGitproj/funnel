@@ -66,9 +66,6 @@ function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
   const domainItems = quote.includedItems.filter(
     (item) => item.category === "included_domain",
   );
-  const packItems = quote.includedItems.filter(
-    (item) => item.category === "included_pack",
-  );
 
   return (
     <section className="mt-14 border border-line bg-surface-elevated shadow-soft">
@@ -107,11 +104,6 @@ function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
                   <p className="font-serif text-lg font-medium text-ink">
                     {quote.pricingModeLabel}
                   </p>
-                  {packItems.length > 0 && (
-                    <p className="mt-1 text-xs text-ink-muted">
-                      Inclus : {packItems.map((i) => i.label).join(", ")}
-                    </p>
-                  )}
                   <p className="mt-1 text-xs uppercase tracking-[0.14em] text-ink-subtle">
                     Base de calcul
                   </p>

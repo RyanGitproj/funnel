@@ -100,10 +100,10 @@ export async function submitFestifLead(values: unknown): Promise<ActionResult> {
   }
 
   const quote = computeFestifQuote({
+    festif_duration: parsed.data.festif_duration,
     guest_count: parsed.data.guest_count,
     selected_options: parsed.data.selected_options,
     activites_interest: parsed.data.activites_interest,
-    festif_pack: parsed.data.festif_pack,
   });
 
   const result = await insertLead({

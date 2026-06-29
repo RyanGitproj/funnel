@@ -60,58 +60,58 @@ describe("Integration : pipeline quote → storage payload", () => {
   });
 
   describe("Festif", () => {
-    test("pack → payload avec prix du pack", () => {
+    test("grille weekend_2_nuits 22 pers → payload avec pricingMode=grid", () => {
       const quote = computeFestifQuote({
-        festif_pack: "evjf_chic",
+        festif_duration: "weekend_2_nuits",
         guest_count: 22,
         selected_options: [],
       });
       const payload = toStoragePayload(quote);
 
-      expect(payload.estimated_amount_min).toBe(5190);
-      expect(payload.estimated_amount_max).toBe(5190);
+      expect(payload.estimated_amount_min).toBe(4840);
+      expect(payload.estimated_amount_max).toBe(4840);
       const breakdown = payload.pricing_breakdown as Record<string, unknown>;
-      expect(breakdown.pricingMode).toBe("pack");
+      expect(breakdown.pricingMode).toBe("grid");
     });
 
     test("hors barème → estimated_amount null (base=0)", () => {
-      const quote = computeFestifQuote({ guest_count: 5, selected_options: [] });
+      const quote = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 5, selected_options: [] });
       const payload = toStoragePayload(quote);
 
       expect(payload.estimated_amount_min).toBeNull();
       expect(payload.estimated_amount_max).toBeNull();
     });
 
-    test("anti-double-billing préservé jusqu'au storage", () => {
+    test("grille + option per_person → quantity basée sur guest_count", () => {
       const quote = computeFestifQuote({
-        festif_pack: "weekend_proches",
-        guest_count: 22,
-        selected_options: ["Petit-déjeuner"],
-      });
-      const payload = toStoragePayload(quote);
-      const breakdown = payload.pricing_breakdown as Record<string, unknown>;
-      const options = breakdown.calculatedOptions as unknown[];
-
-      expect(options).toHaveLength(0);
-      expect(payload.estimated_amount_min).toBe(4640);
-    });
-
-    test("bug fix pack+guest_count différent préservé jusqu'au storage", () => {
-      const quote = computeFestifQuote({
-        festif_pack: "evjf_chic",
+        festif_duration: "weekend_2_nuits",
         guest_count: 16,
-        selected_options: ["Petit-déjeuner"],
+        selected_options: ["Brunch"],
       });
       const payload = toStoragePayload(quote);
       const breakdown = payload.pricing_breakdown as Record<string, unknown>;
       const options = breakdown.calculatedOptions as Array<Record<string, number>>;
 
-      expect(options[0]?.quantity).toBe(22);
-      expect(payload.estimated_amount_min).toBe(5190 + 10 * 22);
+      expect(options[0]?.quantity).toBe(16);
+      expect(payload.estimated_amount_min).toBe(4000 + 20 * 16);
+    });
+
+    test("weekend_long_3_nuits → pricingMode=pending dans le breakdown", () => {
+      const quote = computeFestifQuote({
+        festif_duration: "weekend_long_3_nuits",
+        guest_count: 20,
+        selected_options: [],
+      });
+      const payload = toStoragePayload(quote);
+      const breakdown = payload.pricing_breakdown as Record<string, unknown>;
+
+      expect(breakdown.pricingMode).toBe("pending");
+      expect(payload.estimated_amount_min).toBeNull();
     });
 
     test("activités → interestItems dans le breakdown, total non affecté", () => {
       const quote = computeFestifQuote({
+        festif_duration: "semaine_1_nuit",
         guest_count: 22,
         activites_interest: ["Combat de sumo", "Chasse au trésor"],
         selected_options: [],
@@ -121,24 +121,25 @@ describe("Integration : pipeline quote → storage payload", () => {
       const interests = breakdown.interestItems as unknown[];
 
       expect(interests).toHaveLength(2);
-      expect(payload.estimated_amount_min).toBe(22 * 159);
+      expect(payload.estimated_amount_min).toBe(1738);
     });
 
-    test("standard 22 pers + brunch → payload correct", () => {
+    test("weekend_2_nuits 22 pers + brunch → payload correct", () => {
       const quote = computeFestifQuote({
+        festif_duration: "weekend_2_nuits",
         guest_count: 22,
         selected_options: ["Brunch"],
       });
       const payload = toStoragePayload(quote);
 
-      expect(payload.estimated_amount_min).toBe(22 * 159 + 20 * 22);
+      expect(payload.estimated_amount_min).toBe(4840 + 20 * 22);
     });
   });
 
   describe("Cohérence cross-univers", () => {
     test("quote_status toujours 'indicative'", () => {
       const qc = computeCeremonieQuote({ guest_count: 50, selected_options: [] });
-      const qf = computeFestifQuote({ festif_pack: "evjf_chic", selected_options: [] });
+      const qf = computeFestifQuote({ festif_duration: "weekend_2_nuits", guest_count: 22, selected_options: [] });
 
       expect(toStoragePayload(qc).quote_status).toBe("indicative");
       expect(toStoragePayload(qf).quote_status).toBe("indicative");
@@ -146,7 +147,7 @@ describe("Integration : pipeline quote → storage payload", () => {
 
     test("manual_review_required toujours true (validation humaine obligatoire)", () => {
       const qc = computeCeremonieQuote({ guest_count: 50, selected_options: [] });
-      const qf = computeFestifQuote({ festif_pack: "anniversaire_signature", selected_options: [] });
+      const qf = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 12, selected_options: [] });
 
       expect(toStoragePayload(qc).manual_review_required).toBe(true);
       expect(toStoragePayload(qf).manual_review_required).toBe(true);

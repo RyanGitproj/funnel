@@ -46,9 +46,6 @@ export function QuotePreview({ quote }: { quote: QuoteResult | null }) {
   const domainItems = quote.includedItems.filter(
     (i) => i.category === "included_domain",
   );
-  const packItems = quote.includedItems.filter(
-    (i) => i.category === "included_pack",
-  );
 
   if (!hasBase && !hasInterests && !hasWarnings) return null;
 
@@ -59,18 +56,17 @@ export function QuotePreview({ quote }: { quote: QuoteResult | null }) {
       </p>
 
       {hasBase && (
-        <div>
-          <Row
-            label={quote.pricingMode === "pack" ? "Pack sélectionné" : "Base domaine"}
-            min={quote.baseAmountMin}
-            max={quote.baseAmountMax}
-          />
-          {packItems.length > 0 && (
-            <p className="pl-0 text-[10px] leading-relaxed text-ink-subtle">
-              ↳ Inclus : {packItems.map((i) => i.label).join(", ")}
-            </p>
-          )}
-        </div>
+        <Row
+          label={
+            quote.pricingMode === "grid"
+              ? "Séjour estimé"
+              : quote.pricingMode === "pending"
+              ? "Estimation à confirmer"
+              : "Base domaine"
+          }
+          min={quote.baseAmountMin}
+          max={quote.baseAmountMax}
+        />
       )}
 
       {hasOptions &&

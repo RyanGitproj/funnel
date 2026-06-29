@@ -113,21 +113,19 @@ export const festifActivitesInterestOptions = [
   "Activités extérieures",
 ] as const;
 
-export const festifPackOptions = [
-  "weekend_proches",
-  "evg_fun_chill",
-  "evjf_chic",
-  "anniversaire_signature",
+export const festifDurationOptions = [
+  "semaine_1_nuit",
+  "weekend_2_nuits",
+  "weekend_long_3_nuits",
 ] as const;
 
-export const festifPackLabels: Record<
-  (typeof festifPackOptions)[number],
+export const festifDurationLabels: Record<
+  (typeof festifDurationOptions)[number],
   string
 > = {
-  weekend_proches: "Week-end entre proches — 4 640 €",
-  evg_fun_chill: "EVG Fun & Chill (vie de garçon) — 4 860 €",
-  evjf_chic: "EVJF Chic (vie de jeune fille) — 5 190 €",
-  anniversaire_signature: "Anniversaire Signature — 5 410 €",
+  semaine_1_nuit: "Offre semaine — 1 nuit (dès 95 €/pers., lun-jeu, min. 12 pers.)",
+  weekend_2_nuits: "Week-end — 2 nuits (à partir de 205 €/pers. en groupe complet)",
+  weekend_long_3_nuits: "Week-end long — 3 nuits (estimation à confirmer)",
 };
 
 export const festifAmbianceOptions = [
@@ -219,11 +217,14 @@ export const festifLeadSchema = z
       festifEventTypeOptions,
       "Veuillez choisir un type d'événement.",
     ),
+    festif_duration: requiredSelect(
+      festifDurationOptions,
+      "Veuillez choisir une durée de séjour.",
+    ),
     guest_count: positiveInt,
     selected_options: z.array(z.enum(festifSelectedOptions)).optional(),
     activites_interest: z.array(z.enum(festifActivitesInterestOptions)).optional(),
     ambiance: optionalSelect(festifAmbianceOptions),
-    festif_pack: optionalSelect(festifPackOptions),
   })
   .strict();
 

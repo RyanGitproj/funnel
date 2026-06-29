@@ -12,18 +12,15 @@ import {
   dateFlexibilityOptions,
   festifAmbianceOptions,
   festifActivitesInterestOptions,
+  festifDurationLabels,
+  festifDurationOptions,
   festifEventTypeOptions,
   festifLeadSchema,
-  festifPackLabels,
-  festifPackOptions,
   festifSelectedOptions,
   projectStageOptions,
   type FestifLeadInput,
 } from "@/lib/validations/lead-schema";
-import {
-  FESTIF_ACTIVITY_OPTIONS,
-  getFestifPackIncludedLabels,
-} from "@/config/pricing/festif";
+import { FESTIF_ACTIVITY_OPTIONS } from "@/config/pricing/festif";
 import { submitFestifLead } from "@/actions/leads";
 import {
   FormField,
@@ -114,7 +111,7 @@ const ACTIVITY_ICONS: Record<string, React.ReactElement> = {
 };
 
 const STEP_FIELDS: (keyof FestifLeadInput)[][] = [
-  ["event_type", "guest_count"],
+  ["event_type", "festif_duration", "guest_count"],
   ["event_date", "date_flexibility"],
   [],
   ["budget_range", "project_stage"],
@@ -168,7 +165,7 @@ export function LeadFormFestif() {
       selected_options: [],
       activites_interest: [],
       ambiance: undefined,
-      festif_pack: undefined,
+      festif_duration: undefined,
       budget_range: undefined,
       project_stage: undefined,
       message: "",
@@ -185,35 +182,19 @@ export function LeadFormFestif() {
   const guestCount = useWatch({ control, name: "guest_count" });
   const selectedOptions = useWatch({ control, name: "selected_options", defaultValue: [] });
   const activitesInterest = useWatch({ control, name: "activites_interest", defaultValue: [] });
-  const festifPack = useWatch({ control, name: "festif_pack" });
-
-  const packIncludedLabels = React.useMemo(() => {
-    return getFestifPackIncludedLabels(festifPack);
-  }, [festifPack]);
-
-  React.useEffect(() => {
-    if (packIncludedLabels.length === 0 || !selectedOptions?.length) return;
-
-    const nextOptions = selectedOptions.filter(
-      (option) => !packIncludedLabels.includes(option),
-    );
-
-    if (nextOptions.length !== selectedOptions.length) {
-      setValue("selected_options", nextOptions, { shouldValidate: true });
-    }
-  }, [packIncludedLabels, selectedOptions, setValue]);
+  const festifDuration = useWatch({ control, name: "festif_duration" });
 
   const quote = React.useMemo(
     () =>
-      guestCount !== undefined
+      festifDuration !== undefined
         ? computeFestifQuote({
             guest_count: guestCount,
             selected_options: selectedOptions ?? [],
             activites_interest: activitesInterest ?? [],
-            festif_pack: festifPack,
+            festif_duration: festifDuration,
           })
         : null,
-    [guestCount, selectedOptions, activitesInterest, festifPack],
+    [festifDuration, guestCount, selectedOptions, activitesInterest],
   );
 
   const scrollToForm = () =>
@@ -286,6 +267,33 @@ export function LeadFormFestif() {
           {errors.event_type && (
             <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
               {errors.event_type.message}
+            </p>
+          )}
+        </div>
+
+        {/* festif_duration */}
+        <div className="flex flex-col gap-3">
+          <SectionQuestion required>
+            Quelle durée souhaitez-vous ?
+          </SectionQuestion>
+          <Controller
+            control={control}
+            name="festif_duration"
+            render={({ field }) => (
+              <CardSelect
+                options={festifDurationOptions}
+                value={field.value ?? undefined}
+                onChange={field.onChange}
+                cols={2}
+                getLabel={(v) =>
+                  festifDurationLabels[v as (typeof festifDurationOptions)[number]]
+                }
+              />
+            )}
+          />
+          {errors.festif_duration && (
+            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
+              {errors.festif_duration.message}
             </p>
           )}
         </div>
@@ -404,33 +412,6 @@ export function LeadFormFestif() {
 
       {/* ── Étape 3 : Votre ambiance ── */}
       <div className={cn("flex flex-col gap-4", step !== 3 && "hidden")}>
-        {/* Pack Festif — sélection optionnelle */}
-        <div className="flex flex-col gap-3">
-          <SectionQuestion>
-            Souhaitez-vous partir d&apos;un pack prédéfini ? (facultatif)
-          </SectionQuestion>
-          <Controller
-            control={control}
-            name="festif_pack"
-            render={({ field }) => (
-              <CardSelect
-                options={festifPackOptions}
-                value={field.value ?? undefined}
-                onChange={(v) => {
-                  field.onChange(field.value === v ? "" : v);
-                }}
-                cols={2}
-                getLabel={(v) =>
-                  festifPackLabels[v as (typeof festifPackOptions)[number]]
-                }
-              />
-            )}
-          />
-          <p className="text-xs leading-relaxed text-ink-subtle">
-            Si aucun pack ne correspond, le devis sera calculé selon le nombre de participants.
-          </p>
-        </div>
-
         {/* ambiance */}
         <div className="flex flex-col gap-3">
           <SectionQuestion>
@@ -464,7 +445,7 @@ export function LeadFormFestif() {
                 value={field.value}
                 onChange={field.onChange}
                 cols={3}
-                disabledOptions={packIncludedLabels}
+                disabledOptions={[]}
               />
             )}
           />

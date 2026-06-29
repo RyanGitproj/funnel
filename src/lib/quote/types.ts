@@ -1,12 +1,13 @@
 export type QuoteUniverse = "ceremonie" | "festif";
-export type PricingMode = "base" | "pack" | "standard";
+export type PricingMode = "base" | "grid" | "pending";
 export type ManualReviewReason =
   | "missing_price"
   | "sur_devis"
   | "capacity_check"
-  | "logistics_check";
+  | "logistics_check"
+  | "duration_pending";
 
-export type IncludedItemCategory = "included_domain" | "included_pack";
+export type IncludedItemCategory = "included_domain";
 
 export type CalculatedOption = {
   id: string;

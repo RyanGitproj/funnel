@@ -69,8 +69,8 @@ const UNIVERSE_COPY: Record<
 
 const PRICING_MODE_LABELS = {
   base: "Base domaine",
-  pack: "Pack sélectionné",
-  standard: "Barème standard",
+  grid: "Séjour estimé (durée × personnes)",
+  pending: "Estimation à confirmer",
 } as const;
 
 export function createConfirmationQuoteSnapshot(

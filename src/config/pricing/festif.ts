@@ -4,14 +4,103 @@
  * Tous les prix sont indicatifs. Validation commerciale obligatoire avant toute proposition.
  */
 
-export type FestifPack = {
-  id: string;
-  label: string;
-  price: number;
+export type FestifDuration =
+  | "semaine_1_nuit"
+  | "weekend_2_nuits"
+  | "weekend_long_3_nuits";
+
+export type FestifDurationRate = {
   persons: number;
-  /** IDs des options déjà incluses — ne pas les facturer une seconde fois. */
-  includedOptionIds: string[];
+  total: number;
+  /** Nombre de places bivouac au-delà des 22 couchages intérieurs, si applicable. */
+  bivouacPlaces?: number;
 };
+
+export const FESTIF_DURATION_LABELS: Record<FestifDuration, string> = {
+  semaine_1_nuit: "Offre semaine — 1 nuit",
+  weekend_2_nuits: "Week-end — 2 nuits",
+  weekend_long_3_nuits: "Week-end long — 3 nuits",
+};
+
+/** null = barème non validé, ne jamais calculer automatiquement. */
+export const FESTIF_DURATION_CAPACITY: Record<
+  FestifDuration,
+  { min: number; max: number } | null
+> = {
+  semaine_1_nuit: { min: 12, max: 34 },
+  weekend_2_nuits: { min: 10, max: 34 },
+  weekend_long_3_nuits: null,
+};
+
+/**
+ * Grilles tarifaires — source : validation_logique_tarifaire (correctifs durée×personnes).
+ * Chaque ligne = prix TOTAL exact pour ce nombre de personnes (pas une formule continue,
+ * le tarif/personne dégressif n'est pas parfaitement linéaire). Couvre tous les entiers
+ * de min à max : un lookup exact doit toujours trouver une ligne dans la plage.
+ */
+export const FESTIF_DURATION_RATES: Record<FestifDuration, FestifDurationRate[]> = {
+  semaine_1_nuit: [
+    { persons: 12, total: 1140 },
+    { persons: 13, total: 1209 },
+    { persons: 14, total: 1274 },
+    { persons: 15, total: 1335 },
+    { persons: 16, total: 1392 },
+    { persons: 17, total: 1445 },
+    { persons: 18, total: 1494 },
+    { persons: 19, total: 1558 },
+    { persons: 20, total: 1620 },
+    { persons: 21, total: 1680 },
+    { persons: 22, total: 1738 },
+    { persons: 23, total: 1813, bivouacPlaces: 1 },
+    { persons: 24, total: 1887, bivouacPlaces: 2 },
+    { persons: 25, total: 1960, bivouacPlaces: 3 },
+    { persons: 26, total: 2032, bivouacPlaces: 4 },
+    { persons: 27, total: 2103, bivouacPlaces: 5 },
+    { persons: 28, total: 2173, bivouacPlaces: 6 },
+    { persons: 29, total: 2242, bivouacPlaces: 7 },
+    { persons: 30, total: 2310, bivouacPlaces: 8 },
+    { persons: 31, total: 2377, bivouacPlaces: 9 },
+    { persons: 32, total: 2443, bivouacPlaces: 10 },
+    { persons: 33, total: 2508, bivouacPlaces: 11 },
+    { persons: 34, total: 2572, bivouacPlaces: 12 },
+  ],
+  weekend_2_nuits: [
+    { persons: 10, total: 2800 },
+    { persons: 11, total: 3025 },
+    { persons: 12, total: 3240 },
+    { persons: 13, total: 3445 },
+    { persons: 14, total: 3640 },
+    { persons: 15, total: 3825 },
+    { persons: 16, total: 4000 },
+    { persons: 17, total: 4165 },
+    { persons: 18, total: 4320 },
+    { persons: 19, total: 4465 },
+    { persons: 20, total: 4600 },
+    { persons: 21, total: 4725 },
+    { persons: 22, total: 4840 },
+    { persons: 23, total: 5045, bivouacPlaces: 1 },
+    { persons: 24, total: 5245, bivouacPlaces: 2 },
+    { persons: 25, total: 5440, bivouacPlaces: 3 },
+    { persons: 26, total: 5630, bivouacPlaces: 4 },
+    { persons: 27, total: 5815, bivouacPlaces: 5 },
+    { persons: 28, total: 5995, bivouacPlaces: 6 },
+    { persons: 29, total: 6170, bivouacPlaces: 7 },
+    { persons: 30, total: 6340, bivouacPlaces: 8 },
+    { persons: 31, total: 6505, bivouacPlaces: 9 },
+    { persons: 32, total: 6665, bivouacPlaces: 10 },
+    { persons: 33, total: 6820, bivouacPlaces: 11 },
+    { persons: 34, total: 6970, bivouacPlaces: 12 },
+  ],
+  // Barème non validé pour le moment — ne jamais inventer de prix ici.
+  weekend_long_3_nuits: [],
+};
+
+export function getFestifDurationRate(
+  duration: FestifDuration,
+  persons: number,
+): FestifDurationRate | undefined {
+  return FESTIF_DURATION_RATES[duration].find((r) => r.persons === persons);
+}
 
 export const FESTIF_INCLUDED_DOMAIN_ITEMS = [
   { id: "couchages", label: "22 couchages sur place selon configuration" },
@@ -22,52 +111,6 @@ export const FESTIF_INCLUDED_DOMAIN_ITEMS = [
   { id: "petanque", label: "Pétanque" },
   { id: "karaoke_jeux", label: "Karaoké avec micro et jeux festifs" },
 ] as const;
-
-export const FESTIF_PACKS: FestifPack[] = [
-  {
-    id: "weekend_proches",
-    label: "Week-end entre proches",
-    price: 4640,
-    persons: 22,
-    includedOptionIds: ["petit_dejeuner"],
-  },
-  {
-    id: "evg_fun_chill",
-    label: "EVG Fun & Chill - vie de garçon",
-    price: 4860,
-    persons: 22,
-    includedOptionIds: ["petit_dejeuner"],
-  },
-  {
-    id: "evjf_chic",
-    label: "EVJF Chic - vie de jeune fille",
-    price: 5190,
-    persons: 22,
-    includedOptionIds: ["brunch"],
-  },
-  {
-    id: "anniversaire_signature",
-    label: "Anniversaire Signature",
-    price: 5410,
-    persons: 22,
-    includedOptionIds: ["brunch"],
-  },
-];
-
-export type FestifStandardRate = {
-  persons: number;
-  ratePerPerson: number;
-};
-
-/** Barème privatisation standard. Hors barème → validation humaine obligatoire. */
-export const FESTIF_STANDARD_RATES: FestifStandardRate[] = [
-  { persons: 22, ratePerPerson: 159 },
-  { persons: 20, ratePerPerson: 175 },
-  { persons: 18, ratePerPerson: 194 },
-  { persons: 16, ratePerPerson: 219 },
-  { persons: 14, ratePerPerson: 250 },
-  { persons: 12, ratePerPerson: 292 },
-];
 
 export type FestifPricedOption = {
   id: string;
@@ -146,11 +189,6 @@ export const FESTIF_ACTIVITY_OPTIONS: FestifActivityOption[] = [
   { id: "activites_ext",   formLabel: "Activités extérieures" },
 ];
 
-export const FESTIF_CAPACITY = {
-  minPersons: 12,
-  maxPersons: 22,
-} as const;
-
 export function getFestifOptionLabelById(id: string): string | undefined {
   return (
     FESTIF_PRICED_OPTIONS.find((option) => option.id === id)?.formLabel ??
@@ -167,13 +205,3 @@ export function getFestifOptionIdByLabel(label: string): string | undefined {
   );
 }
 
-export function getFestifPackIncludedLabels(packId?: string): string[] {
-  if (!packId) return [];
-
-  const pack = FESTIF_PACKS.find((item) => item.id === packId);
-  if (!pack) return [];
-
-  return pack.includedOptionIds
-    .map((id) => getFestifOptionLabelById(id))
-    .filter((label): label is string => Boolean(label));
-}

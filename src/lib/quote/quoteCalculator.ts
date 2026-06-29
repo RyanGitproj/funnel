@@ -7,14 +7,12 @@ import {
 } from "@/config/pricing/ceremonie";
 import {
   FESTIF_ACTIVITY_OPTIONS,
-  FESTIF_CAPACITY,
+  FESTIF_DURATION_CAPACITY,
   FESTIF_INCLUDED_DOMAIN_ITEMS,
   FESTIF_MANUAL_OPTIONS,
-  FESTIF_PACKS,
   FESTIF_PRICED_OPTIONS,
-  FESTIF_STANDARD_RATES,
-  getFestifOptionIdByLabel,
-  getFestifOptionLabelById,
+  getFestifDurationRate,
+  type FestifDuration,
 } from "@/config/pricing/festif";
 import type {
   CalculatedOption,
@@ -124,7 +122,7 @@ export type FestifQuoteInput = {
   guest_count?: number;
   selected_options?: string[];
   activites_interest?: string[];
-  festif_pack?: string;
+  festif_duration?: FestifDuration;
 };
 
 export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
@@ -132,7 +130,7 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
     guest_count,
     selected_options = [],
     activites_interest = [],
-    festif_pack,
+    festif_duration,
   } = input;
 
   const calculatedOptions: CalculatedOption[] = [];
@@ -141,30 +139,20 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
 
   let baseAmountMin = 0;
   let baseAmountMax = 0;
-  let pricingMode: "pack" | "standard" = "standard";
-  let packIncludedOptionIds: string[] = [];
+  let pricingMode: "grid" | "pending" = "grid";
 
-  const pack =
-    festif_pack && festif_pack !== "standard"
-      ? FESTIF_PACKS.find((p) => p.id === festif_pack)
-      : undefined;
-
-  if (pack) {
-    baseAmountMin = pack.price;
-    baseAmountMax = pack.price;
-    pricingMode = "pack";
-    packIncludedOptionIds = pack.includedOptionIds;
-  } else if (guest_count !== undefined) {
-    const rate = FESTIF_STANDARD_RATES.find((r) => r.persons === guest_count);
-    if (rate) {
-      baseAmountMin = rate.persons * rate.ratePerPerson;
-      baseAmountMax = baseAmountMin;
-    } else if (
-      guest_count < FESTIF_CAPACITY.minPersons ||
-      guest_count > FESTIF_CAPACITY.maxPersons
-    ) {
+  if (festif_duration === "weekend_long_3_nuits") {
+    pricingMode = "pending";
+    manualReviewItems.push({
+      id: "duration_pending",
+      label: "Week-end long — barème non validé, estimation à confirmer",
+      reason: "duration_pending",
+    });
+  } else if (festif_duration !== undefined && guest_count !== undefined) {
+    const capacity = FESTIF_DURATION_CAPACITY[festif_duration];
+    if (guest_count < capacity!.min || guest_count > capacity!.max) {
       warnings.push(
-        `Nombre de participants (${guest_count}) hors barème visible (${FESTIF_CAPACITY.minPersons} à ${FESTIF_CAPACITY.maxPersons} personnes) — validation humaine obligatoire.`,
+        `Nombre de participants (${guest_count}) hors barème visible (${capacity!.min} à ${capacity!.max} personnes) — validation humaine obligatoire.`,
       );
       manualReviewItems.push({
         id: "capacity_persons",
@@ -172,27 +160,15 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
         reason: "capacity_check",
       });
     } else {
-      // Guest count is in range but not an exact match — find nearest
-      const sorted = [...FESTIF_STANDARD_RATES].sort(
-        (a, b) => Math.abs(a.persons - guest_count) - Math.abs(b.persons - guest_count),
-      );
-      const nearest = sorted[0];
-      if (nearest) {
-        baseAmountMin = nearest.persons * nearest.ratePerPerson;
-        baseAmountMax = baseAmountMin;
-        warnings.push(
-          `Barème exact non disponible pour ${guest_count} personnes — estimation basée sur ${nearest.persons} personnes.`,
-        );
+      const rate = getFestifDurationRate(festif_duration, guest_count);
+      if (rate) {
+        baseAmountMin = rate.total;
+        baseAmountMax = rate.total;
       }
     }
   }
 
   for (const optLabel of selected_options) {
-    const optionId = getFestifOptionIdByLabel(optLabel);
-    if (optionId && packIncludedOptionIds.includes(optionId)) {
-      continue;
-    }
-
     const priced = FESTIF_PRICED_OPTIONS.find((p) => p.formLabel === optLabel);
 
     if (priced) {
@@ -207,11 +183,7 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
           totalMax: priced.priceMax!,
         });
       } else {
-        // En mode pack, les options per_person s'appliquent au nombre de personnes
-        // du pack (toujours 22), pas au guest_count saisi — évite l'incohérence
-        // base-22-pers vs options-18-pers quand l'utilisateur a modifié le champ.
-        const effectivePersons = pack?.persons ?? guest_count ?? 22;
-        const qty = priced.priceMode === "per_person" ? effectivePersons : 1;
+        const qty = priced.priceMode === "per_person" ? (guest_count ?? 0) : 1;
         const total = priced.unitPrice! * qty;
         calculatedOptions.push({
           id: priced.id,
@@ -246,32 +218,15 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
       ? "À définir"
       : formatRange(estimatedMin, estimatedMax);
 
-  const packIncludedItems: IncludedItem[] = packIncludedOptionIds.flatMap(
-    (id) => {
-      const label = getFestifOptionLabelById(id);
-      if (!label) return [];
+  const includedItems: IncludedItem[] = FESTIF_INCLUDED_DOMAIN_ITEMS.map((item) => ({
+    ...item,
+    category: "included_domain" as const,
+  }));
 
-      return [
-        {
-          id,
-          label,
-          category: "included_pack",
-        },
-      ];
-    },
-  );
-  const includedItems: IncludedItem[] = [
-    ...FESTIF_INCLUDED_DOMAIN_ITEMS.map((item) => ({
-      ...item,
-      category: "included_domain" as const,
-    })),
-    ...packIncludedItems,
-  ];
   const interestItems: InterestItem[] = activites_interest.map((label) => {
     const activity = FESTIF_ACTIVITY_OPTIONS.find(
       (option) => option.formLabel === label,
     );
-
     return {
       id: activity?.id ?? label,
       label,
