@@ -87,6 +87,7 @@ export default function FestifPage() {
             href: "#devis",
             label: "Obtenir mon devis festif",
             variant: "primaryGlow",
+            trackEvent: "festif_start",
           }}
           image={{
             src: "/images/ceremonie/pool-house-piscine-interieure.jpeg",

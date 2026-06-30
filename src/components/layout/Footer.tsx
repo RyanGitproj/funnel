@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PhoneLink, EmailLink } from "@/components/tracking/ContactLinks";
 
 /**
  * Footer — minimal, premium, agnostique du thème.
@@ -83,20 +84,14 @@ export function Footer({ description = defaultDescription }: { description?: str
             <h3 className="text-eyebrow">Contact</h3>
             <ul className="space-y-2 text-sm">
               <li className="text-ink-muted">
-                <a
-                  href="tel:+33788808194"
-                  className="transition-colors hover:text-accent-strong"
-                >
+                <PhoneLink className="transition-colors hover:text-accent-strong">
                   07 88 80 81 94
-                </a>
+                </PhoneLink>
               </li>
               <li className="text-ink-muted">
-                <a
-                  href="mailto:contact@domainedeselegances.fr"
-                  className="transition-colors hover:text-accent-strong"
-                >
+                <EmailLink className="transition-colors hover:text-accent-strong">
                   contact@domainedeselegances.fr
-                </a>
+                </EmailLink>
               </li>
               <li className="text-ink-muted">
                 Réponse sous 24h ouvrées

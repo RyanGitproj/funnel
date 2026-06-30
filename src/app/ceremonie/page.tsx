@@ -106,6 +106,7 @@ export default function CeremoniePage() {
           primaryCta={{
             href: "#devis",
             label: "Préparer mon devis cérémonie",
+            trackEvent: "ceremonie_start",
           }}
           microReassurance="Réponse sous 24h ouvrées - Proposition personnalisée - Sous réserve de disponibilité"
           image={{

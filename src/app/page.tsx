@@ -4,7 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { ReassuranceBar } from "@/components/sections/ReassuranceBar";
-import Link from "next/link";
+import { TrackedLink } from "@/components/tracking/TrackedLink";
 import Image from "next/image";
 import { Clock, Sparkles, HeartHandshake, MapPinned } from "lucide-react";
 
@@ -72,11 +72,13 @@ export default function HomePage() {
           primaryCta={{
             href: "#orientation",
             label: "CHOISIR MON UNIVERS",
+            trackEvent: "homepage_orientation_click",
           }}
           secondaryCta={{
             href: "#contact",
             label: "CONTACTER L'ÉQUIPE",
             variant: "outline",
+            trackEvent: "homepage_contact_click",
           }}
           image={{
             src: "/images/ceremonie/hero-bg.jpeg",
@@ -120,8 +122,9 @@ export default function HomePage() {
               <div className="flex w-full flex-row gap-3 sm:gap-6">
 
                 {/* Cérémonie */}
-                <Link
+                <TrackedLink
                   href="/ceremonie"
+                  event="homepage_card_ceremonie_click"
                   className="group flex flex-1 flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-accent/35 bg-surface-elevated px-3 py-8 text-center shadow-soft transition-all duration-300 hover:border-accent hover:shadow-[0_16px_48px_-16px_rgba(168,137,92,0.30)] sm:gap-6 sm:px-10 sm:py-12"
                 >
                   <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-accent/50 shadow-soft ring-4 ring-accent/10 sm:h-28 sm:w-28">
@@ -149,11 +152,12 @@ export default function HomePage() {
                     Préparer mon projet
                     <span aria-hidden className="ml-1 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
                   </span>
-                </Link>
+                </TrackedLink>
 
                 {/* Festif */}
-                <Link
+                <TrackedLink
                   href="/festif"
+                  event="homepage_card_festif_click"
                   className="group flex flex-1 flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-accent/35 bg-surface-elevated px-3 py-8 text-center shadow-soft transition-all duration-300 hover:border-accent hover:shadow-[0_16px_48px_-16px_rgba(168,137,92,0.30)] sm:gap-6 sm:px-10 sm:py-12"
                 >
                   <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-accent/50 shadow-soft ring-4 ring-accent/10 sm:h-28 sm:w-28">
@@ -181,7 +185,7 @@ export default function HomePage() {
                     Découvrir le festif
                     <span aria-hidden className="ml-1 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
                   </span>
-                </Link>
+                </TrackedLink>
 
               </div>
             </div>

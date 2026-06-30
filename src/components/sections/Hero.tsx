@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { pushDataLayerEvent } from "@/lib/tracking/gtm";
 
 export type HeroVariant = "accueil" | "ceremonie" | "festif";
 
@@ -13,6 +14,7 @@ export interface HeroCta {
   href: string;
   label: string;
   variant?: "primary" | "primaryGlow" | "outline";
+  trackEvent?: string;
 }
 
 export interface HeroImage {
@@ -69,6 +71,7 @@ function CtaLink({ cta, className }: { cta: HeroCta; className?: string }) {
         className={className}
         onClick={(e) => {
           e.preventDefault();
+          if (cta.trackEvent) pushDataLayerEvent(cta.trackEvent);
           scrollToHash(cta.href);
         }}
       >
@@ -77,7 +80,13 @@ function CtaLink({ cta, className }: { cta: HeroCta; className?: string }) {
     );
   }
   return (
-    <Link href={cta.href} className={className}>
+    <Link
+      href={cta.href}
+      className={className}
+      onClick={() => {
+        if (cta.trackEvent) pushDataLayerEvent(cta.trackEvent);
+      }}
+    >
       <CtaContent cta={cta} />
     </Link>
   );

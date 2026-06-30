@@ -667,11 +667,9 @@ export function LeadFormFestif() {
               id="f-dietary-notes"
               label="Précisez votre demande"
               required
+              hint="Indiquez vos préférences alimentaires pour que l'équipe puisse vous orienter rapidement."
               error={errors.dietary_notes?.message}
             >
-              <p className="mb-2 text-xs leading-relaxed text-ink-subtle">
-                Indiquez vos préférences alimentaires pour que l'équipe puisse vous orienter rapidement.
-              </p>
               <textarea
                 rows={3}
                 className={fieldBaseClass}

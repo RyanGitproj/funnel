@@ -36,6 +36,7 @@ import { QuotePreview } from "./QuotePreview";
 import { computeCeremonieQuote } from "@/lib/quote/quoteCalculator";
 
 const FORM_ID = "lead-form-ceremonie";
+const LAST_OPTIONS_STEP = 3;
 
 const STEP_FIELDS: (keyof CeremonieLeadInput)[][] = [
   ["event_type", "guest_count"],
@@ -611,6 +612,24 @@ export function LeadFormCeremonie() {
               className="w-full"
             >
               {isPending ? "Envoi en cours..." : "Recevoir ma proposition cérémonie →"}
+            </Button>
+            <Button
+              type="button"
+              size="md"
+              variant="secondary"
+              onClick={() => { scrollToForm(); setStep(1); }}
+              className="w-full"
+            >
+              Modifier mes choix
+            </Button>
+            <Button
+              type="button"
+              size="md"
+              variant="ghost"
+              onClick={() => { scrollToForm(); setStep(LAST_OPTIONS_STEP); }}
+              className="w-full"
+            >
+              Ajouter une option
             </Button>
             <p className="text-center text-xs leading-relaxed text-ink-subtle">
               Réponse sous 24h ouvrées. Proposition transmise sous réserve de

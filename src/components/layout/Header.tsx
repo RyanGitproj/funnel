@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { pushDataLayerEvent } from "@/lib/tracking/gtm";
 
 /**
  * Header — commun à toutes les pages, agnostique du thème.
@@ -28,6 +29,11 @@ export function Header() {
     if (!isFunnel) return;
     e.preventDefault();
     document.getElementById("devis")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleQuoteCtaClick = (e: React.MouseEvent) => {
+    pushDataLayerEvent("header_quote_cta_click", { source_page: pathname });
+    scrollToForm(e);
   };
 
   return (
@@ -75,7 +81,7 @@ export function Header() {
 
         <Link
           href={isFunnel ? "#devis" : "/#orientation"}
-          onClick={scrollToForm}
+          onClick={handleQuoteCtaClick}
           className={`bg-accent-strong text-accent-foreground font-semibold uppercase tracking-[0.18em] transition-colors hover:brightness-95${isFunnel ? " inline-flex px-4 py-2.5 text-[10px] md:px-6 md:py-3 md:text-xs" : " hidden px-6 py-3 text-xs md:inline-flex"}`}
           style={{ borderRadius: "var(--radius-md)" }}
         >

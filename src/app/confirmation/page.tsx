@@ -6,6 +6,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PhoneLink, EmailLink } from "@/components/tracking/ContactLinks";
+import { LeadConversionTracker } from "@/components/tracking/LeadConversionTracker";
 import { formatEur } from "@/lib/quote/formatQuote";
 import {
   CONFIRMATION_QUOTE_COOKIE,
@@ -295,7 +297,12 @@ export default async function ConfirmationPage() {
               </p>
             </div>
 
-            {quote && <QuoteSummary quote={quote} />}
+            {quote && (
+              <>
+                <QuoteSummary quote={quote} />
+                <LeadConversionTracker universe={quote.universe} />
+              </>
+            )}
 
             {/* Prochaines étapes */}
             <div className="mt-16 border-t border-line pt-12">
@@ -364,10 +371,7 @@ export default async function ConfirmationPage() {
             <div className="mt-16 border-t border-line pt-12">
               <h2 className="text-eyebrow mb-8">Une question immédiate&nbsp;?</h2>
               <div className="grid gap-6 sm:grid-cols-2">
-                <a
-                  href="tel:+33788808194"
-                  className="group flex items-start gap-4 border border-line bg-surface-elevated p-6 rounded-[var(--radius-lg)] transition-colors hover:border-accent-strong"
-                >
+                <PhoneLink className="group flex items-start gap-4 border border-line bg-surface-elevated p-6 rounded-[var(--radius-lg)] transition-colors hover:border-accent-strong">
                   <span className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-md)] border border-accent/40 bg-accent/10 text-accent-strong">
                     <Phone className="size-5" aria-hidden />
                   </span>
@@ -379,11 +383,8 @@ export default async function ConfirmationPage() {
                       07 88 80 81 94
                     </p>
                   </div>
-                </a>
-                <a
-                  href="mailto:contact@domainedeselegances.fr"
-                  className="group flex items-start gap-4 border border-line bg-surface-elevated p-6 rounded-[var(--radius-lg)] transition-colors hover:border-accent-strong"
-                >
+                </PhoneLink>
+                <EmailLink className="group flex items-start gap-4 border border-line bg-surface-elevated p-6 rounded-[var(--radius-lg)] transition-colors hover:border-accent-strong">
                   <span className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-md)] border border-accent/40 bg-accent/10 text-accent-strong">
                     <Mail className="size-5" aria-hidden />
                   </span>
@@ -395,7 +396,7 @@ export default async function ConfirmationPage() {
                       contact@domainedeselegances.fr
                     </p>
                   </div>
-                </a>
+                </EmailLink>
               </div>
 
               <div className="mt-8 flex items-center justify-center gap-3 text-sm text-ink-muted">
