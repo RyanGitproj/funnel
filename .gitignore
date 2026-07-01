@@ -55,3 +55,9 @@ docs/
 
 # Debug
 .pnpm-debug.log*
+
+# Agent working memory — local only, never pushed to remote
+CLAUDE.md
+TODO.md
+*instruction*.md
+*skill*.md
