@@ -105,9 +105,19 @@ export function Footer({ description = defaultDescription }: { description?: str
             © {currentYear} Domaine des Élégances. Tous droits réservés.
           </p>
           <p className="flex gap-4">
-            <span>Mentions légales</span>
+            <Link
+              href="/mentions-legales"
+              className="transition-colors hover:text-accent-strong"
+            >
+              Mentions légales
+            </Link>
             <span>·</span>
-            <span>Politique de confidentialité</span>
+            <Link
+              href="/politique-de-confidentialite"
+              className="transition-colors hover:text-accent-strong"
+            >
+              Politique de confidentialité
+            </Link>
           </p>
         </div>
       </div>

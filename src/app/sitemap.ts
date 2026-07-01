@@ -19,6 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/", changeFrequency: "monthly", priority: 1 },
     { path: "/ceremonie", changeFrequency: "monthly", priority: 0.9 },
     { path: "/festif", changeFrequency: "monthly", priority: 0.9 },
+    { path: "/mentions-legales", changeFrequency: "yearly", priority: 0.1 },
+    {
+      path: "/politique-de-confidentialite",
+      changeFrequency: "yearly",
+      priority: 0.1,
+    },
   ];
 
   return routes.map((route) => ({
