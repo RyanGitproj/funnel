@@ -7,7 +7,7 @@ import { LegalSection } from "@/components/layout/LegalSection";
 export const metadata: Metadata = {
   title: "Mentions légales",
   description:
-    "Mentions légales du site Domaine des Élégances — éditeur, hébergement, propriété intellectuelle.",
+    "Mentions légales du site Domaine des Élégances — éditeur du site et hébergement.",
   alternates: { canonical: "/mentions-legales" },
 };
 
@@ -36,16 +36,7 @@ export default function MentionsLegalesPage() {
               <p>
                 Siège social : 60 rue François Ier, 75008 Paris, France
                 <br />
-                SIREN : 990 106 098 — SIRET : 990 106 098 00017
-                <br />
                 RCS Paris : 990 106 098
-                <br />
-                N° de TVA intracommunautaire : FR20990106098
-              </p>
-              <p>
-                Activité déclarée : services de conciergerie privée à
-                destination des particuliers, sans prestation de ménage —
-                Code APE 82.99Z.
               </p>
               <p>
                 Directeur de la publication : Monsieur Ludwig Laurent
@@ -80,42 +71,6 @@ export default function MentionsLegalesPage() {
                 >
                   render.com
                 </a>
-              </p>
-            </LegalSection>
-
-            <LegalSection title="Propriété intellectuelle">
-              <p>
-                L&rsquo;ensemble des contenus présents sur ce site (textes,
-                images, logos, mise en page) est la propriété de LIEUX DE
-                CELEBRATIONS.COM, sauf mention contraire, et est protégé par
-                le droit de la propriété intellectuelle. Toute reproduction,
-                représentation, modification ou exploitation, totale ou
-                partielle, sans autorisation préalable écrite, est interdite.
-              </p>
-            </LegalSection>
-
-            <LegalSection title="Responsabilité">
-              <p>
-                LIEUX DE CELEBRATIONS.COM s&rsquo;efforce d&rsquo;assurer
-                l&rsquo;exactitude des informations diffusées sur ce site,
-                sans pouvoir en garantir l&rsquo;exhaustivité ou
-                l&rsquo;absence de modification. Les informations sont
-                communiquées à titre indicatif et peuvent être amenées à
-                évoluer.
-              </p>
-            </LegalSection>
-
-            <LegalSection title="Données personnelles">
-              <p>
-                Le traitement des données personnelles collectées sur ce
-                site est détaillé dans notre{" "}
-                <a
-                  href="/politique-de-confidentialite"
-                  className="text-accent-strong underline underline-offset-2"
-                >
-                  politique de confidentialité
-                </a>
-                .
               </p>
             </LegalSection>
           </div>

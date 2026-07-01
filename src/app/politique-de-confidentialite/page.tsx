@@ -36,16 +36,6 @@ export default function PolitiqueConfidentialitePage() {
               </p>
             </LegalSection>
 
-            <LegalSection title="Données collectées">
-              <p>
-                Via les formulaires de demande de devis (Cérémonie et
-                Festif), nous collectons : nom, prénom, adresse e-mail,
-                numéro de téléphone, et les détails de votre projet
-                d&rsquo;événement (date, nombre d&rsquo;invités, options
-                souhaitées).
-              </p>
-            </LegalSection>
-
             <LegalSection title="Finalités du traitement">
               <ul className="list-disc space-y-2 pl-5">
                 <li>Traiter votre demande de devis et vous recontacter</li>
