@@ -2,7 +2,7 @@
 
 import { formatEur } from "@/lib/quote/formatQuote";
 import type { QuoteResult } from "@/lib/quote/types";
-import { INCLUS_DOMAINE } from "@/config/festif-inclus";
+import { getInclusDomaine } from "@/config/festif-inclus";
 
 function Row({
   label,
@@ -173,7 +173,7 @@ export function QuotePreview({
             Inclus dans votre privatisation
           </p>
           <ul className="grid grid-cols-2 gap-x-3 gap-y-0.5">
-            {INCLUS_DOMAINE.map((item) => (
+            {getInclusDomaine(quote.festifDuration).map((item) => (
               <li key={item} className="text-[10px] leading-relaxed text-ink-subtle">
                 · {item}
               </li>

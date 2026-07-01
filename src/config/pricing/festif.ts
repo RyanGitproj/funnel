@@ -40,29 +40,29 @@ export const FESTIF_DURATION_CAPACITY: Record<
  */
 export const FESTIF_DURATION_RATES: Record<FestifDuration, FestifDurationRate[]> = {
   semaine_1_nuit: [
-    { persons: 12, total: 1140 },
-    { persons: 13, total: 1209 },
-    { persons: 14, total: 1274 },
-    { persons: 15, total: 1335 },
-    { persons: 16, total: 1392 },
-    { persons: 17, total: 1445 },
-    { persons: 18, total: 1494 },
-    { persons: 19, total: 1558 },
-    { persons: 20, total: 1620 },
-    { persons: 21, total: 1680 },
-    { persons: 22, total: 1738 },
-    { persons: 23, total: 1813, bivouacPlaces: 1 },
-    { persons: 24, total: 1887, bivouacPlaces: 2 },
-    { persons: 25, total: 1960, bivouacPlaces: 3 },
-    { persons: 26, total: 2032, bivouacPlaces: 4 },
-    { persons: 27, total: 2103, bivouacPlaces: 5 },
-    { persons: 28, total: 2173, bivouacPlaces: 6 },
-    { persons: 29, total: 2242, bivouacPlaces: 7 },
-    { persons: 30, total: 2310, bivouacPlaces: 8 },
-    { persons: 31, total: 2377, bivouacPlaces: 9 },
-    { persons: 32, total: 2443, bivouacPlaces: 10 },
-    { persons: 33, total: 2508, bivouacPlaces: 11 },
-    { persons: 34, total: 2572, bivouacPlaces: 12 },
+    { persons: 12, total: 1500 },
+    { persons: 13, total: 1590 },
+    { persons: 14, total: 1680 },
+    { persons: 15, total: 1770 },
+    { persons: 16, total: 1860 },
+    { persons: 17, total: 1950 },
+    { persons: 18, total: 2040 },
+    { persons: 19, total: 2130 },
+    { persons: 20, total: 2220 },
+    { persons: 21, total: 2310 },
+    { persons: 22, total: 2400 },
+    { persons: 23, total: 2500, bivouacPlaces: 1 },
+    { persons: 24, total: 2600, bivouacPlaces: 2 },
+    { persons: 25, total: 2700, bivouacPlaces: 3 },
+    { persons: 26, total: 2800, bivouacPlaces: 4 },
+    { persons: 27, total: 2900, bivouacPlaces: 5 },
+    { persons: 28, total: 3000, bivouacPlaces: 6 },
+    { persons: 29, total: 3100, bivouacPlaces: 7 },
+    { persons: 30, total: 3200, bivouacPlaces: 8 },
+    { persons: 31, total: 3350, bivouacPlaces: 9 },
+    { persons: 32, total: 3500, bivouacPlaces: 10 },
+    { persons: 33, total: 3650, bivouacPlaces: 11 },
+    { persons: 34, total: 3800, bivouacPlaces: 12 },
   ],
   weekend_2_nuits: [
     { persons: 10, total: 2800 },
@@ -272,8 +272,10 @@ export function getFestifLoisirsPack(key: string): FestifLoisirsPack | undefined
 
 /**
  * Le "petit-déjeuner essentiel" (baguette, beurre, confiture, café, chocolat chaud,
- * jus d'orange) est DÉJÀ INCLUS dans le tarif de base. Ces options sont des
- * AMÉLIORATIONS facultatives — ne jamais appeler l'inclus "basique".
+ * jus d'orange) est DÉJÀ INCLUS dans le tarif de base — SAUF pour l'offre
+ * "semaine_1_nuit", qui n'inclut aucun petit-déjeuner (uniquement disponible en
+ * option payante). Ces options sont des AMÉLIORATIONS facultatives — ne jamais
+ * appeler l'inclus "basique".
  */
 export const FESTIF_REPAS_OPTIONS = {
   petit_dejeuner_continental: {

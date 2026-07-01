@@ -339,6 +339,7 @@ export function computeFestifQuote(input: FestifQuoteInput): QuoteResult {
     displayLabel,
     disclaimer: DISCLAIMER,
     guestCount: guest_count,
+    festifDuration: festif_duration,
     cadeauEligible,
     cadeauChoiceLabel,
   };

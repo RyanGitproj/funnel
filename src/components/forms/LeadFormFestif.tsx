@@ -142,9 +142,9 @@ const FESTIF_DURATION_CARDS = [
   {
     value: "semaine_1_nuit" as const,
     label: "Offre semaine — 1 nuit",
-    priceHighlight: "Dès 95 € / personne",
+    priceHighlight: "Dès 107 € / personne (à partir de 27 pers.)",
     priceGolden: true,
-    description: "Une nuit privée au Domaine, petit-déjeuner essentiel et nettoyage inclus, à un tarif exclusif en semaine.",
+    description: "Une nuit privée au Domaine, nettoyage inclus — tarif dégressif selon la taille du groupe.",
     conditions: "Du lundi au jeudi · Hors vacances scolaires · Hors jours fériés · Minimum 12 personnes · Selon disponibilité.",
     note: "Même hors période classique, vous pouvez demander une disponibilité — l'équipe confirmera si l'offre peut être appliquée.",
   },
@@ -239,6 +239,7 @@ export function LeadFormFestif() {
   const guestCount = useWatch({ control, name: "guest_count" });
   const activitesInterest = useWatch({ control, name: "activites_interest", defaultValue: [] });
   const festifDuration = useWatch({ control, name: "festif_duration" });
+  const isSemaineOffer = festifDuration === "semaine_1_nuit";
   // Phase 2
   const eventType = useWatch({ control, name: "event_type" });
   const loisirsPackVal = useWatch({ control, name: "loisirs_pack" });
@@ -587,12 +588,14 @@ export function LeadFormFestif() {
         {/* Repas upgrade */}
         <div className="flex flex-col gap-3">
           <SectionQuestion>
-            Souhaitez-vous améliorer votre petit-déjeuner ou ajouter un repas ?
+            {isSemaineOffer
+              ? "Souhaitez-vous ajouter un petit-déjeuner ou un repas ?"
+              : "Souhaitez-vous améliorer votre petit-déjeuner ou ajouter un repas ?"}
           </SectionQuestion>
           <p className="text-xs leading-relaxed text-ink-subtle">
-            Le petit-déjeuner essentiel (baguette, beurre, confiture, café, chocolat chaud,
-            jus d&apos;orange) est déjà inclus dans votre tarif. Choisissez ici seulement
-            si vous souhaitez une formule plus généreuse.
+            {isSemaineOffer
+              ? "Hébergement seul — ajoutez un petit-déjeuner ou brunch en option."
+              : "Le petit-déjeuner essentiel (baguette, beurre, confiture, café, chocolat chaud, jus d’orange) est déjà inclus dans votre tarif. Choisissez ici seulement si vous souhaitez une formule plus généreuse."}
           </p>
           <Controller
             control={control}
@@ -618,12 +621,18 @@ export function LeadFormFestif() {
                     description: FESTIF_REPAS_OPTIONS.brunch_complet.description,
                     badge: `+${FESTIF_REPAS_OPTIONS.brunch_complet.pricePerPerson} €/pers.`,
                   },
-                  {
-                    value: "none",
-                    label: "Petit-déjeuner essentiel uniquement",
-                    description: "Inclus dans votre tarif.",
-                    badge: "Inclus",
-                  },
+                  isSemaineOffer
+                    ? {
+                        value: "none",
+                        label: "Hébergement seul",
+                        description: "Ajoutez un petit-déjeuner ou brunch en option.",
+                      }
+                    : {
+                        value: "none",
+                        label: "Petit-déjeuner essentiel uniquement",
+                        description: "Inclus dans votre tarif.",
+                        badge: "Inclus",
+                      },
                 ]}
                 value={field.value}
                 onChange={field.onChange}

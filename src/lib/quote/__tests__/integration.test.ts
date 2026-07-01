@@ -118,7 +118,7 @@ describe("Integration : pipeline quote → storage payload", () => {
       const interests = breakdown.interestItems as unknown[];
 
       expect(interests).toHaveLength(2);
-      expect(payload.estimated_amount_min).toBe(1738);
+      expect(payload.estimated_amount_min).toBe(2400);
     });
 
     test("weekend_2_nuits 22 pers + brunch → payload correct", () => {

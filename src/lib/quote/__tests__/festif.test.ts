@@ -4,29 +4,30 @@ import {
   toEventTypeFestif,
   isCadeauEligible,
 } from "@/config/pricing/festif";
+import { getInclusDomaine } from "@/config/festif-inclus";
 
 describe("computeFestifQuote", () => {
   describe("grille semaine_1_nuit", () => {
-    test("12 pers (min) → 1 140 €, mode grid", () => {
+    test("12 pers (min) → 1 500 €, mode grid", () => {
       const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 12 });
-      expect(q.baseAmountMin).toBe(1140);
-      expect(q.baseAmountMax).toBe(1140);
+      expect(q.baseAmountMin).toBe(1500);
+      expect(q.baseAmountMax).toBe(1500);
       expect(q.pricingMode).toBe("grid");
     });
 
-    test("22 pers → 1 738 €", () => {
+    test("22 pers → 2 400 €", () => {
       const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 22 });
-      expect(q.baseAmountMin).toBe(1738);
+      expect(q.baseAmountMin).toBe(2400);
     });
 
-    test("23 pers (premier bivouac) → 1 813 €", () => {
+    test("23 pers (premier bivouac) → 2 500 €", () => {
       const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 23 });
-      expect(q.baseAmountMin).toBe(1813);
+      expect(q.baseAmountMin).toBe(2500);
     });
 
-    test("34 pers (max) → 2 572 €", () => {
+    test("34 pers (max) → 3 800 €", () => {
       const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 34 });
-      expect(q.baseAmountMin).toBe(2572);
+      expect(q.baseAmountMin).toBe(3800);
     });
 
     test("11 pers (< min=12) → baseAmountMin=0 + capacity_check", () => {
@@ -94,13 +95,13 @@ describe("computeFestifQuote", () => {
       expect(opt?.totalMin).toBe(20 * 22);
     });
 
-    test("semaine_1_nuit + 14 pers + Petit-déjeuner continental amélioré → 1 274 + 70", () => {
+    test("semaine_1_nuit + 14 pers + Petit-déjeuner continental amélioré → 1 680 + 70", () => {
       const q = computeFestifQuote({
         festif_duration: "semaine_1_nuit",
         guest_count: 14,
         repas_upgrade: "petit_dejeuner_continental",
       });
-      expect(q.estimatedMin).toBe(1274 + 5 * 14);
+      expect(q.estimatedMin).toBe(1680 + 5 * 14);
     });
   });
 
@@ -376,6 +377,30 @@ describe("computeFestifQuote", () => {
     test("sans guest_count → guestCount undefined", () => {
       const q = computeFestifQuote({ festif_duration: "weekend_2_nuits" });
       expect(q.guestCount).toBeUndefined();
+    });
+  });
+
+  describe("festifDuration dans QuoteResult", () => {
+    test("festifDuration propagé dans le résultat", () => {
+      const q = computeFestifQuote({ festif_duration: "semaine_1_nuit", guest_count: 12 });
+      expect(q.festifDuration).toBe("semaine_1_nuit");
+    });
+  });
+
+  describe("getInclusDomaine (petit-déjeuner exclu pour semaine_1_nuit)", () => {
+    test("semaine_1_nuit → petit-déjeuner absent des inclus", () => {
+      const inclus = getInclusDomaine("semaine_1_nuit");
+      expect(inclus).not.toContain("Petit-déjeuner essentiel inclus");
+    });
+
+    test("weekend_2_nuits → petit-déjeuner présent dans les inclus", () => {
+      const inclus = getInclusDomaine("weekend_2_nuits");
+      expect(inclus).toContain("Petit-déjeuner essentiel inclus");
+    });
+
+    test("durée undefined → petit-déjeuner présent (comportement par défaut)", () => {
+      const inclus = getInclusDomaine(undefined);
+      expect(inclus).toContain("Petit-déjeuner essentiel inclus");
     });
   });
 

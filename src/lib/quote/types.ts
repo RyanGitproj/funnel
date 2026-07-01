@@ -1,3 +1,5 @@
+import type { FestifDuration } from "@/config/pricing/festif";
+
 export type QuoteUniverse = "ceremonie" | "festif";
 export type PricingMode = "base" | "grid" | "pending";
 export type ManualReviewReason =
@@ -55,6 +57,8 @@ export type QuoteResult = {
   disclaimer: string;
   /** Festif only — nombre de participants pour calcul bivouac et cadeau. */
   guestCount?: number;
+  /** Festif only — durée sélectionnée, utilisée pour adapter les inclus affichés (ex: petit-déjeuner). */
+  festifDuration?: FestifDuration;
   /** Festif only — true si le cadeau de réservation est éligible. */
   cadeauEligible?: boolean;
   /** Festif only — cadeau choisi si le groupe est éligible. */
