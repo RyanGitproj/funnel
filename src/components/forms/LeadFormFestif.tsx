@@ -144,17 +144,17 @@ const FESTIF_DURATION_CARDS = [
     label: "Offre semaine — 1 nuit",
     priceHighlight: "Dès 107 € / personne (à partir de 27 pers.)",
     priceGolden: true,
-    description: "Une nuit privée au Domaine, nettoyage inclus — tarif dégressif selon la taille du groupe.",
+    description: "Une nuit privée au Domaine, nettoyage inclus.",
     conditions: "Du lundi au jeudi · Hors vacances scolaires · Hors jours fériés · Minimum 12 personnes · Selon disponibilité.",
-    note: "Même hors période classique, vous pouvez demander une disponibilité — l'équipe confirmera si l'offre peut être appliquée.",
+    note: "Hors période ? Demandez, on confirme.",
   },
   {
     value: "weekend_2_nuits" as const,
     label: "Week-end — 2 nuits",
     priceHighlight: "À partir de 205 € / personne en groupe complet",
     priceGolden: false,
-    description: "Petit-déjeuner essentiel + nettoyage inclus. Format principal du Domaine.",
-    note: "Le prix affiché correspond au groupe complet (34 pers.). Le compteur s'ajuste automatiquement au nombre réel de participants.",
+    description: "Petit-déjeuner essentiel + nettoyage inclus.",
+    note: "Prix pour 34 pers. (groupe complet), ajusté à votre nombre réel.",
   },
   {
     value: "weekend_long_3_nuits" as const,
@@ -162,7 +162,7 @@ const FESTIF_DURATION_CARDS = [
     priceHighlight: "Estimation à confirmer",
     priceGolden: false,
     description: "Pour prolonger l'expérience.",
-    note: "Le barème est en cours de validation. Votre demande sera étudiée manuellement.",
+    note: "Barème en cours de validation — étude manuelle de votre demande.",
   },
 ];
 
@@ -497,7 +497,6 @@ export function LeadFormFestif() {
             </SectionQuestion>
             <p className="text-xs leading-relaxed text-ink-subtle">
               Piscine, sauna, tennis privé, city stade, basket, pétanque — inclus dans votre séjour.
-              Vous pouvez enrichir votre programme avec un pack thématique.
             </p>
             <Controller
               control={control}
@@ -595,7 +594,7 @@ export function LeadFormFestif() {
           <p className="text-xs leading-relaxed text-ink-subtle">
             {isSemaineOffer
               ? "Hébergement seul — ajoutez un petit-déjeuner ou brunch en option."
-              : "Le petit-déjeuner essentiel (baguette, beurre, confiture, café, chocolat chaud, jus d’orange) est déjà inclus dans votre tarif. Choisissez ici seulement si vous souhaitez une formule plus généreuse."}
+              : "Le petit-déjeuner essentiel est déjà inclus. Choisissez ici seulement pour une formule plus généreuse."}
           </p>
           <Controller
             control={control}
@@ -630,7 +629,6 @@ export function LeadFormFestif() {
                     : {
                         value: "none",
                         label: "Petit-déjeuner essentiel uniquement",
-                        description: "Inclus dans votre tarif.",
                         badge: "Inclus",
                       },
                 ]}
@@ -646,6 +644,9 @@ export function LeadFormFestif() {
           <SectionQuestion>
             Souhaitez-vous prévoir un repas traiteur ?
           </SectionQuestion>
+          <p className="text-xs leading-relaxed text-ink-subtle">
+            Boissons soft incluses, alcool non inclus.
+          </p>
           <Controller
             control={control}
             name="buffet_choice"
@@ -655,13 +656,11 @@ export function LeadFormFestif() {
                   {
                     value: "buffet_traiteur",
                     label: FESTIF_BUFFET_OPTIONS.buffet_traiteur.label,
-                    description: FESTIF_BUFFET_OPTIONS.buffet_traiteur.description,
                     badge: `+${FESTIF_BUFFET_OPTIONS.buffet_traiteur.pricePerPerson} €/pers.`,
                   },
                   {
                     value: "apero_dinatoire",
                     label: FESTIF_BUFFET_OPTIONS.apero_dinatoire.label,
-                    description: FESTIF_BUFFET_OPTIONS.apero_dinatoire.description,
                     badge: `+${FESTIF_BUFFET_OPTIONS.apero_dinatoire.pricePerPerson} €/pers.`,
                   },
                   { value: "none", label: "Pas pour le moment" },
@@ -901,7 +900,7 @@ export function LeadFormFestif() {
               Un cadeau vous est offert
             </p>
             <p className="mb-3 text-xs leading-relaxed text-ink-muted">
-              Votre groupe est éligible à un cadeau de réservation. Choisissez votre cadeau :
+              Votre groupe est éligible à un cadeau de réservation.
             </p>
             <Controller
               control={control}

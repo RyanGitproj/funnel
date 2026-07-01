@@ -177,19 +177,19 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "evjf_chic_fun",
       label: "Pack EVJF Chic & Fun",
-      description: "Loisirs mis à disposition, sans encadrement. Le groupe organise librement ses activités.",
+      description: "Loisirs en libre accès, sans encadrement.",
       pricePerPerson: 12,
     },
     {
       key: "evjf_pool_party",
       label: "Pack Pool Party",
-      description: "Loisirs pool party mis à disposition autour du Domaine, sans animateur inclus.",
+      description: "Accès pool party, sans animateur.",
       pricePerPerson: 12,
     },
     {
       key: "loisirs_domaine_only",
       label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      description: "Sans supplément.",
       pricePerPerson: 0,
     },
   ],
@@ -209,7 +209,7 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "loisirs_domaine_only",
       label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      description: "Sans supplément.",
       pricePerPerson: 0,
     },
   ],
@@ -229,7 +229,7 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "loisirs_domaine_only",
       label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      description: "Sans supplément.",
       pricePerPerson: 0,
     },
   ],
@@ -243,7 +243,7 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "loisirs_domaine_only",
       label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      description: "Sans supplément.",
       pricePerPerson: 0,
     },
   ],
@@ -257,7 +257,7 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "loisirs_domaine_only",
       label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      description: "Sans supplément.",
       pricePerPerson: 0,
     },
   ],
@@ -281,22 +281,19 @@ export const FESTIF_REPAS_OPTIONS = {
   petit_dejeuner_continental: {
     id: "petit_dejeuner_continental",
     label: "Petit-déjeuner continental amélioré",
-    description:
-      "Viennoiseries, croissants, pains au chocolat, jus de fruits, présentation améliorée.",
+    description: "Viennoiseries variées, jus de fruits.",
     pricePerPerson: 5,
   },
   brunch_sucre_sale: {
     id: "brunch_sucre_sale",
     label: "Brunch gourmand sucré ou salé",
-    description:
-      "Viennoiseries, fruits, yaourts, boissons chaudes, jus, œufs, jambon ou éléments salés.",
+    description: "Sucré et salé : viennoiseries, fruits, œufs, jambon.",
     pricePerPerson: 20,
   },
   brunch_complet: {
     id: "brunch_complet",
     label: "Brunch gourmand sucré-salé complet",
-    description:
-      "Formule complète : sucré + salé, œufs, jambon, omelette, fruits, yaourts, viennoiseries, boissons chaudes, jus.",
+    description: "Formule complète sucré-salé, avec omelette.",
     pricePerPerson: 22,
   },
 } as const;
@@ -305,13 +302,11 @@ export const FESTIF_BUFFET_OPTIONS = {
   buffet_traiteur: {
     id: "buffet_traiteur",
     label: "Buffet traiteur",
-    description: "Boissons soft incluses. Alcool non inclus.",
     pricePerPerson: 35,
   },
   apero_dinatoire: {
     id: "apero_dinatoire",
     label: "Apéro dînatoire",
-    description: "Boissons soft incluses. Alcool non inclus.",
     pricePerPerson: 35,
   },
 } as const;
@@ -322,7 +317,7 @@ export const FESTIF_SERVICE_COURSES = {
   id: "service_courses",
   label: "Service courses installé",
   description:
-    "Gagnez du temps et arrivez l'esprit libre. Notre équipe récupère votre drive, range vos courses au frais et prépare la cuisine avant votre arrivée. Les 25 € correspondent au service — le montant des courses reste à votre charge.",
+    "On récupère et range vos courses avant votre arrivée. Service 25 €, courses en sus.",
   priceFlatRate: 25,
 } as const;
 
@@ -348,32 +343,31 @@ export const FESTIF_INTERVENANTS: Record<
   dj_son_lumiere: {
     id: "dj_son_lumiere",
     label: "DJ son & lumière",
-    description: "Ambiance musicale et éclairage pour votre soirée.",
+    description: "Ambiance musicale et éclairage.",
     priceFlat: 250,
   },
   bien_etre_energie: {
     id: "bien_etre_energie",
     label: "Bien-être / énergie",
-    description: "Masseuse à domicile ou coach sportif, selon disponibilité des partenaires.",
+    description: "Masseuse à domicile ou coach sportif.",
     priceFlat: 150,
   },
   cracheur_de_feu: {
     id: "cracheur_de_feu",
     label: "Cracheur de feu",
-    description: "Spectacle événementiel, selon disponibilité des partenaires.",
+    description: "Spectacle événementiel.",
     priceFlat: 300,
   },
   echassier_lumineux: {
     id: "echassier_lumineux",
     label: "Échassier lumineux",
-    description: "Animation scénique, selon disponibilité des partenaires.",
+    description: "Animation scénique.",
     priceFlat: 250,
   },
   animation_adulte: {
     id: "animation_adulte",
     label: "Animation privée adulte sur demande",
-    description:
-      "Sur demande uniquement. Validation commerciale obligatoire. Groupe majeur, cadre privé, selon disponibilité.",
+    description: "Sur demande, validation obligatoire (groupe majeur uniquement).",
     priceFlat: 0,
     requiresManualReview: true,
   },
@@ -390,13 +384,13 @@ export const FESTIF_MATERIEL: Record<
   tente_barnum: {
     id: "tente_barnum",
     label: "Tente / barnum",
-    description: "Structure supplémentaire pour vos espaces extérieurs.",
+    description: "Structure pour vos espaces extérieurs.",
     priceFlat: 350,
   },
   tables_chaises: {
     id: "tables_chaises",
     label: "Tables & chaises supplémentaires",
-    description: "Mobilier complémentaire selon configuration.",
+    description: "Mobilier complémentaire.",
     priceFlat: 200,
   },
 };
