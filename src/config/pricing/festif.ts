@@ -40,29 +40,29 @@ export const FESTIF_DURATION_CAPACITY: Record<
  */
 export const FESTIF_DURATION_RATES: Record<FestifDuration, FestifDurationRate[]> = {
   semaine_1_nuit: [
-    { persons: 12, total: 1140 },
-    { persons: 13, total: 1209 },
-    { persons: 14, total: 1274 },
-    { persons: 15, total: 1335 },
-    { persons: 16, total: 1392 },
-    { persons: 17, total: 1445 },
-    { persons: 18, total: 1494 },
-    { persons: 19, total: 1558 },
-    { persons: 20, total: 1620 },
-    { persons: 21, total: 1680 },
-    { persons: 22, total: 1738 },
-    { persons: 23, total: 1813, bivouacPlaces: 1 },
-    { persons: 24, total: 1887, bivouacPlaces: 2 },
-    { persons: 25, total: 1960, bivouacPlaces: 3 },
-    { persons: 26, total: 2032, bivouacPlaces: 4 },
-    { persons: 27, total: 2103, bivouacPlaces: 5 },
-    { persons: 28, total: 2173, bivouacPlaces: 6 },
-    { persons: 29, total: 2242, bivouacPlaces: 7 },
-    { persons: 30, total: 2310, bivouacPlaces: 8 },
-    { persons: 31, total: 2377, bivouacPlaces: 9 },
-    { persons: 32, total: 2443, bivouacPlaces: 10 },
-    { persons: 33, total: 2508, bivouacPlaces: 11 },
-    { persons: 34, total: 2572, bivouacPlaces: 12 },
+    { persons: 12, total: 1500 },
+    { persons: 13, total: 1590 },
+    { persons: 14, total: 1680 },
+    { persons: 15, total: 1770 },
+    { persons: 16, total: 1860 },
+    { persons: 17, total: 1950 },
+    { persons: 18, total: 2040 },
+    { persons: 19, total: 2130 },
+    { persons: 20, total: 2220 },
+    { persons: 21, total: 2310 },
+    { persons: 22, total: 2400 },
+    { persons: 23, total: 2500, bivouacPlaces: 1 },
+    { persons: 24, total: 2600, bivouacPlaces: 2 },
+    { persons: 25, total: 2700, bivouacPlaces: 3 },
+    { persons: 26, total: 2800, bivouacPlaces: 4 },
+    { persons: 27, total: 2900, bivouacPlaces: 5 },
+    { persons: 28, total: 3000, bivouacPlaces: 6 },
+    { persons: 29, total: 3100, bivouacPlaces: 7 },
+    { persons: 30, total: 3200, bivouacPlaces: 8 },
+    { persons: 31, total: 3350, bivouacPlaces: 9 },
+    { persons: 32, total: 3500, bivouacPlaces: 10 },
+    { persons: 33, total: 3650, bivouacPlaces: 11 },
+    { persons: 34, total: 3800, bivouacPlaces: 12 },
   ],
   weekend_2_nuits: [
     { persons: 10, total: 2800 },
@@ -177,19 +177,19 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "evjf_chic_fun",
       label: "Pack EVJF Chic & Fun",
-      description: "Loisirs mis à disposition, sans encadrement. Le groupe organise librement ses activités.",
+      description: "Loisirs en libre accès, sans encadrement.",
       pricePerPerson: 12,
     },
     {
       key: "evjf_pool_party",
       label: "Pack Pool Party",
-      description: "Loisirs pool party mis à disposition autour du Domaine, sans animateur inclus.",
+      description: "Accès pool party, sans animateur.",
       pricePerPerson: 12,
     },
     {
       key: "loisirs_domaine_only",
       label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      description: "Sans supplément.",
       pricePerPerson: 0,
     },
   ],
@@ -209,7 +209,7 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "loisirs_domaine_only",
       label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      description: "Sans supplément.",
       pricePerPerson: 0,
     },
   ],
@@ -229,7 +229,7 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "loisirs_domaine_only",
       label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      description: "Sans supplément.",
       pricePerPerson: 0,
     },
   ],
@@ -243,7 +243,7 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "loisirs_domaine_only",
       label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      description: "Sans supplément.",
       pricePerPerson: 0,
     },
   ],
@@ -257,7 +257,7 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "loisirs_domaine_only",
       label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Piscine, sauna, tennis, basket, city stade, pétanque — sans supplément.",
+      description: "Sans supplément.",
       pricePerPerson: 0,
     },
   ],
@@ -272,29 +272,28 @@ export function getFestifLoisirsPack(key: string): FestifLoisirsPack | undefined
 
 /**
  * Le "petit-déjeuner essentiel" (baguette, beurre, confiture, café, chocolat chaud,
- * jus d'orange) est DÉJÀ INCLUS dans le tarif de base. Ces options sont des
- * AMÉLIORATIONS facultatives — ne jamais appeler l'inclus "basique".
+ * jus d'orange) est DÉJÀ INCLUS dans le tarif de base — SAUF pour l'offre
+ * "semaine_1_nuit", qui n'inclut aucun petit-déjeuner (uniquement disponible en
+ * option payante). Ces options sont des AMÉLIORATIONS facultatives — ne jamais
+ * appeler l'inclus "basique".
  */
 export const FESTIF_REPAS_OPTIONS = {
   petit_dejeuner_continental: {
     id: "petit_dejeuner_continental",
     label: "Petit-déjeuner continental amélioré",
-    description:
-      "Viennoiseries, croissants, pains au chocolat, jus de fruits, présentation améliorée.",
+    description: "Viennoiseries variées, jus de fruits.",
     pricePerPerson: 5,
   },
   brunch_sucre_sale: {
     id: "brunch_sucre_sale",
     label: "Brunch gourmand sucré ou salé",
-    description:
-      "Viennoiseries, fruits, yaourts, boissons chaudes, jus, œufs, jambon ou éléments salés.",
+    description: "Sucré et salé : viennoiseries, fruits, œufs, jambon.",
     pricePerPerson: 20,
   },
   brunch_complet: {
     id: "brunch_complet",
     label: "Brunch gourmand sucré-salé complet",
-    description:
-      "Formule complète : sucré + salé, œufs, jambon, omelette, fruits, yaourts, viennoiseries, boissons chaudes, jus.",
+    description: "Formule complète sucré-salé, avec omelette.",
     pricePerPerson: 22,
   },
 } as const;
@@ -303,13 +302,11 @@ export const FESTIF_BUFFET_OPTIONS = {
   buffet_traiteur: {
     id: "buffet_traiteur",
     label: "Buffet traiteur",
-    description: "Boissons soft incluses. Alcool non inclus.",
     pricePerPerson: 35,
   },
   apero_dinatoire: {
     id: "apero_dinatoire",
     label: "Apéro dînatoire",
-    description: "Boissons soft incluses. Alcool non inclus.",
     pricePerPerson: 35,
   },
 } as const;
@@ -320,7 +317,7 @@ export const FESTIF_SERVICE_COURSES = {
   id: "service_courses",
   label: "Service courses installé",
   description:
-    "Gagnez du temps et arrivez l'esprit libre. Notre équipe récupère votre drive, range vos courses au frais et prépare la cuisine avant votre arrivée. Les 25 € correspondent au service — le montant des courses reste à votre charge.",
+    "On récupère et range vos courses avant votre arrivée. Service 25 €, courses en sus.",
   priceFlatRate: 25,
 } as const;
 
@@ -346,32 +343,31 @@ export const FESTIF_INTERVENANTS: Record<
   dj_son_lumiere: {
     id: "dj_son_lumiere",
     label: "DJ son & lumière",
-    description: "Ambiance musicale et éclairage pour votre soirée.",
+    description: "Ambiance musicale et éclairage.",
     priceFlat: 250,
   },
   bien_etre_energie: {
     id: "bien_etre_energie",
     label: "Bien-être / énergie",
-    description: "Masseuse à domicile ou coach sportif, selon disponibilité des partenaires.",
+    description: "Masseuse à domicile ou coach sportif.",
     priceFlat: 150,
   },
   cracheur_de_feu: {
     id: "cracheur_de_feu",
     label: "Cracheur de feu",
-    description: "Spectacle événementiel, selon disponibilité des partenaires.",
+    description: "Spectacle événementiel.",
     priceFlat: 300,
   },
   echassier_lumineux: {
     id: "echassier_lumineux",
     label: "Échassier lumineux",
-    description: "Animation scénique, selon disponibilité des partenaires.",
+    description: "Animation scénique.",
     priceFlat: 250,
   },
   animation_adulte: {
     id: "animation_adulte",
     label: "Animation privée adulte sur demande",
-    description:
-      "Sur demande uniquement. Validation commerciale obligatoire. Groupe majeur, cadre privé, selon disponibilité.",
+    description: "Sur demande, validation obligatoire (groupe majeur uniquement).",
     priceFlat: 0,
     requiresManualReview: true,
   },
@@ -388,13 +384,13 @@ export const FESTIF_MATERIEL: Record<
   tente_barnum: {
     id: "tente_barnum",
     label: "Tente / barnum",
-    description: "Structure supplémentaire pour vos espaces extérieurs.",
+    description: "Structure pour vos espaces extérieurs.",
     priceFlat: 350,
   },
   tables_chaises: {
     id: "tables_chaises",
     label: "Tables & chaises supplémentaires",
-    description: "Mobilier complémentaire selon configuration.",
+    description: "Mobilier complémentaire.",
     priceFlat: 200,
   },
 };

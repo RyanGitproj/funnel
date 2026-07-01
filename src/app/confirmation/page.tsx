@@ -14,7 +14,7 @@ import {
   parseConfirmationQuoteCookie,
   type ConfirmationQuoteSnapshot,
 } from "@/lib/quote/confirmationQuote";
-import { INCLUS_DOMAINE } from "@/config/festif-inclus";
+import { getInclusDomaine } from "@/config/festif-inclus";
 import {
   ArrowRight,
   Calculator,
@@ -212,7 +212,7 @@ function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
                   Inclus dans votre privatisation
                 </p>
                 <ul className="grid grid-cols-2 gap-x-4 gap-y-1">
-                  {INCLUS_DOMAINE.map((item) => (
+                  {getInclusDomaine(quote.festifDuration).map((item) => (
                     <li key={item} className="flex items-start gap-1.5 text-xs leading-relaxed text-ink-muted">
                       <CheckCircle2 className="mt-0.5 size-3 shrink-0 text-accent-strong" aria-hidden />
                       {item}

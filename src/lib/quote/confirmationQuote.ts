@@ -1,3 +1,4 @@
+import type { FestifDuration } from "@/config/pricing/festif";
 import type { QuoteResult, QuoteUniverse } from "./types";
 
 export const CONFIRMATION_QUOTE_COOKIE = "dde_last_quote";
@@ -49,6 +50,8 @@ export type ConfirmationQuoteSnapshot = {
   guestCount?: number;
   /** Festif only — cadeau choisi si éligible. */
   cadeauChoiceLabel?: string;
+  /** Festif only — durée sélectionnée, utilisée pour adapter les inclus affichés. */
+  festifDuration?: FestifDuration;
 };
 
 const UNIVERSE_COPY: Record<
@@ -119,6 +122,7 @@ export function createConfirmationQuoteSnapshot(
     disclaimer: quote.disclaimer,
     guestCount: quote.guestCount,
     cadeauChoiceLabel: quote.cadeauChoiceLabel,
+    festifDuration: quote.festifDuration,
   };
 }
 

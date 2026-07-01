@@ -152,15 +152,6 @@ export const festifCadeauOptions = [
   "pack_celebration",
 ] as const;
 
-export const festifDurationLabels: Record<
-  (typeof festifDurationOptions)[number],
-  string
-> = {
-  semaine_1_nuit: "Offre semaine — 1 nuit (dès 95 €/pers., lun-jeu, min. 12 pers.)",
-  weekend_2_nuits: "Week-end — 2 nuits (à partir de 205 €/pers. en groupe complet)",
-  weekend_long_3_nuits: "Week-end long — 3 nuits (estimation à confirmer)",
-};
-
 export const festifAmbianceOptions = [
   "Chic & élégante",
   "Festive & animée",
