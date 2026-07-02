@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { useForm, useWatch, Controller } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -58,75 +59,6 @@ const FESTIF_STEP_LABELS = [
   "Votre projet",
   "Vos coordonnées",
 ] as const;
-
-const ACTIVITY_ICONS: Record<string, React.ReactElement> = {
-  "Combat de sumo": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="w-5 h-5">
-      <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/>
-      <line x1="13" y1="19" x2="19" y2="13"/>
-      <line x1="16" y1="16" x2="20" y2="20"/>
-      <line x1="19" y1="21" x2="21" y2="19"/>
-    </svg>
-  ),
-  "Chasse au trésor": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="w-5 h-5">
-      <path d="M9 20l-6-3V5l6 3 6-3 6 3v12l-6-3-6 3z"/>
-      <line x1="9" y1="8" x2="9" y2="20"/>
-      <line x1="15" y1="5" x2="15" y2="17"/>
-    </svg>
-  ),
-  "Escape game apéro": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="w-5 h-5">
-      <rect x="5" y="11" width="14" height="11" rx="2" ry="2"/>
-      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-    </svg>
-  ),
-  "Parcours d'énigmes": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="w-5 h-5">
-      <circle cx="12" cy="12" r="10"/>
-      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-      <line x1="12" y1="17" x2="12.01" y2="17"/>
-    </svg>
-  ),
-  "Parcours gages & défis": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="w-5 h-5">
-      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
-      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
-      <path d="M4 22h16"/>
-      <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
-      <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
-      <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/>
-    </svg>
-  ),
-  "Table de casino": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="w-5 h-5">
-      <path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41L13.7 2.71a2.41 2.41 0 0 0-3.41 0Z"/>
-    </svg>
-  ),
-  "Cocooning love": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="w-5 h-5">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-    </svg>
-  ),
-  "Magicien / mentaliste": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="w-5 h-5">
-      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
-      <path d="M5 3v4M19 17v4M3 5h4M17 19h4"/>
-    </svg>
-  ),
-  "Échassiers / cracheurs de feu": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="w-5 h-5">
-      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 17c.93 0 1.77-.5 2.24-1.25"/>
-      <path d="M12 22C6.5 22 2 17.5 2 12c0-4 2.5-7.5 6-9.5 0 3 1.5 5.5 3 7 .5-1 1-2 1-3.5 1.5 2 2 4 2 6.5 1.5-1 2-2.5 2-4.5 2 2 3 5 3 7.5 0 5.5-4.5 6.5-7 6.5z"/>
-    </svg>
-  ),
-  "Activités extérieures": (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="w-5 h-5">
-      <circle cx="12" cy="12" r="4"/>
-      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-    </svg>
-  ),
-};
 
 const STEP_FIELDS: (keyof FestifLeadFormValues)[][] = [
   ["event_type", "guest_count"],
@@ -874,8 +806,21 @@ export function LeadFormFestif() {
                               : "border-line bg-surface-elevated text-ink-muted hover:border-accent/50 hover:text-ink hover:scale-[1.01]",
                           )}
                         >
-                          <span className={cn("shrink-0", isSelected ? "text-accent" : "text-ink-muted")}>
-                            {ACTIVITY_ICONS[act.formLabel]}
+                          <span
+                            className={cn(
+                              "relative size-9 shrink-0 overflow-hidden rounded-full border-2",
+                              isSelected
+                                ? "border-accent shadow-[0_0_14px_var(--card-glow)]"
+                                : "border-line",
+                            )}
+                          >
+                            <Image
+                              src={`/images/festif/icons/${act.id}.jpg`}
+                              alt=""
+                              fill
+                              sizes="36px"
+                              className="object-cover"
+                            />
                           </span>
                           <span className="text-sm font-medium leading-snug text-current">
                             {act.formLabel}

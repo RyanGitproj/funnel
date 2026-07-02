@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
@@ -352,6 +353,9 @@ function getFestifEventTone(option: string) {
       cardInactive:
         "border-[#ff2bd6]/70 bg-[#ff2bd6]/10 text-[#ffd9f8] hover:border-[#ff2bd6] hover:text-white hover:shadow-[0_0_24px_rgba(255,43,214,0.45)]",
       icon: "text-[#ff2bd6] drop-shadow-[0_0_8px_rgba(255,43,214,0.75)]",
+      imageBorderActive:
+        "border-[#ff2bd6] shadow-[0_0_16px_rgba(255,43,214,0.6)]",
+      imageBorderInactive: "border-[#ff2bd6]/70",
       check: "border-[#ff2bd6] bg-[#ff2bd6] text-white",
       subtitle: "Enterrement de vie de jeune fille",
     };
@@ -364,11 +368,29 @@ function getFestifEventTone(option: string) {
       cardInactive:
         "border-[#00a3ff]/70 bg-[#00a3ff]/10 text-[#d7f2ff] hover:border-[#00a3ff] hover:text-white hover:shadow-[0_0_24px_rgba(0,163,255,0.45)]",
       icon: "text-[#00a3ff] drop-shadow-[0_0_8px_rgba(0,163,255,0.75)]",
+      imageBorderActive:
+        "border-[#00a3ff] shadow-[0_0_16px_rgba(0,163,255,0.6)]",
+      imageBorderInactive: "border-[#00a3ff]/70",
       check: "border-[#00a3ff] bg-[#00a3ff] text-white",
       subtitle: "Enterrement de vie de garçon",
     };
   }
 
+  return null;
+}
+
+const FESTIF_EVENT_IMAGES: Record<string, string> = {
+  evjf: "/images/festif/icons/evjf.jpg",
+  evg: "/images/festif/icons/evg.jpg",
+  anniversaire: "/images/festif/icons/anniversaire.jpg",
+};
+
+function getFestifEventImage(option: string): string | null {
+  const normalized = normalizeEventOption(option);
+
+  if (normalized.includes("evjf")) return FESTIF_EVENT_IMAGES.evjf;
+  if (normalized.includes("evg")) return FESTIF_EVENT_IMAGES.evg;
+  if (normalized.includes("anniversaire")) return FESTIF_EVENT_IMAGES.anniversaire;
   return null;
 }
 
@@ -423,6 +445,7 @@ export function IconCardSelect({
         const selected = value === opt;
         const Icon = eventIcons[getEventIconName(opt, iconSet)];
         const festifTone = iconSet === "festif" ? getFestifEventTone(opt) : null;
+        const imageSrc = iconSet === "festif" ? getFestifEventImage(opt) : null;
 
         return (
           <button
@@ -455,7 +478,24 @@ export function IconCardSelect({
             >
               ✓
             </span>
-            <Icon className={cn("size-7 sm:size-8", festifTone?.icon ?? "text-accent")} />
+            {imageSrc ? (
+              <span
+                className={cn(
+                  "relative size-11 shrink-0 overflow-hidden rounded-full border-2 sm:size-12",
+                  festifTone
+                    ? selected
+                      ? festifTone.imageBorderActive
+                      : festifTone.imageBorderInactive
+                    : selected
+                      ? "border-accent shadow-[0_0_16px_var(--card-glow)]"
+                      : "border-line",
+                )}
+              >
+                <Image src={imageSrc} alt="" fill sizes="48px" className="object-cover" />
+              </span>
+            ) : (
+              <Icon className={cn("size-7 sm:size-8", festifTone?.icon ?? "text-accent")} />
+            )}
             <span className="max-w-full break-words text-[10px] font-semibold uppercase leading-snug text-current sm:text-[11px]">
               {opt}
             </span>
