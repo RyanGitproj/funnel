@@ -69,11 +69,6 @@ export default function HomePage() {
             </>
           }
           subtitle="Mariage, cérémonie familiale, enterrement de vie de jeune fille, enterrement de vie de garçon ou anniversaire : choisissez votre univers, nous préparons un parcours adapté à votre projet."
-          primaryCta={{
-            href: "#orientation",
-            label: "CHOISIR MON UNIVERS",
-            trackEvent: "homepage_orientation_click",
-          }}
           image={{
             src: "/images/ceremonie/hero-bg.jpeg",
             alt: "Vue panoramique du Domaine des Élégances",
