@@ -74,12 +74,6 @@ export default function HomePage() {
             label: "CHOISIR MON UNIVERS",
             trackEvent: "homepage_orientation_click",
           }}
-          secondaryCta={{
-            href: "#contact",
-            label: "CONTACTER L'ÉQUIPE",
-            variant: "outline",
-            trackEvent: "homepage_contact_click",
-          }}
           image={{
             src: "/images/ceremonie/hero-bg.jpeg",
             alt: "Vue panoramique du Domaine des Élégances",

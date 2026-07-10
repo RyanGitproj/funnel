@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import Image from "next/image";
@@ -106,7 +106,7 @@ function CtaRow({
   return (
     <div
       className={cn(
-        "mt-10 flex flex-col gap-4 sm:flex-row sm:items-center",
+        "mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4",
         align === "center" ? "items-center sm:justify-center" : "items-stretch",
       )}
     >
@@ -191,6 +191,52 @@ export function Hero({
   );
 }
 
+/**
+ * Section de couverture partagée par les trois heros : photo pleine largeur
+ * de hauteur uniforme — 70 % de l'écran sur mobile, 80 % sur desktop.
+ * Le padding vertical du contenu est volontairement compact pour que le
+ * contenu le plus haut (accueil : 2 CTA + long sous-titre) tienne DANS ce
+ * pourcentage aux tailles d'écran courantes. Résultat : toutes les heros
+ * atteignent exactement le même pourcentage → hauteurs identiques et images
+ * alignées. `min-h` (et non `h` fixe) garantit qu'aucun texte n'est tronqué
+ * si l'écran est plus court que le contenu (le hero grandit au lieu de couper).
+ *
+ * L'image remonte derrière le header (`-mt-20` = hauteur du header `h-20`)
+ * pour éviter la coupure nette sous le menu ; `pt-20` maintient le contenu
+ * sous le header. Voir Header.tsx (sticky, semi-transparent + blur).
+ */
+function HeroCoverFrame({
+  image,
+  overlays,
+  children,
+  className,
+}: {
+  image: HeroImage;
+  overlays: React.ReactNode;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section
+      className={cn(
+        "relative isolate -mt-20 flex min-h-[70svh] items-center overflow-hidden pt-20 md:min-h-[80vh]",
+        className,
+      )}
+    >
+      <Image
+        src={image.src}
+        alt={image.alt}
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-center"
+      />
+      {overlays}
+      {children}
+    </section>
+  );
+}
+
 function HeroAccueil({
   eyebrow,
   title,
@@ -202,49 +248,38 @@ function HeroAccueil({
   className,
 }: SubHeroProps & { accentImage?: HeroImage }) {
   return (
-    <section
-      className={cn(
-        "relative isolate flex min-h-[82svh] items-center justify-center overflow-hidden md:min-h-[90vh]",
-        className,
-      )}
+    <HeroCoverFrame
+      image={image}
+      className={className}
+      overlays={
+        <>
+          {/* Voile sombre gradué — lisibilité du texte blanc */}
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/32 to-black/58"
+            aria-hidden
+          />
+          {/* Vignette latérale douce pour concentrer le regard au centre */}
+          <div
+            className="absolute inset-0 bg-[radial-gradient(ellipse_120%_100%_at_50%_50%,transparent_42%,rgba(12,9,5,0.38)_100%)]"
+            aria-hidden
+          />
+        </>
+      }
     >
-      {/* Image plein cadre — mobile et desktop */}
-      <div className="absolute inset-0">
-        <Image
-          src={image.src}
-          alt={image.alt}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-      </div>
-
-      {/* Voile sombre gradué — lisibilité du texte blanc */}
-      <div
-        className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/32 to-black/58"
-        aria-hidden
-      />
-      {/* Vignette latérale douce pour concentrer le regard au centre */}
-      <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_120%_100%_at_50%_50%,transparent_42%,rgba(12,9,5,0.38)_100%)]"
-        aria-hidden
-      />
-
-      <div className="relative z-10 mx-auto w-full max-w-4xl px-6 py-24 text-center md:py-40">
+      <div className="relative z-10 mx-auto w-full max-w-4xl px-6 py-4 text-center">
         {eyebrow && (
           <Badge
             variant="accent"
-            className="mb-8 max-w-full whitespace-normal text-center leading-relaxed"
+            className="mb-6 max-w-full whitespace-normal text-center leading-relaxed"
           >
             {eyebrow}
           </Badge>
         )}
-        <h1 className="mx-auto max-w-[22rem] break-words font-serif text-[2.1rem] font-bold leading-[1.08] tracking-normal text-[#fffdf8] [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.30)] sm:max-w-2xl sm:text-4xl md:max-w-3xl md:text-[3.6rem] md:font-semibold md:leading-[1.05] lg:text-[72px]">
+        <h1 className="mx-auto max-w-[20rem] break-words font-serif text-[1.75rem] font-bold leading-[1.1] tracking-normal text-[#fffdf8] [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.30)] sm:max-w-2xl sm:text-[2.1rem] md:max-w-3xl md:text-[2.8rem] md:font-semibold md:leading-[1.06] lg:text-[3.3rem]">
           {title}
         </h1>
         {subtitle && (
-          <p className="mx-auto mt-8 max-w-2xl rounded-xl px-6 py-4 text-base leading-[1.8] text-ink bg-white/92 backdrop-blur-md md:px-8 md:py-5 md:text-lg">
+          <p className="mx-auto mt-6 max-w-2xl rounded-xl px-6 py-4 text-base leading-[1.8] text-ink bg-white/92 backdrop-blur-md md:px-8 md:py-5 md:text-lg">
             {subtitle}
           </p>
         )}
@@ -255,7 +290,7 @@ function HeroAccueil({
           </p>
         )}
       </div>
-    </section>
+    </HeroCoverFrame>
   );
 }
 
@@ -270,87 +305,49 @@ function HeroCeremonie({
   className,
 }: SubHeroProps) {
   return (
-    <section
-      className={cn(
-        "relative isolate overflow-hidden",
-        // Mobile : hero plein cadre centré dans le viewport
-        "flex min-h-[82svh] items-center",
-        // Desktop : layout bloc classique avec padding vertical
-        "lg:block lg:min-h-0 lg:py-24 xl:py-28",
-        className,
-      )}
+    <HeroCoverFrame
+      image={image}
+      className={className}
+      overlays={
+        <>
+          {/* Voile sombre gradué — lisibilité du texte blanc */}
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/48 to-black/65"
+            aria-hidden
+          />
+          {/* Vignette latérale douce pour concentrer le regard au centre */}
+          <div
+            className="absolute inset-0 bg-[radial-gradient(ellipse_120%_100%_at_50%_50%,transparent_40%,rgba(10,8,5,0.35)_100%)]"
+            aria-hidden
+          />
+        </>
+      }
     >
-      {/* Image de fond — mobile uniquement */}
-      <div className="absolute inset-0 lg:hidden">
-        <Image
-          src={image.src}
-          alt={image.alt}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
+      <div className="relative z-10 mx-auto w-full max-w-4xl px-6 py-4 text-center">
+        {eyebrow && (
+          <Badge
+            variant="accent"
+            className="mb-5 max-w-full whitespace-normal text-center leading-relaxed"
+          >
+            {eyebrow}
+          </Badge>
+        )}
+        <h1 className="mx-auto max-w-full break-words font-serif text-[1.75rem] font-semibold leading-[1.1] text-[#fffdf8] [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.28)] sm:text-[2.1rem] md:text-[2.8rem] md:leading-[1.06] lg:text-[3.3rem]">
+          {title}
+        </h1>
+        {subtitle && (
+          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white [text-shadow:0_1px_4px_rgba(0,0,0,1),0_2px_12px_rgba(0,0,0,0.92),0_4px_24px_rgba(0,0,0,0.75),0_0_48px_rgba(0,0,0,0.50)] md:text-lg">
+            {subtitle}
+          </p>
+        )}
+        <CtaRow primary={primaryCta} secondary={secondaryCta} />
+        {microReassurance && (
+          <p className="mx-auto mt-5 max-w-xl text-xs leading-relaxed text-white/70 [text-shadow:0_1px_5px_rgba(0,0,0,0.90),0_2px_14px_rgba(0,0,0,0.65)] md:text-sm">
+            {microReassurance}
+          </p>
+        )}
       </div>
-      {/* Voile sombre gradué — lisibilité texte blanc sur mobile */}
-      <div
-        className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/48 to-black/65 lg:hidden"
-        aria-hidden
-      />
-      {/* Vignette latérale douce — mobile */}
-      <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_120%_100%_at_50%_50%,transparent_40%,rgba(10,8,5,0.35)_100%)] lg:hidden"
-        aria-hidden
-      />
-
-      {/* Gradient décoratif desktop — inchangé */}
-      <div className="pointer-events-none absolute inset-0 hidden lg:block bg-[radial-gradient(circle_at_85%_18%,rgba(194,163,104,0.16),transparent_28%),linear-gradient(180deg,rgba(255,253,248,0.9),rgba(250,246,238,0.98))]" />
-
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-14 lg:grid lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-16 lg:px-10 lg:py-0">
-        {/* Bloc texte — premier dans le DOM → premier sur mobile */}
-        <div className="lg:order-1">
-          {eyebrow && (
-            <Badge
-              variant="accent"
-              className="mb-6 max-w-full whitespace-normal text-center leading-relaxed lg:text-left"
-            >
-              {eyebrow}
-            </Badge>
-          )}
-          <h1 className="max-w-full break-words text-center font-serif text-4xl font-semibold leading-[1.08] text-[#fffdf8] [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.28)] md:text-5xl lg:text-left lg:text-[62px] lg:text-ink lg:[text-shadow:none]">
-            {title}
-          </h1>
-          {subtitle && (
-            <p className="mx-auto mt-6 max-w-xl text-center text-base leading-relaxed text-white [text-shadow:0_1px_4px_rgba(0,0,0,1),0_2px_12px_rgba(0,0,0,0.92),0_4px_24px_rgba(0,0,0,0.75),0_0_48px_rgba(0,0,0,0.50)] md:text-lg lg:mx-0 lg:mt-8 lg:text-left lg:text-ink-muted lg:[text-shadow:none]">
-              {subtitle}
-            </p>
-          )}
-          <div className="flex justify-center lg:justify-start">
-            <CtaRow primary={primaryCta} secondary={secondaryCta} align="left" />
-          </div>
-          {microReassurance && (
-            <p className="mx-auto mt-5 max-w-xl text-center text-xs leading-relaxed text-white/70 [text-shadow:0_1px_5px_rgba(0,0,0,0.90),0_2px_14px_rgba(0,0,0,0.65)] md:text-sm lg:mx-0 lg:text-left lg:text-ink-subtle lg:[text-shadow:none]">
-              {microReassurance}
-            </p>
-          )}
-        </div>
-
-        {/* Carte image — desktop uniquement */}
-        <div className="order-2 hidden lg:block lg:order-2">
-          <div className="rounded-[var(--radius-xl)] border border-accent/45 bg-surface-elevated p-2 shadow-soft">
-            <div className="relative aspect-[16/11] overflow-hidden rounded-[var(--radius-md)] bg-surface-alt lg:aspect-[5/4]">
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    </HeroCoverFrame>
   );
 }
 
@@ -365,47 +362,37 @@ function HeroFestif({
   className,
 }: SubHeroProps) {
   return (
-    <section
-      className={cn(
-        "relative isolate flex min-h-[88vh] items-center overflow-hidden",
-        className,
-      )}
+    <HeroCoverFrame
+      image={image}
+      className={className}
+      overlays={
+        <>
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-[#0c1424]/92 via-[#101827]/70 to-[#101827]/22"
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-[#111827] via-transparent to-[#111827]/35"
+            aria-hidden
+          />
+        </>
+      }
     >
-      <div className="absolute inset-0">
-        <Image
-          src={image.src}
-          alt={image.alt}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-      </div>
-
-      <div
-        className="absolute inset-0 bg-gradient-to-r from-[#0c1424]/92 via-[#101827]/70 to-[#101827]/22"
-        aria-hidden
-      />
-      <div
-        className="absolute inset-0 bg-gradient-to-t from-[#111827] via-transparent to-[#111827]/35"
-        aria-hidden
-      />
-
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-32 lg:px-10">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-4 lg:px-10">
         <div className="max-w-[21.5rem] sm:max-w-2xl">
           {eyebrow && (
             <Badge
               variant="accent"
-              className="mb-8 max-w-full whitespace-normal text-center leading-relaxed"
+              className="mb-6 max-w-full whitespace-normal text-center leading-relaxed"
             >
               {eyebrow}
             </Badge>
           )}
-          <h1 className="max-w-full break-words font-serif text-[2.45rem] font-semibold leading-[1.04] text-ink sm:text-5xl md:text-6xl lg:text-[70px]">
+          <h1 className="max-w-full break-words font-serif text-[1.85rem] font-semibold leading-[1.08] text-ink sm:text-[2.3rem] md:text-[2.9rem] lg:text-[3.5rem]">
             {title}
           </h1>
           {subtitle && (
-            <p className="mt-8 max-w-xl text-base leading-relaxed text-ink-muted md:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-muted md:text-lg">
               {subtitle}
             </p>
           )}
@@ -417,6 +404,6 @@ function HeroFestif({
           )}
         </div>
       </div>
-    </section>
+    </HeroCoverFrame>
   );
 }
