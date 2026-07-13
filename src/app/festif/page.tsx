@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { HeaderThemed } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LeadFormFestif } from "@/components/forms/LeadFormFestif";
+import { ContactGate } from "@/components/forms/ContactGate";
+import {
+  CONTACT_ID_COOKIE,
+  isValidContactId,
+} from "@/lib/contact/contactCookie";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 
@@ -67,13 +73,22 @@ const galerie = [
   },
 ];
 
-export default function FestifPage() {
+export default async function FestifPage() {
+  // Lecture du cookie (route dynamique, assumé) : une pub peut envoyer
+  // directement ici — le popup de capture bloque tant que le visiteur
+  // n'a pas laissé ses coordonnées.
+  const cookieStore = await cookies();
+  const hasContact = isValidContactId(
+    cookieStore.get(CONTACT_ID_COOKIE)?.value,
+  );
+
   return (
     <ThemeProvider
       theme="festif"
       as="div"
       className="flex min-h-screen flex-col bg-surface"
     >
+      <ContactGate initialOpen={!hasContact} sourcePage="/festif" />
       <HeaderThemed theme="accueil" />
 
       <main className="flex-1">

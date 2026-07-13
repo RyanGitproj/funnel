@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { pushDataLayerEvent } from "@/lib/tracking/gtm";
 
@@ -41,7 +42,7 @@ export function Header() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
         <Link
           href="/"
-          className="group flex flex-col items-start gap-[4px] leading-none"
+          className="group flex items-center gap-3"
           aria-label="Domaine des Élégances — accueil"
           onClick={(e) => {
             if (window.location.pathname === "/") {
@@ -50,20 +51,32 @@ export function Header() {
             }
           }}
         >
-          <span
-            className="font-serif text-[1.15rem] font-medium tracking-[0.12em] text-accent transition-colors duration-300 group-hover:text-accent-strong"
-          >
-            Domaine des Élégances
+          <span className="relative size-11 shrink-0 overflow-hidden rounded-full ring-1 ring-accent/40 transition-shadow duration-300 group-hover:ring-accent/70 md:size-12">
+            <Image
+              src="/images/brand/embleme.png"
+              alt=""
+              fill
+              sizes="48px"
+              className="object-cover"
+              priority
+            />
           </span>
-          <div className="flex w-full items-center gap-1.5">
-            <div className="h-px flex-1 bg-accent/40 transition-colors duration-300 group-hover:bg-accent/65" />
-            <span aria-hidden className="text-accent/50 transition-colors duration-300 group-hover:text-accent" style={{ fontSize: "0.36rem", lineHeight: 1 }}>◆</span>
-            <div className="h-px flex-1 bg-accent/40 transition-colors duration-300 group-hover:bg-accent/65" />
-          </div>
-          <span
-            className="font-sans text-[0.52rem] font-medium uppercase tracking-[0.30em] text-accent-strong/80 transition-colors duration-300 group-hover:text-accent-strong"
-          >
-            Domaine privé · Yvelines
+          <span className="flex flex-col items-start gap-[4px] leading-none">
+            <span
+              className="font-serif text-[1.15rem] font-medium tracking-[0.12em] text-accent transition-colors duration-300 group-hover:text-accent-strong"
+            >
+              Domaine des Élégances
+            </span>
+            <div className="flex w-full items-center gap-1.5">
+              <div className="h-px flex-1 bg-accent/40 transition-colors duration-300 group-hover:bg-accent/65" />
+              <span aria-hidden className="text-accent/50 transition-colors duration-300 group-hover:text-accent" style={{ fontSize: "0.36rem", lineHeight: 1 }}>◆</span>
+              <div className="h-px flex-1 bg-accent/40 transition-colors duration-300 group-hover:bg-accent/65" />
+            </div>
+            <span
+              className="font-sans text-[0.52rem] font-medium uppercase tracking-[0.30em] text-accent-strong/80 transition-colors duration-300 group-hover:text-accent-strong"
+            >
+              Domaine privé · Yvelines
+            </span>
           </span>
         </Link>
 

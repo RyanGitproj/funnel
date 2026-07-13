@@ -52,6 +52,9 @@ docs/
 !public/**/*.avif
 !public/**/*.gif
 !public/**/*.svg
+# Icônes App Router (favicon) — servies par Next, doivent être versionnées
+!src/app/icon.png
+!src/app/apple-icon.png
 
 # Debug
 .pnpm-debug.log*

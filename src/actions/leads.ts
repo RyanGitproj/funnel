@@ -7,7 +7,7 @@ import {
   festifLeadSchema,
   normalizeEmptyToUndefined,
 } from "@/lib/validations/lead-schema";
-import { insertLead } from "@/lib/supabase/leads";
+import { insertRequest } from "@/lib/supabase/requests";
 import {
   computeCeremonieQuote,
   computeFestifQuote,
@@ -18,8 +18,39 @@ import {
   createConfirmationQuoteSnapshot,
   encodeConfirmationQuoteCookie,
 } from "@/lib/quote/confirmationQuote";
+import {
+  CONTACT_ID_COOKIE,
+  isValidContactId,
+} from "@/lib/contact/contactCookie";
 import { toStoragePayload } from "@/lib/quote/formatQuote";
 import type { ActionResult } from "@/types/lead";
+
+/**
+ * Le contact_id provient exclusivement du cookie httpOnly posé par le
+ * popup de capture — jamais du payload client (les schémas .strict()
+ * le rejetteraient de toute façon).
+ */
+async function readContactId(): Promise<string | null> {
+  const cookieStore = await cookies();
+  const value = cookieStore.get(CONTACT_ID_COOKIE)?.value;
+  return isValidContactId(value) ? value : null;
+}
+
+const CONTACT_REQUIRED: ActionResult = {
+  success: false,
+  errorCode: "contact_required",
+  error: "Renseignez d'abord vos coordonnées pour finaliser votre demande.",
+};
+
+/**
+ * FK violée (cookie forgé ou contact purgé) : on supprime le cookie
+ * invalide pour que le popup se rouvre et recrée un contact sain.
+ */
+async function handleContactMissing(): Promise<ActionResult> {
+  const cookieStore = await cookies();
+  cookieStore.delete(CONTACT_ID_COOKIE);
+  return CONTACT_REQUIRED;
+}
 
 async function rememberConfirmationQuote(quote: QuoteResult) {
   const cookieStore = await cookies();
@@ -40,6 +71,12 @@ async function rememberConfirmationQuote(quote: QuoteResult) {
 export async function submitCeremonieLead(
   values: unknown,
 ): Promise<ActionResult> {
+  const contactId = await readContactId();
+
+  if (!contactId) {
+    return CONTACT_REQUIRED;
+  }
+
   const parsed = ceremonieLeadSchema.safeParse(values);
 
   if (!parsed.success) {
@@ -59,12 +96,16 @@ export async function submitCeremonieLead(
     heater_count: parsed.data.heater_count,
   });
 
-  const result = await insertLead({
+  const result = await insertRequest({
     ...normalizeEmptyToUndefined(parsed.data),
     ...toStoragePayload(quote),
+    contact_id: contactId,
   });
 
   if (!result.success) {
+    if (result.code === "contact_missing") {
+      return handleContactMissing();
+    }
     return { success: false, error: result.error };
   }
 
@@ -74,6 +115,12 @@ export async function submitCeremonieLead(
 }
 
 export async function submitFestifLead(values: unknown): Promise<ActionResult> {
+  const contactId = await readContactId();
+
+  if (!contactId) {
+    return CONTACT_REQUIRED;
+  }
+
   const parsed = festifLeadSchema.safeParse(values);
 
   if (!parsed.success) {
@@ -101,12 +148,16 @@ export async function submitFestifLead(values: unknown): Promise<ActionResult> {
     cadeau_choice: parsed.data.cadeau_choice,
   });
 
-  const result = await insertLead({
+  const result = await insertRequest({
     ...normalizeEmptyToUndefined(parsed.data),
     ...toStoragePayload(quote),
+    contact_id: contactId,
   });
 
   if (!result.success) {
+    if (result.code === "contact_missing") {
+      return handleContactMissing();
+    }
     return { success: false, error: result.error };
   }
 

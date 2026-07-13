@@ -167,7 +167,6 @@ export function toEventTypeFestif(raw: string | undefined): EventTypeFestif {
 export type FestifLoisirsPack = {
   key: FestifLoisirsPackKey;
   label: string;
-  description: string;
   /** 0 = inclus sans supplément. */
   pricePerPerson: number;
 };
@@ -177,19 +176,16 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "evjf_chic_fun",
       label: "Pack EVJF Chic & Fun",
-      description: "Loisirs en libre accès, sans encadrement.",
       pricePerPerson: 12,
     },
     {
       key: "evjf_pool_party",
       label: "Pack Pool Party",
-      description: "Accès pool party, sans animateur.",
       pricePerPerson: 12,
     },
     {
       key: "loisirs_domaine_only",
-      label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Sans supplément.",
+      label: "Loisirs inclus uniquement",
       pricePerPerson: 0,
     },
   ],
@@ -197,19 +193,16 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "evg_challenge",
       label: "Pack EVG Challenge",
-      description: "Jeux et défis mis à disposition. Le groupe organise librement ses activités.",
       pricePerPerson: 12,
     },
     {
       key: "evg_casino_apero",
       label: "Pack Casino & Apéro",
-      description: "Ambiance casino et apéro en autonomie, sans encadrement inclus.",
       pricePerPerson: 12,
     },
     {
       key: "loisirs_domaine_only",
-      label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Sans supplément.",
+      label: "Loisirs inclus uniquement",
       pricePerPerson: 0,
     },
   ],
@@ -217,19 +210,16 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "anniversaire_signature",
       label: "Pack Anniversaire Signature",
-      description: "Loisirs et attentions festives mis à disposition pour le groupe.",
       pricePerPerson: 12,
     },
     {
       key: "loisirs_convivial",
       label: "Pack Loisirs Convivial",
-      description: "Jeux extérieurs, piscine et détente en autonomie.",
       pricePerPerson: 12,
     },
     {
       key: "loisirs_domaine_only",
-      label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Sans supplément.",
+      label: "Loisirs inclus uniquement",
       pricePerPerson: 0,
     },
   ],
@@ -237,13 +227,11 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "loisirs_convivial",
       label: "Pack Loisirs Convivial",
-      description: "Jeux extérieurs, accès pool & détente, ambiance conviviale.",
       pricePerPerson: 12,
     },
     {
       key: "loisirs_domaine_only",
-      label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Sans supplément.",
+      label: "Loisirs inclus uniquement",
       pricePerPerson: 0,
     },
   ],
@@ -251,13 +239,11 @@ export const FESTIF_LOISIRS_PACKS_BY_EVENT: Record<EventTypeFestif, FestifLoisir
     {
       key: "loisirs_convivial",
       label: "Pack Loisirs Convivial",
-      description: "Jeux extérieurs, accès pool & détente, ambiance conviviale.",
       pricePerPerson: 12,
     },
     {
       key: "loisirs_domaine_only",
-      label: "Je garde uniquement les loisirs inclus du Domaine",
-      description: "Sans supplément.",
+      label: "Loisirs inclus uniquement",
       pricePerPerson: 0,
     },
   ],
@@ -280,20 +266,17 @@ export function getFestifLoisirsPack(key: string): FestifLoisirsPack | undefined
 export const FESTIF_REPAS_OPTIONS = {
   petit_dejeuner_continental: {
     id: "petit_dejeuner_continental",
-    label: "Petit-déjeuner continental amélioré",
-    description: "Viennoiseries variées, jus de fruits.",
+    label: "Petit-déjeuner continental",
     pricePerPerson: 5,
   },
   brunch_sucre_sale: {
     id: "brunch_sucre_sale",
-    label: "Brunch gourmand sucré ou salé",
-    description: "Sucré et salé : viennoiseries, fruits, œufs, jambon.",
+    label: "Brunch sucré ou salé",
     pricePerPerson: 20,
   },
   brunch_complet: {
     id: "brunch_complet",
-    label: "Brunch gourmand sucré-salé complet",
-    description: "Formule complète sucré-salé, avec omelette.",
+    label: "Brunch complet",
     pricePerPerson: 22,
   },
 } as const;
@@ -315,9 +298,7 @@ export const FESTIF_BUFFET_OPTIONS = {
 
 export const FESTIF_SERVICE_COURSES = {
   id: "service_courses",
-  label: "Service courses installé",
-  description:
-    "On récupère et range vos courses avant votre arrivée. Service 25 €, courses en sus.",
+  label: "Service courses installé (courses en sus)",
   priceFlatRate: 25,
 } as const;
 
@@ -335,7 +316,6 @@ export const FESTIF_INTERVENANTS: Record<
   {
     id: FestifIntervenantKey;
     label: string;
-    description: string;
     priceFlat: number;
     requiresManualReview?: boolean;
   }
@@ -343,31 +323,26 @@ export const FESTIF_INTERVENANTS: Record<
   dj_son_lumiere: {
     id: "dj_son_lumiere",
     label: "DJ son & lumière",
-    description: "Ambiance musicale et éclairage.",
     priceFlat: 250,
   },
   bien_etre_energie: {
     id: "bien_etre_energie",
     label: "Bien-être / énergie",
-    description: "Masseuse à domicile ou coach sportif.",
     priceFlat: 150,
   },
   cracheur_de_feu: {
     id: "cracheur_de_feu",
     label: "Cracheur de feu",
-    description: "Spectacle événementiel.",
     priceFlat: 300,
   },
   echassier_lumineux: {
     id: "echassier_lumineux",
     label: "Échassier lumineux",
-    description: "Animation scénique.",
     priceFlat: 250,
   },
   animation_adulte: {
     id: "animation_adulte",
-    label: "Animation privée adulte sur demande",
-    description: "Sur demande, validation obligatoire (groupe majeur uniquement).",
+    label: "Animation privée adulte (groupe majeur)",
     priceFlat: 0,
     requiresManualReview: true,
   },
@@ -379,18 +354,16 @@ export type FestifMaterielKey = "tente_barnum" | "tables_chaises";
 
 export const FESTIF_MATERIEL: Record<
   FestifMaterielKey,
-  { id: FestifMaterielKey; label: string; description: string; priceFlat: number }
+  { id: FestifMaterielKey; label: string; priceFlat: number }
 > = {
   tente_barnum: {
     id: "tente_barnum",
     label: "Tente / barnum",
-    description: "Structure pour vos espaces extérieurs.",
     priceFlat: 350,
   },
   tables_chaises: {
     id: "tables_chaises",
     label: "Tables & chaises supplémentaires",
-    description: "Mobilier complémentaire.",
     priceFlat: 200,
   },
 };

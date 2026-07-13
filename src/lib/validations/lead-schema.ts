@@ -1,12 +1,10 @@
 import { z } from "zod";
 
-const phoneRegex = /^\+[1-9]\d{6,14}$/;
-
 const optionalSelect = <T extends readonly [string, ...string[]]>(
   values: T,
 ) => z.enum(values).optional().or(z.literal(""));
 
-const requiredSelect = <T extends readonly [string, ...string[]]>(
+export const requiredSelect = <T extends readonly [string, ...string[]]>(
   values: T,
   message: string,
 ) => z.enum(values, { message });
@@ -20,26 +18,6 @@ const positiveInt = z
   .max(2000, "Veuillez vérifier ce nombre.");
 
 const baseLeadFields = {
-  first_name: z
-    .string()
-    .trim()
-    .min(2, "Le prénom doit comporter au moins 2 caractères.")
-    .max(80, "Le prénom ne peut pas dépasser 80 caractères."),
-  last_name: z
-    .string()
-    .trim()
-    .min(2, "Le nom doit comporter au moins 2 caractères.")
-    .max(100, "Le nom ne peut pas dépasser 100 caractères."),
-  email: z
-    .string()
-    .trim()
-    .min(1, "L'adresse e-mail est obligatoire.")
-    .email("L'adresse e-mail n'est pas valide."),
-  phone: z
-    .string()
-    .trim()
-    .min(1, "Le numéro de téléphone est obligatoire.")
-    .regex(phoneRegex, "Le numéro de téléphone n'est pas valide."),
   event_date: z.string().trim().min(1, "Veuillez indiquer une date de début."),
   date_flexibility: requiredSelect(
     ["oui", "non", "a_definir"] as const,
@@ -56,20 +34,7 @@ const baseLeadFields = {
     ] as const,
     "Veuillez choisir un budget estimatif global.",
   ),
-  project_stage: requiredSelect(
-    [
-      "Je découvre",
-      "Je compare plusieurs lieux",
-      "Mon projet est déjà assez défini",
-      "Je souhaite réserver rapidement",
-    ] as const,
-    "Veuillez préciser où vous en êtes dans votre projet.",
-  ),
   message: optionalString,
-  rgpd_consent: z.boolean().refine((v) => v === true, {
-    message: "Vous devez accepter la politique de confidentialité.",
-  }),
-  marketing_optin: z.boolean().optional(),
 } as const;
 
 // ─── Festif ──────────────────────────────────────────────────────────────────
@@ -213,13 +178,6 @@ export const budgetRangeOptions = [
   "5 000 € – 8 000 €",
   "8 000 € – 12 000 €",
   "Plus de 12 000 €",
-] as const;
-
-export const projectStageOptions = [
-  "Je découvre",
-  "Je compare plusieurs lieux",
-  "Mon projet est déjà assez défini",
-  "Je souhaite réserver rapidement",
 ] as const;
 
 // ─── Schemas ─────────────────────────────────────────────────────────────────

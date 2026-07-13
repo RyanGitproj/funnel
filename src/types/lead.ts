@@ -11,10 +11,7 @@ export type { CeremonieLeadInput, FestifLeadInput } from "@/lib/validations/lead
 /** Discriminated union des inputs possibles (utile pour les helpers). */
 export type LeadInput = CeremonieLeadInput | FestifLeadInput;
 
-/**
- * Champs de devis calculés côté serveur, ajoutés au payload avant insertion.
- * Nécessitent la migration SQL [Q1] dans TODO.md avant déploiement.
- */
+/** Champs de devis calculés côté serveur, ajoutés au payload avant insertion. */
 export type QuoteStorageFields = {
   estimated_amount_min?: number | null;
   estimated_amount_max?: number | null;
@@ -23,24 +20,31 @@ export type QuoteStorageFields = {
   pricing_breakdown?: Record<string, unknown> | null;
 };
 
-export type CalculatedLeadFields = {
-  duration?: string | null;
-};
-
 /**
- * Payload envoyé à la couche d'accès aux données (lib/supabase/leads.ts).
- * Inclut les champs du formulaire + les champs de devis calculés.
+ * Payload envoyé à la couche d'accès aux données (lib/supabase/requests.ts).
+ * `contact_id` est injecté exclusivement côté serveur depuis le cookie
+ * httpOnly du popup — jamais accepté du client (les schémas .strict()
+ * le rejetteraient de toute façon).
  */
-export type LeadInsertPayload = LeadInput & QuoteStorageFields & CalculatedLeadFields;
+export type LeadInsertPayload = LeadInput &
+  QuoteStorageFields & { contact_id: string };
 
 /**
  * Résultat typé d'une insertion — jamais d'exception, toujours un
- * état explicite. La Server Action l'utilise directement pour renvoyer
- * sa propre réponse typée au client.
+ * état explicite. `code: "contact_missing"` signale une violation de
+ * FK (cookie forgé ou contact purgé) : la Server Action purge alors
+ * le cookie et redemande le popup.
  */
-export type LeadInsertResult =
+export type RequestInsertResult =
   | { success: true }
-  | { success: false; error: string };
+  | { success: false; error: string; code?: "contact_missing" };
+
+/**
+ * Codes d'erreur métier que le client interprète (au-delà du message
+ * affichable). `contact_required` → le formulaire funnel ouvre le
+ * popup de capture puis resoumet.
+ */
+export type ActionErrorCode = "contact_required";
 
 /**
  * Format de retour public d'une Server Action. Le champ `fieldErrors`
@@ -49,4 +53,9 @@ export type LeadInsertResult =
  */
 export type ActionResult =
   | { success: true }
-  | { success: false; error: string; fieldErrors?: Record<string, string> };
+  | {
+      success: false;
+      error: string;
+      errorCode?: ActionErrorCode;
+      fieldErrors?: Record<string, string>;
+    };

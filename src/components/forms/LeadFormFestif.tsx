@@ -3,8 +3,6 @@
 import * as React from "react";
 import Image from "next/image";
 import { useForm, useWatch, Controller } from "react-hook-form";
-import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import {
@@ -15,7 +13,6 @@ import {
   festifActivitesInterestOptions,
   festifEventTypeOptions,
   festifLeadSchema,
-  projectStageOptions,
   type FestifLeadFormValues,
   type FestifLeadInput,
 } from "@/lib/validations/lead-schema";
@@ -34,8 +31,6 @@ import { submitFestifLead } from "@/actions/leads";
 import {
   FormField,
   fieldBaseClass,
-  checkboxInputClass,
-  PhoneInputInner,
   CardSelect,
   IconCardSelect,
   PillSelect,
@@ -44,6 +39,7 @@ import {
   RichMultiCardSelect,
   stepperBtnClass,
 } from "./FormField";
+import { ContactGateModal } from "./ContactGateModal";
 import { StepIndicator } from "./StepIndicator";
 import { Button } from "@/components/ui/button";
 import { QuotePreview } from "./QuotePreview";
@@ -57,7 +53,6 @@ const FESTIF_STEP_LABELS = [
   "Votre date",
   "Votre ambiance",
   "Votre projet",
-  "Vos coordonnées",
 ] as const;
 
 const STEP_FIELDS: (keyof FestifLeadFormValues)[][] = [
@@ -65,8 +60,7 @@ const STEP_FIELDS: (keyof FestifLeadFormValues)[][] = [
   ["festif_duration"],
   ["event_date", "date_flexibility"],
   ["buffet_choice", "dietary_notes"],
-  ["budget_range", "project_stage"],
-  ["first_name", "last_name", "email", "phone", "rgpd_consent"],
+  ["budget_range"],
 ];
 
 // Cartes durée enrichies
@@ -77,7 +71,7 @@ const FESTIF_DURATION_CARDS = [
     priceHighlight: "Dès 107 € / personne (à partir de 27 pers.)",
     priceGolden: true,
     description: "Une nuit privée au Domaine, nettoyage inclus.",
-    conditions: "Du lundi au jeudi · Hors vacances scolaires · Hors jours fériés · Minimum 12 personnes · Selon disponibilité.",
+    conditions: "Lun–jeu · hors vacances scolaires et jours fériés · min. 12 pers.",
     note: "Hors période ? Demandez, on confirme.",
   },
   {
@@ -86,7 +80,7 @@ const FESTIF_DURATION_CARDS = [
     priceHighlight: "À partir de 205 € / personne en groupe complet",
     priceGolden: false,
     description: "Petit-déjeuner essentiel + nettoyage inclus.",
-    note: "Prix pour 34 pers. (groupe complet), ajusté à votre nombre réel.",
+    note: "Prix groupe complet (34 pers.), ajusté à votre nombre.",
   },
   {
     value: "weekend_long_3_nuits" as const,
@@ -123,6 +117,9 @@ export function LeadFormFestif() {
   const [isPending, startTransition] = React.useTransition();
   const [activitesToggle, setActivitesToggle] = React.useState<"oui" | "non" | undefined>(undefined);
   const [validationAttempt, setValidationAttempt] = React.useState(0);
+  const [gateOpen, setGateOpen] = React.useState(false);
+  const [pendingValues, setPendingValues] =
+    React.useState<FestifLeadInput | null>(null);
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const {
@@ -145,14 +142,7 @@ export function LeadFormFestif() {
       ambiance: undefined,
       festif_duration: undefined,
       budget_range: undefined,
-      project_stage: undefined,
       message: "",
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
-      rgpd_consent: false,
-      marketing_optin: false,
       // Phase 2
       loisirs_pack: undefined,
       repas_upgrade: undefined,
@@ -167,7 +157,6 @@ export function LeadFormFestif() {
     },
   });
 
-  const phoneValue = useWatch({ control, name: "phone", defaultValue: "" });
   const guestCount = useWatch({ control, name: "guest_count" });
   const activitesInterest = useWatch({ control, name: "activites_interest", defaultValue: [] });
   const festifDuration = useWatch({ control, name: "festif_duration" });
@@ -238,12 +227,27 @@ export function LeadFormFestif() {
     setStep((s) => s - 1);
   };
 
-  const onSubmit = (values: FestifLeadInput) => {
+  const submitLead = (values: FestifLeadInput) => {
     setServerError(null);
     startTransition(async () => {
       const result = await submitFestifLead(values);
-      if (!result.success) setServerError(result.error ?? "Une erreur est survenue.");
+      if (result.success) return;
+      if (result.errorCode === "contact_required") {
+        // Visiteur sans contact enregistré (arrivée directe, cookie
+        // expiré) : le popup capture ses coordonnées puis resoumet.
+        setPendingValues(values);
+        setGateOpen(true);
+        return;
+      }
+      setServerError(result.error ?? "Une erreur est survenue.");
     });
+  };
+
+  const onSubmit = submitLead;
+
+  const handleGateSubmitted = () => {
+    setGateOpen(false);
+    if (pendingValues) submitLead(pendingValues);
   };
 
   // Packs loisirs selon type d'événement
@@ -252,12 +256,12 @@ export function LeadFormFestif() {
     return FESTIF_LOISIRS_PACKS_BY_EVENT[bucket].map((p) => ({
       value: p.key,
       label: p.label,
-      description: p.description,
       badge: p.pricePerPerson > 0 ? `+${p.pricePerPerson} €/pers.` : "Inclus",
     }));
   }, [eventType]);
 
   return (
+    <>
     <form
       ref={formRef}
       id={FORM_ID}
@@ -438,6 +442,7 @@ export function LeadFormFestif() {
                   options={loisirsPackOptions}
                   value={field.value ?? undefined}
                   onChange={field.onChange}
+                  cols={2}
                 />
               )}
             />
@@ -520,13 +525,13 @@ export function LeadFormFestif() {
         <div className="flex flex-col gap-3">
           <SectionQuestion>
             {isSemaineOffer
-              ? "Souhaitez-vous ajouter un petit-déjeuner ou un repas ?"
-              : "Souhaitez-vous améliorer votre petit-déjeuner ou ajouter un repas ?"}
+              ? "Ajouter un petit-déjeuner ou un repas ?"
+              : "Petit-déjeuner ou repas supplémentaire ?"}
           </SectionQuestion>
           <p className="text-xs leading-relaxed text-ink-subtle">
             {isSemaineOffer
-              ? "Hébergement seul — ajoutez un petit-déjeuner ou brunch en option."
-              : "Le petit-déjeuner essentiel est déjà inclus. Choisissez ici seulement pour une formule plus généreuse."}
+              ? "Hébergement seul — petit-déjeuner en option."
+              : "Petit-déjeuner essentiel déjà inclus."}
           </p>
           <Controller
             control={control}
@@ -537,26 +542,22 @@ export function LeadFormFestif() {
                   {
                     value: "petit_dejeuner_continental",
                     label: FESTIF_REPAS_OPTIONS.petit_dejeuner_continental.label,
-                    description: FESTIF_REPAS_OPTIONS.petit_dejeuner_continental.description,
                     badge: `+${FESTIF_REPAS_OPTIONS.petit_dejeuner_continental.pricePerPerson} €/pers.`,
                   },
                   {
                     value: "brunch_sucre_sale",
                     label: FESTIF_REPAS_OPTIONS.brunch_sucre_sale.label,
-                    description: FESTIF_REPAS_OPTIONS.brunch_sucre_sale.description,
                     badge: `+${FESTIF_REPAS_OPTIONS.brunch_sucre_sale.pricePerPerson} €/pers.`,
                   },
                   {
                     value: "brunch_complet",
                     label: FESTIF_REPAS_OPTIONS.brunch_complet.label,
-                    description: FESTIF_REPAS_OPTIONS.brunch_complet.description,
                     badge: `+${FESTIF_REPAS_OPTIONS.brunch_complet.pricePerPerson} €/pers.`,
                   },
                   isSemaineOffer
                     ? {
                         value: "none",
                         label: "Hébergement seul",
-                        description: "Ajoutez un petit-déjeuner ou brunch en option.",
                       }
                     : {
                         value: "none",
@@ -566,6 +567,7 @@ export function LeadFormFestif() {
                 ]}
                 value={field.value}
                 onChange={field.onChange}
+                cols={2}
               />
             )}
           />
@@ -599,6 +601,7 @@ export function LeadFormFestif() {
                 ]}
                 value={field.value}
                 onChange={field.onChange}
+                cols={2}
               />
             )}
           />
@@ -634,7 +637,6 @@ export function LeadFormFestif() {
                   {
                     value: "service_courses",
                     label: FESTIF_SERVICE_COURSES.label,
-                    description: FESTIF_SERVICE_COURSES.description,
                     badge: `${FESTIF_SERVICE_COURSES.priceFlatRate} €`,
                   },
                   { value: "none", label: "Pas pour le moment" },
@@ -642,6 +644,7 @@ export function LeadFormFestif() {
                 ]}
                 value={field.value}
                 onChange={field.onChange}
+                cols={2}
               />
             )}
           />
@@ -653,7 +656,7 @@ export function LeadFormFestif() {
             Souhaitez-vous ajouter un intervenant ?
           </SectionQuestion>
           <p className="text-xs leading-relaxed text-ink-subtle">
-            Les intervenants sont proposés en supplément, selon disponibilité des partenaires.
+            Proposés en supplément, selon disponibilité des partenaires.
           </p>
           <Controller
             control={control}
@@ -664,36 +667,32 @@ export function LeadFormFestif() {
                   {
                     value: "dj_son_lumiere",
                     label: FESTIF_INTERVENANTS.dj_son_lumiere.label,
-                    description: FESTIF_INTERVENANTS.dj_son_lumiere.description,
                     badge: `${FESTIF_INTERVENANTS.dj_son_lumiere.priceFlat} €`,
                   },
                   {
                     value: "bien_etre_energie",
                     label: FESTIF_INTERVENANTS.bien_etre_energie.label,
-                    description: FESTIF_INTERVENANTS.bien_etre_energie.description,
                     badge: `${FESTIF_INTERVENANTS.bien_etre_energie.priceFlat} €`,
                   },
                   {
                     value: "cracheur_de_feu",
                     label: FESTIF_INTERVENANTS.cracheur_de_feu.label,
-                    description: FESTIF_INTERVENANTS.cracheur_de_feu.description,
                     badge: `${FESTIF_INTERVENANTS.cracheur_de_feu.priceFlat} €`,
                   },
                   {
                     value: "echassier_lumineux",
                     label: FESTIF_INTERVENANTS.echassier_lumineux.label,
-                    description: FESTIF_INTERVENANTS.echassier_lumineux.description,
                     badge: `${FESTIF_INTERVENANTS.echassier_lumineux.priceFlat} €`,
                   },
                   {
                     value: "animation_adulte",
                     label: FESTIF_INTERVENANTS.animation_adulte.label,
-                    description: FESTIF_INTERVENANTS.animation_adulte.description,
                     badge: "Sur demande",
                   },
                 ]}
                 value={field.value ?? []}
                 onChange={field.onChange}
+                cols={2}
               />
             )}
           />
@@ -702,7 +701,7 @@ export function LeadFormFestif() {
             label="Autre intervenant souhaité (facultatif)"
           >
             <textarea
-              rows={2}
+              rows={1}
               className={fieldBaseClass}
               placeholder="Décrivez l'intervenant souhaité…"
               {...register("autre_intervenant_notes")}
@@ -724,18 +723,17 @@ export function LeadFormFestif() {
                   {
                     value: "tente_barnum",
                     label: FESTIF_MATERIEL.tente_barnum.label,
-                    description: FESTIF_MATERIEL.tente_barnum.description,
                     badge: `${FESTIF_MATERIEL.tente_barnum.priceFlat} €`,
                   },
                   {
                     value: "tables_chaises",
                     label: FESTIF_MATERIEL.tables_chaises.label,
-                    description: FESTIF_MATERIEL.tables_chaises.description,
                     badge: `${FESTIF_MATERIEL.tables_chaises.priceFlat} €`,
                   },
                 ]}
                 value={field.value ?? []}
                 onChange={field.onChange}
+                cols={2}
               />
             )}
           />
@@ -744,7 +742,7 @@ export function LeadFormFestif() {
             label="Autre besoin matériel (facultatif)"
           >
             <textarea
-              rows={2}
+              rows={1}
               className={fieldBaseClass}
               placeholder="Décrivez votre besoin…"
               {...register("autre_materiel_notes")}
@@ -759,7 +757,7 @@ export function LeadFormFestif() {
               Souhaitez-vous des activités avec nos partenaires ?
             </SectionQuestion>
             <p className="mt-1 text-xs leading-relaxed text-ink-subtle">
-              Ces extras ne sont pas inclus dans le devis estimatif — notre équipe vous contactera pour en discuter.
+              Extras hors devis — notre équipe vous recontacte.
             </p>
           </div>
           <PillSelect
@@ -785,7 +783,7 @@ export function LeadFormFestif() {
                       : [...sel, label],
                   );
                 return (
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                     {FESTIF_ACTIVITY_OPTIONS.map((act) => {
                       const isSelected = sel.includes(
                         act.formLabel as (typeof festifActivitesInterestOptions)[number],
@@ -862,9 +860,8 @@ export function LeadFormFestif() {
               )}
             />
             <p className="mt-3 text-[10px] leading-relaxed text-ink-subtle opacity-70">
-              Un seul cadeau par réservation · Non cumulable · Non remboursable ·
-              Non échangeable contre une remise · Confirmé après réservation validée et acompte reçu ·
-              Sous réserve de disponibilité.
+              Un seul cadeau par réservation · non cumulable, ni remboursable,
+              ni échangeable · confirmé après acompte reçu · selon disponibilité.
             </p>
           </div>
         )}
@@ -875,17 +872,18 @@ export function LeadFormFestif() {
           </p>
         )}
 
-        {/* Estimation indicative */}
-        <QuotePreview quote={quote} guestCount={guestCount} />
+        {/* Estimation indicative — total en direct (détail sur /confirmation) */}
+        <QuotePreview quote={quote} guestCount={guestCount} compact />
       </div>
 
       {/* ── Étape 5 : Budget & timing ── */}
-      <div className={cn("flex flex-col gap-4", step !== 5 && "hidden")}>
-        <QuotePreview quote={quote} guestCount={guestCount} />
+      <div className={cn("flex flex-col gap-3", step !== 5 && "hidden")}>
+        {/* Rappel estimation (résumé — détail complet sur /confirmation) */}
+        <QuotePreview quote={quote} guestCount={guestCount} compact />
 
         <div className="flex flex-col gap-3">
           <SectionQuestion required>
-            Quel budget souhaitez-vous viser pour l&apos;événement ?
+            Quel budget visez-vous pour l&apos;événement ?
           </SectionQuestion>
           <Controller
             control={control}
@@ -895,7 +893,7 @@ export function LeadFormFestif() {
                 options={budgetRangeOptions}
                 value={field.value}
                 onChange={field.onChange}
-                cols={2}
+                cols={3}
               />
             )}
           />
@@ -906,36 +904,13 @@ export function LeadFormFestif() {
           )}
         </div>
 
-        <div className="flex flex-col gap-3">
-          <SectionQuestion required>
-            Où en êtes-vous dans votre organisation ?
-          </SectionQuestion>
-          <Controller
-            control={control}
-            name="project_stage"
-            render={({ field }) => (
-              <CardSelect
-                options={projectStageOptions}
-                value={field.value}
-                onChange={field.onChange}
-                cols={2}
-              />
-            )}
-          />
-          {errors.project_stage && (
-            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
-              {errors.project_stage.message}
-            </p>
-          )}
-        </div>
-
         <FormField
           id="f-message"
           label="Un message à ajouter ?"
           error={errors.message?.message}
         >
           <textarea
-            rows={3}
+            rows={2}
             className={fieldBaseClass}
             placeholder="Partagez votre idée, l'ambiance recherchée ou tout point important."
             {...register("message")}
@@ -943,112 +918,8 @@ export function LeadFormFestif() {
         </FormField>
       </div>
 
-      {/* ── Étape 6 : Vos coordonnées ── */}
-      <div className={cn("flex flex-col gap-4", step !== 6 && "hidden")}>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FormField
-            id="f-first-name"
-            label="Prénom"
-            required
-            error={errors.first_name?.message}
-          >
-            <input
-              type="text"
-              autoComplete="given-name"
-              className={fieldBaseClass}
-              placeholder="Prénom"
-              {...register("first_name")}
-            />
-          </FormField>
-          <FormField
-            id="f-last-name"
-            label="Nom"
-            required
-            error={errors.last_name?.message}
-          >
-            <input
-              type="text"
-              autoComplete="family-name"
-              className={fieldBaseClass}
-              placeholder="Nom"
-              {...register("last_name")}
-            />
-          </FormField>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FormField
-            id="f-email"
-            label="E-mail"
-            required
-            error={errors.email?.message}
-          >
-            <input
-              type="email"
-              autoComplete="email"
-              className={fieldBaseClass}
-              placeholder="votre@email.fr"
-              {...register("email")}
-            />
-          </FormField>
-          <FormField
-            id="f-phone"
-            label="Téléphone"
-            required
-            error={errors.phone?.message}
-          >
-            <PhoneInput
-              defaultCountry="FR"
-              placeholder="06 12 34 56 78"
-              value={phoneValue}
-              onChange={(val) =>
-                setValue("phone", val ?? "", { shouldValidate: !!errors.phone })
-              }
-              inputComponent={PhoneInputInner}
-              className={cn(
-                "flex items-center",
-                "border border-line rounded-[var(--radius-md)]",
-                "bg-surface-elevated",
-                "transition-[border-color,box-shadow] duration-200",
-                "focus-within:border-accent-strong focus-within:ring-2 focus-within:ring-accent/40",
-                errors.phone && "border-accent-strong ring-2 ring-accent-strong/30",
-              )}
-            />
-          </FormField>
-        </div>
-
-        <div className="flex flex-col gap-3 pt-1">
-          <label className="flex cursor-pointer items-start gap-3">
-            <input
-              type="checkbox"
-              className={cn(checkboxInputClass, "mt-0.5 shrink-0")}
-              {...register("rgpd_consent")}
-            />
-            <span className="text-sm leading-relaxed text-ink-muted">
-              J&apos;accepte que mes données soient traitées par le Domaine des
-              Élégances afin de répondre à ma demande et de me recontacter.{" "}
-              <span className="text-accent-strong" aria-hidden>*</span>
-            </span>
-          </label>
-          {errors.rgpd_consent && (
-            <p key={validationAttempt} role="alert" className="animate-fade-in-up text-xs leading-relaxed text-accent-strong">
-              {errors.rgpd_consent.message}
-            </p>
-          )}
-
-          <label className="flex cursor-pointer items-start gap-3">
-            <input
-              type="checkbox"
-              className={cn(checkboxInputClass, "mt-0.5 shrink-0")}
-              {...register("marketing_optin")}
-            />
-            <span className="text-sm leading-relaxed text-ink-muted">
-              J&apos;accepte de recevoir des informations et offres du Domaine
-              des Élégances par e-mail. (facultatif)
-            </span>
-          </label>
-        </div>
-
+      {/* ── Navigation ── */}
+      <div className="flex flex-col gap-3 pt-1">
         {serverError && (
           <p
             role="alert"
@@ -1057,11 +928,7 @@ export function LeadFormFestif() {
             {serverError}
           </p>
         )}
-      </div>
-
-      {/* ── Navigation ── */}
-      <div className="flex flex-col gap-3 pt-1">
-        {step < 6 ? (
+        {step < 5 ? (
           <Button
             type="button"
             size="lg"
@@ -1082,28 +949,28 @@ export function LeadFormFestif() {
             >
               {isPending ? "Envoi en cours..." : "Recevoir mon devis personnalisé →"}
             </Button>
-            <Button
-              type="button"
-              size="md"
-              variant="secondary"
-              onClick={() => { scrollToForm(); setStep(1); }}
-              className="w-full"
-            >
-              Modifier mes choix
-            </Button>
-            <Button
-              type="button"
-              size="md"
-              variant="ghost"
-              onClick={() => { scrollToForm(); setStep(LAST_OPTIONS_STEP); }}
-              className="w-full"
-            >
-              Ajouter une option
-            </Button>
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                type="button"
+                size="md"
+                variant="secondary"
+                onClick={() => { scrollToForm(); setStep(1); }}
+                className="h-auto min-h-10 w-full whitespace-normal"
+              >
+                Modifier mes choix
+              </Button>
+              <Button
+                type="button"
+                size="md"
+                variant="ghost"
+                onClick={() => { scrollToForm(); setStep(LAST_OPTIONS_STEP); }}
+                className="h-auto min-h-10 w-full whitespace-normal"
+              >
+                Ajouter une option
+              </Button>
+            </div>
             <p className="text-center text-xs leading-relaxed text-ink-subtle">
-              Réponse sous 24h ouvrées. Proposition transmise sous réserve de
-              disponibilité et de validation finale par l&apos;équipe du Domaine
-              des Élégances.
+              Réponse sous 24h · sous réserve de disponibilité et validation finale.
             </p>
           </>
         )}
@@ -1118,5 +985,14 @@ export function LeadFormFestif() {
         )}
       </div>
     </form>
+
+    {/* Hors du <form> : le modal contient son propre formulaire. */}
+    <ContactGateModal
+      open={gateOpen}
+      sourcePage="/festif"
+      ctaLabel="Reprendre ma demande →"
+      onSubmitted={handleGateSubmitted}
+    />
+    </>
   );
 }

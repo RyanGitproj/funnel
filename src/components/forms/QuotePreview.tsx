@@ -37,9 +37,16 @@ function Row({
 export function QuotePreview({
   quote,
   guestCount,
+  compact = false,
 }: {
   quote: QuoteResult | null;
   guestCount?: number;
+  /**
+   * Mode résumé pour l'étape finale (formulaire court) : total, prix
+   * par personne, alertes et disclaimer seulement — le détail complet
+   * est affiché à l'étape options et sur /confirmation.
+   */
+  compact?: boolean;
 }) {
   if (!quote) return null;
 
@@ -57,6 +64,40 @@ export function QuotePreview({
   const gc = guestCount ?? quote.guestCount;
 
   if (!hasBase && !hasInterests && !hasWarnings) return null;
+
+  if (compact) {
+    return (
+      <div className="rounded-[var(--radius-md)] border border-accent/30 bg-surface-alt p-3 text-sm">
+        <div className="flex items-baseline justify-between gap-2">
+          <span className="font-serif font-medium text-ink">
+            Estimation indicative
+          </span>
+          <span className="shrink-0 text-right font-serif font-medium tabular-nums text-ink">
+            {quote.displayLabel}
+          </span>
+        </div>
+
+        {isFestif && quote.pricingMode === "grid" && quote.estimatedMin > 0 && gc && (
+          <p className="mt-1 text-xs leading-relaxed text-ink-muted">
+            Soit environ{" "}
+            <strong>{Math.round(quote.estimatedMin / gc)} €/personne</strong>{" "}
+            (options incluses).
+          </p>
+        )}
+
+        {hasWarnings &&
+          quote.warnings.map((w, i) => (
+            <p key={i} className="mt-1.5 text-xs leading-relaxed text-accent-strong">
+              ⚠ {w}
+            </p>
+          ))}
+
+        <p className="mt-1.5 text-[10px] leading-relaxed text-ink-subtle">
+          {quote.disclaimer}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-[var(--radius-md)] border border-accent/30 bg-surface-alt p-4 text-sm">

@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { cookies } from "next/headers";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LeadFormCeremonie } from "@/components/forms/LeadFormCeremonie";
+import { ContactGate } from "@/components/forms/ContactGate";
+import {
+  CONTACT_ID_COOKIE,
+  isValidContactId,
+} from "@/lib/contact/contactCookie";
 import { Badge } from "@/components/ui/badge";
 
 export const metadata: Metadata = {
@@ -88,13 +94,22 @@ const galleryImages = [
   },
 ];
 
-export default function CeremoniePage() {
+export default async function CeremoniePage() {
+  // Lecture du cookie (route dynamique, assumé) : une pub peut envoyer
+  // directement ici — le popup de capture bloque tant que le visiteur
+  // n'a pas laissé ses coordonnées.
+  const cookieStore = await cookies();
+  const hasContact = isValidContactId(
+    cookieStore.get(CONTACT_ID_COOKIE)?.value,
+  );
+
   return (
     <ThemeProvider
       theme="ceremonie"
       as="div"
       className="flex min-h-screen flex-col bg-surface"
     >
+      <ContactGate initialOpen={!hasContact} sourcePage="/ceremonie" />
       <Header />
 
       <main className="flex-1">

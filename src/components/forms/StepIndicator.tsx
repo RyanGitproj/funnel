@@ -8,7 +8,6 @@ const BASE_LABELS = [
   "Votre date",
   "placeholder",
   "Votre projet",
-  "Vos coordonnées",
 ] as const;
 
 interface StepIndicatorProps {
@@ -27,7 +26,6 @@ export function StepIndicator({
     BASE_LABELS[1],
     step3Label,
     BASE_LABELS[3],
-    BASE_LABELS[4],
   ];
 
   return (

@@ -3,10 +3,10 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 /**
  * Client Supabase public (rôle anon).
  *
- * RLS est activé sur la table `elegance_leads` avec une policy d'insertion
- * publique uniquement (anon, insert only). On utilise donc le client
- * public côté serveur (Server Actions) comme côté client — jamais de
- * service_role key dans l'app.
+ * RLS est activé sur les tables `funnel_elegance_contacts` et `funnel_elegance_requests`
+ * avec une policy d'insertion publique uniquement (anon, insert only).
+ * On utilise donc le client public côté serveur (Server Actions) comme
+ * côté client — jamais de service_role key dans l'app.
  *
  * Les variables d'env sont préfixées NEXT_PUBLIC_ pour rester
  * disponibles aussi bien côté serveur que côté client.

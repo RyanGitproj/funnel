@@ -132,15 +132,18 @@ export function CardSelect({
   onChange,
   cols = 2,
   getLabel,
+  gridClassName,
 }: {
   options: readonly string[];
   value: string | undefined;
   onChange: (v: string) => void;
   cols?: 2 | 3 | 4;
   getLabel?: (v: string) => string;
+  /** Remplace la grille par défaut (ex. "grid-cols-1 sm:grid-cols-3"). */
+  gridClassName?: string;
 }) {
   return (
-    <div className={cn("grid gap-2", colsClass[cols])}>
+    <div className={cn("grid gap-2", gridClassName ?? colsClass[cols])}>
       {options.map((opt) => (
         <button
           key={opt}
@@ -604,13 +607,12 @@ export function PillSelect({
 }
 
 /* ───────────────────────────────────────────────────────────────
-   RichCardSelect — sélecteur unique avec label, description et badge
+   RichCardSelect — sélecteur unique avec label et badge
    ─────────────────────────────────────────────────────────────── */
 
 export type RichCardOption = {
   value: string;
   label: string;
-  description?: string;
   badge?: string;
 };
 
@@ -618,13 +620,16 @@ export function RichCardSelect({
   options,
   value,
   onChange,
+  cols = 1,
 }: {
   options: RichCardOption[];
   value: string | undefined;
   onChange: (v: string) => void;
+  /** 2 = deux colonnes à toutes les tailles d'écran. */
+  cols?: 1 | 2;
 }) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn("grid gap-2", cols === 2 && "grid-cols-2")}>
       {options.map((opt) => {
         const selected = value === opt.value;
         return (
@@ -633,22 +638,15 @@ export function RichCardSelect({
             type="button"
             onClick={() => onChange(opt.value)}
             className={cn(
-              "flex items-start justify-between gap-3 rounded-[var(--radius-md)] border-2 px-4 py-3 text-left transition-all duration-150 cursor-pointer select-none active:scale-[0.99]",
+              "flex flex-wrap items-start justify-between gap-x-3 gap-y-1 rounded-[var(--radius-md)] border-2 px-3 py-3 text-left transition-all duration-150 cursor-pointer select-none active:scale-[0.99]",
               selected
                 ? "border-accent bg-accent/[0.12] text-ink shadow-[0_0_22px_var(--card-glow)]"
                 : "border-line bg-surface-elevated text-ink-muted hover:border-accent/50 hover:text-ink hover:scale-[1.01]",
             )}
           >
-            <div className="flex flex-col gap-0.5 min-w-0">
-              <span className={cn("text-sm font-medium leading-snug", selected ? "text-ink" : "text-ink")}>
-                {opt.label}
-              </span>
-              {opt.description && (
-                <span className="text-xs leading-relaxed text-ink-subtle">
-                  {opt.description}
-                </span>
-              )}
-            </div>
+            <span className="min-w-0 text-sm font-medium leading-snug text-ink">
+              {opt.label}
+            </span>
             {opt.badge && (
               <span
                 className={cn(
@@ -669,23 +667,26 @@ export function RichCardSelect({
 }
 
 /* ───────────────────────────────────────────────────────────────
-   RichMultiCardSelect — sélecteur multiple avec label, description, badge
+   RichMultiCardSelect — sélecteur multiple avec label et badge
    ─────────────────────────────────────────────────────────────── */
 
 export function RichMultiCardSelect({
   options,
   value,
   onChange,
+  cols = 1,
 }: {
   options: RichCardOption[];
   value: string[];
   onChange: (v: string[]) => void;
+  /** 2 = deux colonnes à toutes les tailles d'écran. */
+  cols?: 1 | 2;
 }) {
   const toggle = (v: string) =>
     onChange(value.includes(v) ? value.filter((x) => x !== v) : [...value, v]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn("grid gap-2", cols === 2 && "grid-cols-2")}>
       {options.map((opt) => {
         const selected = value.includes(opt.value);
         return (
@@ -694,22 +695,15 @@ export function RichMultiCardSelect({
             type="button"
             onClick={() => toggle(opt.value)}
             className={cn(
-              "flex items-start justify-between gap-3 rounded-[var(--radius-md)] border-2 px-4 py-3 text-left transition-all duration-150 cursor-pointer select-none active:scale-[0.99]",
+              "flex flex-wrap items-start justify-between gap-x-3 gap-y-1 rounded-[var(--radius-md)] border-2 px-3 py-3 text-left transition-all duration-150 cursor-pointer select-none active:scale-[0.99]",
               selected
                 ? "border-accent bg-accent/[0.12] text-ink shadow-[0_0_22px_var(--card-glow)]"
                 : "border-line bg-surface-elevated text-ink-muted hover:border-accent/50 hover:text-ink hover:scale-[1.01]",
             )}
           >
-            <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="text-sm font-medium leading-snug text-ink">
-                {opt.label}
-              </span>
-              {opt.description && (
-                <span className="text-xs leading-relaxed text-ink-subtle">
-                  {opt.description}
-                </span>
-              )}
-            </div>
+            <span className="min-w-0 text-sm font-medium leading-snug text-ink">
+              {opt.label}
+            </span>
             {opt.badge && (
               <span
                 className={cn(
