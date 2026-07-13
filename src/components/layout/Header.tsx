@@ -9,17 +9,13 @@ import { pushDataLayerEvent } from "@/lib/tracking/gtm";
  * Header — commun à toutes les pages, agnostique du thème.
  * Il consomme les variables CSS du contexte `data-theme` ambiant.
  *
+ * Volontairement minimal (trafic publicitaire) : logo + CTA devis,
+ * aucun lien de navigation pour ne pas disperser le visiteur.
+ *
  * Conventions premium :
  *   - lettres majuscules espacées (text-eyebrow) pour le logo
- *   - liens en sans-serif fine, jamais de bouton pour la nav
  *   - sticky top avec fond surface semi-transparent + blur discret
  */
-const navLinks = [
-  { href: "/ceremonie", label: "Cérémonie" },
-  { href: "/festif", label: "Festif" },
-  { href: "/#contact", label: "Contact" },
-];
-
 export function Header() {
   const pathname = usePathname();
   const isCeremonie = pathname === "/ceremonie";
@@ -80,22 +76,10 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-10 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium tracking-wide text-ink-muted transition-colors hover:text-ink"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
         <Link
           href={isFunnel ? "#devis" : "/#orientation"}
           onClick={handleQuoteCtaClick}
-          className={`bg-accent-strong text-accent-foreground font-semibold uppercase tracking-[0.18em] transition-colors hover:brightness-95${isFunnel ? " inline-flex px-4 py-2.5 text-[10px] md:px-6 md:py-3 md:text-xs" : " hidden px-6 py-3 text-xs md:inline-flex"}`}
+          className="inline-flex bg-accent-strong px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-accent-foreground transition-colors hover:brightness-95 md:px-6 md:py-3 md:text-xs"
           style={{ borderRadius: "var(--radius-md)" }}
         >
           <span className="md:hidden">MON DEVIS</span>
