@@ -18,13 +18,25 @@ export const contactPreparationStageOptions = [
   "Je veux des conseils",
 ] as const;
 
+export const contactEventTimelineOptions = [
+  "Dans moins de 3 mois",
+  "Entre 3 et 6 mois",
+  "Entre 6 et 12 mois",
+  "Dans plus d'un an",
+  "Je n'ai pas encore de date",
+] as const;
+
 export const contactSchema = z
   .object({
+    // Facultatif : vide accepté (normalisé en null à l'insert), sinon 2 car. min.
     first_name: z
       .string()
       .trim()
-      .min(2, "Le prénom doit comporter au moins 2 caractères.")
-      .max(80, "Le prénom ne peut pas dépasser 80 caractères."),
+      .max(80, "Le prénom ne peut pas dépasser 80 caractères.")
+      .refine((v) => v.length === 0 || v.length >= 2, {
+        message: "Le prénom doit comporter au moins 2 caractères.",
+      })
+      .optional(),
     last_name: z
       .string()
       .trim()
@@ -43,6 +55,10 @@ export const contactSchema = z
     preparation_stage: requiredSelect(
       contactPreparationStageOptions,
       "Veuillez indiquer où vous en êtes dans votre préparation.",
+    ),
+    event_timeline: requiredSelect(
+      contactEventTimelineOptions,
+      "Veuillez indiquer à quelle échéance aurait lieu votre événement.",
     ),
     rgpd_consent: z.boolean().refine((v) => v === true, {
       message: "Vous devez accepter la politique de confidentialité.",

@@ -8,6 +8,7 @@ import "react-phone-number-input/style.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import {
+  contactEventTimelineOptions,
   contactPreparationStageOptions,
   contactSchema,
   type ContactInput,
@@ -70,6 +71,7 @@ export function ContactGateModal({
       email: "",
       phone: "",
       preparation_stage: undefined,
+      event_timeline: undefined,
       rgpd_consent: false,
       marketing_optin: false,
       source_page: sourcePage,
@@ -121,6 +123,7 @@ export function ContactGateModal({
         pushDataLayerEvent("contact_gate_submit", {
           source_page: sourcePage,
           preparation_stage: values.preparation_stage,
+          event_timeline: values.event_timeline,
         });
         fbEvent("Lead", {
           content_name: "Popup contact",
@@ -182,7 +185,6 @@ export function ContactGateModal({
             <FormField
               id="gate-first-name"
               label="Prénom"
-              required
               error={errors.first_name?.message}
             >
               <input
@@ -273,6 +275,32 @@ export function ContactGateModal({
             {errors.preparation_stage && (
               <p role="alert" className="text-xs leading-relaxed text-accent-strong">
                 {errors.preparation_stage.message}
+              </p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <p className="font-serif text-base leading-snug text-ink">
+              À quelle échéance aurait lieu votre événement ?
+              <span className="ml-1 text-accent-strong" aria-hidden>
+                *
+              </span>
+            </p>
+            <Controller
+              control={control}
+              name="event_timeline"
+              render={({ field }) => (
+                <CardSelect
+                  options={contactEventTimelineOptions}
+                  value={field.value}
+                  onChange={field.onChange}
+                  cols={3}
+                />
+              )}
+            />
+            {errors.event_timeline && (
+              <p role="alert" className="text-xs leading-relaxed text-accent-strong">
+                {errors.event_timeline.message}
               </p>
             )}
           </div>
