@@ -207,12 +207,10 @@ export function Hero({
  */
 function HeroCoverFrame({
   image,
-  overlays,
   children,
   className,
 }: {
   image: HeroImage;
-  overlays: React.ReactNode;
   children: React.ReactNode;
   className?: string;
 }) {
@@ -231,7 +229,12 @@ function HeroCoverFrame({
         sizes="100vw"
         className="object-cover object-center"
       />
-      {overlays}
+      {/* Voile de lisibilité multi-couches (gradient + vignette), piloté
+          par le token --hero-overlay du thème ambiant (cf. globals.css) */}
+      <div
+        aria-hidden
+        className="absolute inset-0 [background-image:var(--hero-overlay)]"
+      />
       {children}
     </section>
   );
@@ -248,24 +251,7 @@ function HeroAccueil({
   className,
 }: SubHeroProps & { accentImage?: HeroImage }) {
   return (
-    <HeroCoverFrame
-      image={image}
-      className={className}
-      overlays={
-        <>
-          {/* Voile sombre gradué — lisibilité du texte blanc */}
-          <div
-            className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/32 to-black/58"
-            aria-hidden
-          />
-          {/* Vignette latérale douce pour concentrer le regard au centre */}
-          <div
-            className="absolute inset-0 bg-[radial-gradient(ellipse_120%_100%_at_50%_50%,transparent_42%,rgba(12,9,5,0.38)_100%)]"
-            aria-hidden
-          />
-        </>
-      }
-    >
+    <HeroCoverFrame image={image} className={className}>
       <div className="relative z-10 mx-auto w-full max-w-4xl px-6 py-4 text-center">
         {eyebrow && (
           <Badge
@@ -275,11 +261,11 @@ function HeroAccueil({
             {eyebrow}
           </Badge>
         )}
-        <h1 className="mx-auto max-w-[20rem] break-words font-serif text-[1.75rem] font-bold leading-[1.1] tracking-normal text-[#fffdf8] [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.30)] sm:max-w-2xl sm:text-[2.1rem] md:max-w-3xl md:text-[2.8rem] md:font-semibold md:leading-[1.06] lg:text-[3.3rem]">
+        <h1 className="mx-auto max-w-[20rem] break-words font-serif text-[1.75rem] leading-[1.1] tracking-normal text-white [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.30)] sm:max-w-2xl sm:text-[2.1rem] md:max-w-3xl md:text-[2.8rem] md:leading-[1.06] lg:text-[3.3rem]">
           {title}
         </h1>
         {subtitle && (
-          <p className="mx-auto mt-6 max-w-2xl rounded-xl px-6 py-4 text-base leading-[1.8] text-ink bg-white/92 backdrop-blur-md md:px-8 md:py-5 md:text-lg">
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-[1.8] text-white [text-shadow:0_1px_4px_rgba(0,0,0,1),0_2px_12px_rgba(0,0,0,0.92),0_4px_24px_rgba(0,0,0,0.75),0_0_48px_rgba(0,0,0,0.50)] md:text-lg">
             {subtitle}
           </p>
         )}
@@ -305,24 +291,7 @@ function HeroCeremonie({
   className,
 }: SubHeroProps) {
   return (
-    <HeroCoverFrame
-      image={image}
-      className={className}
-      overlays={
-        <>
-          {/* Voile sombre gradué — lisibilité du texte blanc */}
-          <div
-            className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/48 to-black/65"
-            aria-hidden
-          />
-          {/* Vignette latérale douce pour concentrer le regard au centre */}
-          <div
-            className="absolute inset-0 bg-[radial-gradient(ellipse_120%_100%_at_50%_50%,transparent_40%,rgba(10,8,5,0.35)_100%)]"
-            aria-hidden
-          />
-        </>
-      }
-    >
+    <HeroCoverFrame image={image} className={className}>
       <div className="relative z-10 mx-auto w-full max-w-4xl px-6 py-4 text-center">
         {eyebrow && (
           <Badge
@@ -332,7 +301,7 @@ function HeroCeremonie({
             {eyebrow}
           </Badge>
         )}
-        <h1 className="mx-auto max-w-full break-words font-serif text-[1.75rem] font-semibold leading-[1.1] text-[#fffdf8] [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.28)] sm:text-[2.1rem] md:text-[2.8rem] md:leading-[1.06] lg:text-[3.3rem]">
+        <h1 className="mx-auto max-w-full break-words font-serif text-[1.75rem] leading-[1.1] text-white [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.28)] sm:text-[2.1rem] md:text-[2.8rem] md:leading-[1.06] lg:text-[3.3rem]">
           {title}
         </h1>
         {subtitle && (
@@ -362,22 +331,7 @@ function HeroFestif({
   className,
 }: SubHeroProps) {
   return (
-    <HeroCoverFrame
-      image={image}
-      className={className}
-      overlays={
-        <>
-          <div
-            className="absolute inset-0 bg-gradient-to-r from-[#0c1424]/92 via-[#101827]/70 to-[#101827]/22"
-            aria-hidden
-          />
-          <div
-            className="absolute inset-0 bg-gradient-to-t from-[#111827] via-transparent to-[#111827]/35"
-            aria-hidden
-          />
-        </>
-      }
-    >
+    <HeroCoverFrame image={image} className={className}>
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-4 lg:px-10">
         <div className="max-w-[21.5rem] sm:max-w-2xl">
           {eyebrow && (
@@ -388,7 +342,7 @@ function HeroFestif({
               {eyebrow}
             </Badge>
           )}
-          <h1 className="max-w-full break-words font-serif text-[1.85rem] font-semibold leading-[1.08] text-ink sm:text-[2.3rem] md:text-[2.9rem] lg:text-[3.5rem]">
+          <h1 className="max-w-full break-words font-serif text-[1.85rem] leading-[1.08] sm:text-[2.3rem] md:text-[2.9rem] lg:text-[3.5rem]">
             {title}
           </h1>
           {subtitle && (

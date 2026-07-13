@@ -822,7 +822,7 @@ export function CalendarPicker(props: CalendarPickerProps) {
         <button
           type="button"
           onClick={() => setView(view === "days" ? "months" : "days")}
-          className="flex items-center gap-1 font-serif text-sm font-semibold uppercase tracking-[0.14em] text-ink transition-colors hover:text-accent"
+          className="flex items-center gap-1 font-serif text-sm uppercase tracking-[0.14em] text-ink transition-colors hover:text-accent"
           aria-label={view === "days" ? "Choisir le mois" : "Retour au calendrier"}
         >
           {view === "days" ? `${MONTH_NAMES[viewMonth]} ${viewYear}` : viewYear}

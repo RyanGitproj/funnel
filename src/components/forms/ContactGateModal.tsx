@@ -163,7 +163,7 @@ export function ContactGateModal({
           </p>
           <h2
             id={titleId}
-            className="font-serif text-xl leading-snug text-ink md:text-2xl"
+            className="font-serif text-xl leading-snug md:text-2xl"
           >
             Bienvenue au Domaine des Élégances
           </h2>
@@ -252,7 +252,7 @@ export function ContactGateModal({
           </div>
 
           <div className="flex flex-col gap-2">
-            <p className="font-serif text-base font-medium leading-snug text-ink">
+            <p className="font-serif text-base leading-snug text-ink">
               Où en êtes-vous dans votre préparation ?
               <span className="ml-1 text-accent-strong" aria-hidden>
                 *

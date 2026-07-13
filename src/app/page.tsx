@@ -103,7 +103,7 @@ export default async function HomePage() {
               {/* Boîte de bienvenue */}
               <div className="w-full max-w-sm rounded-[var(--radius-lg)] border border-accent/45 bg-surface-elevated px-10 py-8 text-center shadow-soft">
                 <span className="text-accent/80" aria-hidden style={{ fontSize: "0.75rem", letterSpacing: "0.12em" }}>◆</span>
-                <p className="mt-3 font-serif text-2xl font-semibold leading-snug text-ink">
+                <p className="mt-3 font-serif text-2xl leading-snug text-heading">
                   Bienvenue au{" "}
                   <span className="whitespace-nowrap text-accent-strong">Domaine des Élégances</span>
                 </p>
@@ -128,7 +128,7 @@ export default async function HomePage() {
                 <TrackedLink
                   href="/ceremonie"
                   event="homepage_card_ceremonie_click"
-                  className="group flex flex-1 flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-accent/35 bg-surface-elevated px-3 py-8 text-center shadow-soft transition-all duration-300 hover:border-accent hover:shadow-[0_16px_48px_-16px_rgba(168,137,92,0.30)] sm:gap-6 sm:px-10 sm:py-12"
+                  className="group flex flex-1 flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-accent/35 bg-surface-elevated px-3 py-8 text-center shadow-soft transition-all duration-300 hover:border-accent hover:shadow-[0_16px_48px_-16px_var(--card-glow)] sm:gap-6 sm:px-10 sm:py-12"
                 >
                   <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-accent/50 shadow-soft ring-4 ring-accent/10 sm:h-28 sm:w-28">
                     <Image
@@ -142,7 +142,7 @@ export default async function HomePage() {
                   <p className="font-sans text-[0.55rem] font-semibold uppercase tracking-[0.22em] text-accent-strong sm:text-[0.63rem] sm:tracking-[0.30em]">
                     Cérémonie
                   </p>
-                  <h3 className="font-serif text-lg font-semibold leading-tight text-ink sm:text-[1.85rem]">
+                  <h3 className="font-serif text-lg leading-tight sm:text-[1.85rem]">
                     Mariages &amp;<br />cérémonies
                   </h3>
                   <div className="h-px w-8 bg-accent/55 sm:w-10" />
@@ -161,7 +161,7 @@ export default async function HomePage() {
                 <TrackedLink
                   href="/festif"
                   event="homepage_card_festif_click"
-                  className="group flex flex-1 flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-accent/35 bg-surface-elevated px-3 py-8 text-center shadow-soft transition-all duration-300 hover:border-accent hover:shadow-[0_16px_48px_-16px_rgba(168,137,92,0.30)] sm:gap-6 sm:px-10 sm:py-12"
+                  className="group flex flex-1 flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-accent/35 bg-surface-elevated px-3 py-8 text-center shadow-soft transition-all duration-300 hover:border-accent hover:shadow-[0_16px_48px_-16px_var(--card-glow)] sm:gap-6 sm:px-10 sm:py-12"
                 >
                   <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-accent/50 shadow-soft ring-4 ring-accent/10 sm:h-28 sm:w-28">
                     <Image
@@ -175,7 +175,7 @@ export default async function HomePage() {
                   <p className="font-sans text-[0.55rem] font-semibold uppercase tracking-[0.22em] text-accent-strong sm:text-[0.63rem] sm:tracking-[0.30em]">
                     Festif
                   </p>
-                  <h3 className="font-serif text-lg font-semibold leading-tight text-ink sm:text-[1.85rem]">
+                  <h3 className="font-serif text-lg leading-tight sm:text-[1.85rem]">
                     Réceptions &amp;<br />célébrations
                   </h3>
                   <div className="h-px w-8 bg-accent/55 sm:w-10" />

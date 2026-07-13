@@ -23,7 +23,7 @@ export default function PolitiqueConfidentialitePage() {
       <main className="flex-1">
         <section className="py-20 md:py-28">
           <div className="mx-auto max-w-3xl px-6 lg:px-10">
-            <h1 className="font-serif text-4xl font-semibold leading-[1.12] text-ink md:text-5xl">
+            <h1 className="font-serif text-4xl leading-[1.12] md:text-5xl">
               Politique de confidentialité
             </h1>
 

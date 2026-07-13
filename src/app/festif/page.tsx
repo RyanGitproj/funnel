@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
-import { HeaderThemed } from "@/components/layout/Header";
+import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LeadFormFestif } from "@/components/forms/LeadFormFestif";
@@ -91,7 +91,7 @@ export default async function FestifPage() {
     >
       <ContactGate initialOpen={!hasContact} sourcePage="/festif" />
       <ViewContentTracker universe="festif" contentName="Devis festif" />
-      <HeaderThemed theme="accueil" />
+      <Header />
 
       <main className="flex-1">
         <Hero
@@ -124,7 +124,7 @@ export default async function FestifPage() {
             >
               EVJF rose fluo · EVG bleu électrique · ANNIVERSAIRES
             </Badge>
-            <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+            <h2 className="font-serif text-3xl leading-tight md:text-[40px]">
               Un lieu pensé pour profiter, sans gérer toute l'organisation
             </h2>
             <p className="mx-auto mt-8 max-w-3xl text-base leading-relaxed text-ink-muted md:text-lg">
@@ -138,7 +138,7 @@ export default async function FestifPage() {
         <section className="bg-surface py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6 lg:px-10">
             <div className="mx-auto mb-12 max-w-3xl text-center">
-              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+              <h2 className="font-serif text-3xl leading-tight md:text-[40px]">
                 Une expérience qui s'adapte à votre groupe
               </h2>
               <p className="mt-6 text-base leading-relaxed text-ink-muted md:text-lg">
@@ -152,7 +152,7 @@ export default async function FestifPage() {
                   key={item.titre}
                   className="border border-line bg-surface-elevated p-7 glow-accent"
                 >
-                  <h3 className="font-serif text-lg font-medium text-ink">
+                  <h3 className="font-serif text-lg">
                     {item.titre}
                   </h3>
                   <p className="mt-4 text-sm leading-relaxed text-ink-muted">
@@ -170,7 +170,7 @@ export default async function FestifPage() {
               <Badge variant="accent" className="mb-6">
                 Aperçu du domaine
               </Badge>
-              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+              <h2 className="font-serif text-3xl leading-tight md:text-[40px]">
                 Un cadre réel pour se projeter simplement
               </h2>
               <p className="mt-6 text-base leading-relaxed text-ink-muted md:text-lg">
@@ -208,10 +208,10 @@ export default async function FestifPage() {
                       className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                     />
                     <div
-                      className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0b1b2b]/80 to-transparent p-4"
+                      className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-surface/80 to-transparent p-4"
                       aria-hidden
                     />
-                    <figcaption className="absolute bottom-4 left-4 right-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#f5f0e8]">
+                    <figcaption className="absolute bottom-4 left-4 right-4 text-xs font-semibold uppercase tracking-[0.16em] text-ink">
                       {image.legende}
                     </figcaption>
                   </div>
@@ -227,7 +227,7 @@ export default async function FestifPage() {
               <Badge variant="accent" className="mb-6">
                 Ambiance en vidéo
               </Badge>
-              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+              <h2 className="font-serif text-3xl leading-tight md:text-[40px]">
                 Vivez l'ambiance avant d'arriver
               </h2>
               <p className="mt-6 text-base leading-relaxed text-ink-muted md:text-lg">
@@ -260,7 +260,7 @@ export default async function FestifPage() {
               <Badge variant="accent" className="mb-6">
                 Demande de devis
               </Badge>
-              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+              <h2 className="font-serif text-3xl leading-tight md:text-[40px]">
                 Préparez votre devis festif
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-ink-muted md:text-lg">

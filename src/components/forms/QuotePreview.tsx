@@ -69,10 +69,10 @@ export function QuotePreview({
     return (
       <div className="rounded-[var(--radius-md)] border border-accent/30 bg-surface-alt p-3 text-sm">
         <div className="flex items-baseline justify-between gap-2">
-          <span className="font-serif font-medium text-ink">
+          <span className="font-serif text-ink">
             Estimation indicative
           </span>
-          <span className="shrink-0 text-right font-serif font-medium tabular-nums text-ink">
+          <span className="shrink-0 text-right font-serif tabular-nums text-ink">
             {quote.displayLabel}
           </span>
         </div>
@@ -137,10 +137,10 @@ export function QuotePreview({
       {hasBase && (
         <div className="mt-3 border-t border-line pt-3">
           <div className="flex items-baseline justify-between gap-2">
-            <span className="font-serif font-medium text-ink">
+            <span className="font-serif text-ink">
               Total estimatif
             </span>
-            <span className="shrink-0 text-right font-serif font-medium tabular-nums text-ink">
+            <span className="shrink-0 text-right font-serif tabular-nums text-ink">
               {quote.displayLabel}
             </span>
           </div>

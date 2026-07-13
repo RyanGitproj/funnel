@@ -104,7 +104,7 @@ function QuoteSummary({ quote }: { quote: ConfirmationQuoteSnapshot }) {
             <p className="text-xs font-medium text-ink-muted">
               Total estimatif
             </p>
-            <p className="mt-0.5 font-serif text-2xl font-semibold leading-none text-ink md:text-3xl">
+            <p className="mt-0.5 font-serif text-2xl leading-none text-ink md:text-3xl">
               {quote.displayLabel}
             </p>
           </div>
@@ -319,7 +319,7 @@ export default async function ConfirmationPage() {
                 <Badge variant="accent" className="mb-4">
                   Demande reçue
                 </Badge>
-                <h1 className="font-serif text-2xl font-semibold leading-[1.12] text-ink md:text-4xl">
+                <h1 className="font-serif text-2xl leading-[1.12] md:text-4xl">
                   Merci — nous avons bien reçu votre demande.
                 </h1>
                 <p className="mt-3 text-sm leading-relaxed text-ink-muted md:text-base">
@@ -345,13 +345,13 @@ export default async function ConfirmationPage() {
                     {NEXT_STEPS.map((step, index) => (
                       <li key={step.titre} className="flex gap-3">
                         <span
-                          className="flex size-7 shrink-0 items-center justify-center rounded-full border border-accent-strong bg-accent/10 font-serif text-xs font-semibold text-accent-strong"
+                          className="flex size-7 shrink-0 items-center justify-center rounded-full border border-accent-strong bg-accent/10 font-serif text-xs text-accent-strong"
                           aria-hidden
                         >
                           {index + 1}
                         </span>
                         <div>
-                          <h3 className="font-serif text-base font-medium leading-snug text-ink">
+                          <h3 className="font-serif text-base leading-snug">
                             {step.titre}
                           </h3>
                           <p className="mt-0.5 text-xs leading-relaxed text-ink-muted">

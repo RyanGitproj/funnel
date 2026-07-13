@@ -2,7 +2,10 @@ import Link from "next/link";
 import { PhoneLink, EmailLink } from "@/components/tracking/ContactLinks";
 
 /**
- * Footer — minimal, premium, agnostique du thème.
+ * Footer — minimal, premium, fond vert domaine (charte p.6 : footer
+ * #1F3A2E, texte beige élégance, détails dorés). Il pose lui-même
+ * `data-theme="dark"` pour consommer les tokens sombres quel que soit
+ * le thème de la page.
  *
  * Conformément au brief J1 : « logo, mention légale minimale, contact ».
  * On n'ajoute ni newsletter, ni liens vers des réseaux sociaux (hors
@@ -16,7 +19,11 @@ const defaultDescription =
 
 export function Footer({ description = defaultDescription }: { description?: string }) {
   return (
-    <footer id="contact" className="mt-auto border-t border-line bg-surface-alt">
+    <footer
+      id="contact"
+      data-theme="dark"
+      className="mt-auto border-t border-line bg-surface"
+    >
       <div className="mx-auto max-w-7xl px-6 py-14 lg:px-10">
         <div className="grid gap-10 md:grid-cols-3">
           {/* Bloc identité */}
@@ -39,7 +46,7 @@ export function Footer({ description = defaultDescription }: { description?: str
                 <span aria-hidden className="text-accent/45" style={{ fontSize: "0.32rem", lineHeight: 1 }}>◆</span>
                 <div className="h-px flex-1 bg-accent/35" />
               </div>
-              <p className="mt-2 font-serif text-xs italic leading-snug text-ink-subtle">
+              <p className="mt-2 font-serif text-xs leading-snug text-ink-subtle">
                 Lieu d&rsquo;exception pour moments inoubliables.
               </p>
             </div>

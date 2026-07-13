@@ -39,7 +39,7 @@ export function ReassuranceBar({ items, className }: ReassuranceBarProps) {
               >
                 <Icon className="size-5" />
               </span>
-              <h4 className="font-serif text-base font-medium text-ink">
+              <h4 className="font-serif text-base">
                 {title}
               </h4>
               <p className="text-sm leading-relaxed text-ink-muted">

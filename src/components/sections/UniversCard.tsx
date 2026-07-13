@@ -68,7 +68,7 @@ export function UniversCard({
         <Badge variant="accent" className="self-start">
           {eyebrow}
         </Badge>
-        <h3 className="font-serif text-2xl font-medium leading-tight text-ink md:text-3xl">
+        <h3 className="font-serif text-2xl leading-tight md:text-3xl">
           {title}
         </h3>
         <p className="flex-1 text-sm leading-relaxed text-ink-muted">

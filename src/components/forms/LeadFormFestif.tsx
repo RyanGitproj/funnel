@@ -100,7 +100,7 @@ function SectionQuestion({
   required?: boolean;
 }) {
   return (
-    <p className="font-serif text-base font-medium leading-snug text-ink">
+    <p className="font-serif text-base leading-snug text-ink">
       {children}
       {required && (
         <span className="ml-1 text-accent-strong" aria-hidden>
@@ -333,7 +333,7 @@ export function LeadFormFestif() {
                       const v = parseInt(e.target.value, 10);
                       field.onChange(!isNaN(v) && v >= 1 ? Math.min(v, 34) : undefined);
                     }}
-                    className="w-20 bg-transparent text-center font-serif text-5xl font-semibold leading-none text-ink outline-none placeholder:text-ink-subtle [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                    className="w-20 bg-transparent text-center font-serif text-5xl leading-none text-ink outline-none placeholder:text-ink-subtle [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
                   <span className="mt-1 text-xs uppercase tracking-[0.14em] text-ink-subtle">
                     {field.value === 1 ? "personne" : "personnes"}
@@ -839,7 +839,7 @@ export function LeadFormFestif() {
         {/* Cadeau offert — conditionnel */}
         {quote?.cadeauEligible && (
           <div className="rounded-[var(--radius-md)] border border-accent/40 bg-accent/[0.06] p-4">
-            <p className="mb-1 font-serif text-base font-medium text-ink">
+            <p className="mb-1 font-serif text-base text-ink">
               Un cadeau vous est offert
             </p>
             <p className="mb-3 text-xs leading-relaxed text-ink-muted">

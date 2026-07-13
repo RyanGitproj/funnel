@@ -138,7 +138,7 @@ export default async function CeremoniePage() {
               <Badge variant="accent" className="mb-6">
                 Le domaine
               </Badge>
-              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+              <h2 className="font-serif text-3xl leading-tight md:text-[40px]">
                 Un cadre élégant pour réunir les proches essentiels.
               </h2>
             </div>
@@ -164,7 +164,7 @@ export default async function CeremoniePage() {
               <Badge variant="accent" className="mb-6">
                 Capacités & hébergements
               </Badge>
-              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+              <h2 className="font-serif text-3xl leading-tight md:text-[40px]">
                 Des espaces pensés pour recevoir avec justesse.
               </h2>
               <p className="mt-8 text-base leading-relaxed text-ink-muted md:text-lg">
@@ -180,7 +180,7 @@ export default async function CeremoniePage() {
                   key={item.title}
                   className="flex min-h-[15rem] flex-col gap-4 rounded-[var(--radius-lg)] border border-line bg-surface-elevated p-7 shadow-soft md:p-8"
                 >
-                  <h3 className="font-serif text-2xl font-medium text-ink">
+                  <h3 className="font-serif text-2xl">
                     {item.title}
                   </h3>
                   <p className="text-xs font-semibold uppercase leading-relaxed tracking-[0.16em] text-accent-strong">
@@ -202,7 +202,7 @@ export default async function CeremoniePage() {
                 <Badge variant="accent" className="mb-6">
                   Accompagnement
                 </Badge>
-                <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+                <h2 className="font-serif text-3xl leading-tight md:text-[40px]">
                   Vous partagez votre projet, nous clarifions la meilleure
                   configuration.
                 </h2>
@@ -221,7 +221,7 @@ export default async function CeremoniePage() {
                     key={item.title}
                     className="rounded-[var(--radius-lg)] border border-line bg-surface-elevated p-6 shadow-soft"
                   >
-                    <h3 className="font-serif text-xl font-medium text-ink">
+                    <h3 className="font-serif text-xl">
                       {item.title}
                     </h3>
                     <p className="mt-3 text-sm leading-relaxed text-ink-muted">
@@ -240,7 +240,7 @@ export default async function CeremoniePage() {
               <Badge variant="accent" className="mb-6">
                 Galerie
               </Badge>
-              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+              <h2 className="font-serif text-3xl leading-tight md:text-[40px]">
                 Le domaine en images
               </h2>
               <p className="mt-6 text-base leading-relaxed text-ink-muted md:text-lg">
@@ -289,7 +289,7 @@ export default async function CeremoniePage() {
               <Badge variant="accent" className="mb-6">
                 Ambiance en vidéo
               </Badge>
-              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+              <h2 className="font-serif text-3xl leading-tight md:text-[40px]">
                 Ressentez le cadre avant de vous décider
               </h2>
               <p className="mt-6 text-base leading-relaxed text-ink-muted md:text-lg">
@@ -320,7 +320,7 @@ export default async function CeremoniePage() {
               <Badge variant="accent" className="mb-6">
                 Demande de devis cérémonie
               </Badge>
-              <h2 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-[40px]">
+              <h2 className="font-serif text-3xl leading-tight md:text-[40px]">
                 Préparez votre devis cérémonie
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-ink-muted md:text-lg">

@@ -10,14 +10,15 @@ import { cn } from "@/lib/utils";
  * `ceremonie` ou `festif` : tout passe par les variables CSS (tokens
  * sémantiques définis dans globals.css).
  *
- * Specs respectées :
+ * Specs charte respectées :
  *   - coins légèrement arrondis (radius-md ≈ 4px), jamais rounded-full
- *   - CTA principal = fond doré plein + texte anthracite (clair) ou
- *     marine (festif) — le token --accent-foreground bascule tout seul
- *   - hover = luminosité légèrement diminuée, pas un simple opacity
- *   - état outline réservé aux actions secondaires
- *   - pas de shadow dure SaaS : shadow-soft (chaude) en thème clair,
- *     glow-accent (chaude dorée) en thème festif (cf. globals.css)
+ *   - CTA principal = fond --primary : vert domaine / texte blanc en
+ *     thème clair, INVERSÉ en doré / texte noir sur les thèmes sombres
+ *     (le token bascule tout seul, jamais de vert sur fond vert)
+ *   - hover = luminosité ajustée, pas un simple opacity
+ *   - outline = « bouton discret » charte (transparent, texte --primary)
+ *   - pas de shadow dure SaaS : shadow-soft (teintée) en thème clair,
+ *     glow-accent (dorée) en thème sombre (cf. globals.css)
  */
 const buttonVariants = cva(
   [
@@ -31,23 +32,24 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // CTA principal — fond doré plein
+        // CTA principal — vert domaine (doré sur thème sombre)
+        // hover éclairci : le vert #1F3A2E assombri deviendrait noir
         primary: [
-          "bg-accent-strong text-white",
-          "shadow-soft hover:brightness-95 active:brightness-90",
+          "bg-primary text-primary-foreground",
+          "shadow-soft hover:brightness-110 active:brightness-95",
         ].join(" "),
         primaryGlow: [
-          "bg-accent-strong text-white",
-          "glow-accent hover:brightness-105 active:brightness-95",
+          "bg-primary text-primary-foreground",
+          "glow-accent hover:brightness-110 active:brightness-95",
         ].join(" "),
-        // Action secondaire — fond blanc, bordure et texte dorés
+        // « Bouton discret » charte — transparent, bordure dorée
         outline: [
-          "bg-white border border-accent text-accent-strong",
-          "hover:bg-accent/5 hover:border-accent-strong",
+          "bg-transparent border border-accent text-primary",
+          "hover:bg-accent/10 hover:border-accent-strong",
         ].join(" "),
-        // Lien discret (texte doré, underline au hover)
+        // Lien discret (underline au hover)
         link: [
-          "bg-transparent text-accent-strong underline-offset-4",
+          "bg-transparent text-primary underline-offset-4",
           "normal-case tracking-normal hover:underline",
         ].join(" "),
 
@@ -58,8 +60,8 @@ const buttonVariants = cva(
         // n'utilise pas ces alias directement — ils existent juste
         // pour la compat.
         default: [
-          "bg-accent-strong text-accent-foreground",
-          "shadow-soft hover:brightness-95",
+          "bg-primary text-primary-foreground",
+          "shadow-soft hover:brightness-110",
         ].join(" "),
         ghost: [
           "bg-transparent text-ink hover:bg-accent/10",

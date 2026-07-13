@@ -1,14 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Polices premium auto-hébergées via Fontsource (zéro appel réseau) */
-@import "@fontsource/cormorant-garamond/400.css";
-@import "@fontsource/cormorant-garamond/400-italic.css";
-@import "@fontsource/cormorant-garamond/500.css";
-@import "@fontsource/cormorant-garamond/500-italic.css";
-@import "@fontsource/cormorant-garamond/600.css";
-@import "@fontsource/cormorant-garamond/600-italic.css";
-@import "@fontsource-variable/dm-sans/index.css";
+/* Titres : Marcellus, auto-hébergée via Fontsource (zéro appel réseau).
+   Un seul poids (400), pas d'italique — voir font-synthesis plus bas.
+   Texte courant : stack système Helvetica, rien à héberger. */
+@import "@fontsource/marcellus/400.css";
 
 html {
   scroll-padding-top: 5rem; /* compense le header sticky h-20 (80px) */
@@ -17,10 +13,16 @@ html {
 /* ─────────────────────────────────────────────────────────────
    Domaine des Élégances — Système de thèmes
    ─────────────────────────────────────────────────────────────
-   3 ambiances pilotées par data-theme sur un wrapper englobant :
-     - accueil   (ivoire / champagne / anthracite) — neutre
-     - ceremonie (même base claire, papeterie de luxe)
-     - festif    (marine profond / ivoire / or saturé) — rupture sombre
+   Palette charte graphique : Vert Domaine #1F3A2E, Beige Élégance
+   #F3E9DA, Doré Champagne #C9A45C, Blanc Villa #FFFFFF, Noir Élégant
+   #1C1C1C, Ligne douce #DED2BD.
+
+   Ambiances pilotées par data-theme sur un wrapper englobant :
+     - accueil / ceremonie (blanc villa / beige, titres vert domaine)
+     - festif              (« version sombre premium » : fond vert,
+                            titres blancs, texte beige, doré en accent)
+     - dark                (alias du bloc festif — surfaces
+                            institutionnelles sombres : header, footer)
 
    Règle d'architecture : les composants partagés (Button, Card,
    UniversCard, Hero, etc.) ne lisent JAMAIS de couleur en dur et
@@ -32,14 +34,20 @@ html {
      --surface            : fond principal
      --surface-alt        : fond secondaire (bandes alternées)
      --surface-elevated   : fond des cartes (légère élévation)
-     --ink                : texte principal
+     --ink                : texte courant
      --ink-muted          : texte secondaire
      --ink-subtle         : texte tertiaire / labels
-     --accent             : champagne / or (bordures, icônes, outlines)
-     --accent-strong      : or plus profond (fonds de CTA)
-     --accent-foreground  : texte posé sur un fond --accent / --accent-strong
+     --heading            : titres (vert domaine en clair, blanc en sombre)
+     --primary            : fond du CTA principal (vert en clair ;
+                            INVERSÉ en doré sur les thèmes sombres pour
+                            ne jamais poser du vert sur du vert)
+     --primary-foreground : texte posé sur --primary
+     --accent             : doré champagne (bordures, icônes, détails)
+     --accent-strong      : doré décliné pour rester lisible (assombri
+                            sur fond clair, éclairci sur fond sombre)
+     --accent-foreground  : texte posé sur un fond --accent
      --line               : bordures subtiles
-     --shadow-color       : teinte de l'ombre portée (chaude)
+     --shadow-color       : teinte de l'ombre portée
    ───────────────────────────────────────────────────────────── */
 
 @theme inline {
@@ -50,14 +58,15 @@ html {
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
   --color-ink-subtle: var(--ink-subtle);
+  --color-heading: var(--heading);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-foreground: var(--accent-foreground);
   --color-line: var(--line);
 
-  /* Polices */
-  --font-sans: "DM Sans Variable", "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Cormorant Garamond", Georgia, serif;
+  /* Polices — charte : Marcellus (titres), Helvetica (texte courant) */
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-serif: "Marcellus", Georgia, serif;
 
   /* Rayons (cohérents avec les boutons : 2-6px, jamais full) */
   --radius-sm: 2px;
@@ -73,8 +82,8 @@ html {
   --color-card-foreground: var(--ink);
   --color-border: var(--line);
   --color-input: var(--line);
-  --color-primary: var(--accent-strong);
-  --color-primary-foreground: var(--accent-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--surface-alt);
   --color-secondary-foreground: var(--ink);
   --color-muted: var(--surface-alt);
@@ -87,59 +96,64 @@ html {
 
 /* ─────────────────────────────────────────────────────────────
    Thème clair — Accueil & Cérémonie
-   Ivoire, champagne doré, anthracite. Beige sable pour respirer.
+   Blanc villa, beige élégance en bandes alternées, titres vert
+   domaine, doré champagne en accent uniquement.
    ───────────────────────────────────────────────────────────── */
 :root,
 [data-theme="accueil"],
 [data-theme="ceremonie"] {
-  --surface: #faf6ee;            /* ivoire */
-  --surface-alt: #f1e9d8;        /* beige sable */
-  --surface-elevated: #fffdf8;   /* blanc cassé, cartes */
-  --ink: #2a2622;                /* anthracite profond */
-  --ink-muted: #6b645a;          /* taupe */
-  --ink-subtle: #8c8478;         /* taupe clair */
-  --accent: #C9A44A;             /* or doré saturé */
-  --accent-strong: #B08A30;      /* or profond (hover / CTA) */
-  --accent-foreground: #2a2622;  /* anthracite sur or */
-  --line: rgba(168, 137, 92, 0.22);
-  --shadow-color: 42 35 25;      /* ombre chaude (RGB brut pour usage avec /opacité) */
-  --card-glow: rgba(201, 164, 74, 0.38);
-  /* Overlay des heros : anthracite à faible opacité pour garder la
-     texture de l'image visible derrière le texte (gradients, pas
-     d'aplat). */
-  --hero-overlay: linear-gradient(
-    135deg,
-    rgba(42, 38, 34, 0.55) 0%,
-    rgba(42, 38, 34, 0.30) 50%,
-    rgba(42, 38, 34, 0.45) 100%
-  );
+  --surface: #FFFFFF;            /* Blanc Villa — fond de page, respiration */
+  --surface-alt: #F3E9DA;        /* Beige Élégance — bandes alternées */
+  --surface-elevated: #FFFFFF;   /* cartes (relief via border-line + shadow-soft) */
+  --ink: #1C1C1C;                /* Noir Élégant — texte courant */
+  --ink-muted: #4C4A45;          /* gris chaud dérivé */
+  --ink-subtle: #767065;         /* gris chaud clair, labels */
+  --heading: #1F3A2E;            /* Vert Domaine — titres */
+  --primary: #1F3A2E;            /* CTA principal vert, texte blanc */
+  --primary-foreground: #FFFFFF;
+  --accent: #C9A45C;             /* Doré Champagne */
+  --accent-strong: #A9853D;      /* doré assombri — hovers, labels lisibles sur clair */
+  --accent-foreground: #1C1C1C;  /* noir élégant sur doré */
+  --line: #DED2BD;               /* Ligne douce */
+  --shadow-color: 31 58 46;      /* ombre teintée vert domaine (RGB brut) */
+  --card-glow: rgba(201, 164, 92, 0.35);
+  /* Overlay des heros : voile vert domaine gradué + vignette douce,
+     en une seule background-image multi-couches (texture de l'image
+     préservée, jamais d'aplat). Densité calibrée pour que titre ET
+     sous-titre blancs restent lisibles sur photo claire (accueil). */
+  --hero-overlay:
+    linear-gradient(180deg, rgba(18, 34, 27, 0.60) 0%, rgba(18, 34, 27, 0.50) 50%, rgba(31, 58, 46, 0.65) 100%),
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 42%, rgba(18, 34, 27, 0.42) 100%);
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Thème Festif — sombre, immersif, réception nocturne chic
-   Marine/anthracite chaud (pas noir pur), or saturé qui « brille ».
+   Thème sombre premium — Festif + alias `dark` (header, footer)
+   « Version sombre premium » de la charte : fond vert domaine,
+   titres blancs, texte beige élégance, doré champagne en accent.
    ───────────────────────────────────────────────────────────── */
-[data-theme="festif"] {
-  --surface: #0b1b2b;            /* bleu nuit profond */
-  --surface-alt: #13263a;        /* marine un cran plus clair pour bandes alternées */
-  --surface-elevated: #172b40;   /* cartes */
-  --ink: #f5f0e8;                /* ivoire chaud */
-  --ink-muted: #e8ddcf;          /* beige sable */
-  --ink-subtle: #b9ab94;         /* champagne atténué */
-  --accent: #D4AF5A;             /* or champagne saturé */
-  --accent-strong: #F2CB6A;      /* or vif pour CTA (brille sur fond sombre) */
-  --accent-foreground: #0b1b2b;  /* bleu nuit sur or */
-  --line: rgba(200, 169, 106, 0.34);
+[data-theme="festif"],
+[data-theme="dark"] {
+  --surface: #1F3A2E;            /* Vert Domaine */
+  --surface-alt: #274839;        /* vert éclairci — bandes alternées */
+  --surface-elevated: #2D5342;   /* cartes */
+  --ink: #F3E9DA;                /* Beige Élégance — texte courant */
+  --ink-muted: #E2D6C2;
+  --ink-subtle: #C3B49A;
+  --heading: #FFFFFF;            /* titres blancs */
+  --primary: #C9A45C;            /* INVERSION : le CTA principal devient doré
+                                    (jamais de vert sur fond vert) */
+  --primary-foreground: #1C1C1C;
+  --accent: #C9A45C;
+  --accent-strong: #DBBC7E;      /* doré éclairci — hovers sur fond sombre */
+  --accent-foreground: #1C1C1C;
+  --line: rgba(201, 164, 92, 0.32);
   --shadow-color: 0 0 0;         /* ombre neutre (légère) pour CTA doré */
-  --card-glow: rgba(242, 203, 106, 0.60);
-  /* Overlay marine plus profond pour Festif : conserve l'ambiance
-     nocturne tout en assurant la lisibilité. */
-  --hero-overlay: linear-gradient(
-    180deg,
-    rgba(15, 19, 32, 0.55) 0%,
-    rgba(15, 19, 32, 0.40) 45%,
-    rgba(15, 19, 32, 0.75) 100%
-  );
+  --card-glow: rgba(201, 164, 92, 0.45);
+  /* Overlay festif : gradient latéral (texte à gauche) qui se fond
+     dans le vert domaine en pied de hero. */
+  --hero-overlay:
+    linear-gradient(90deg, rgba(18, 34, 27, 0.90) 0%, rgba(18, 34, 27, 0.62) 45%, rgba(31, 58, 46, 0.22) 100%),
+    linear-gradient(0deg, #1F3A2E 0%, transparent 32%, rgba(18, 34, 27, 0.40) 100%);
 }
 
 @layer base {
@@ -162,13 +176,16 @@ html {
 
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
-    font-weight: 600;
+    font-weight: 400;              /* Marcellus n'existe qu'en 400 */
+    font-synthesis-weight: none;   /* pas de faux-gras navigateur */
+    color: var(--heading);
     line-height: 1.15;
     letter-spacing: -0.01em;
   }
 
-  h3 {
-    font-weight: 500;
+  /* Même garde-fou pour les éléments serif hors hN (prix, logo…) */
+  :where(.font-serif) {
+    font-synthesis-weight: none;
   }
 
   /* Transitions douces au changement de thème (fade, jamais de bounce) */
@@ -191,8 +208,8 @@ html {
   /* Léger glow doré pour les cartes sur fond Festif (les ombres
      classiques étant invisibles sur fond sombre) */
   .glow-accent {
-    box-shadow: 0 0 0 1px rgba(242, 203, 106, 0.18),
-                0 8px 32px -12px rgba(242, 203, 106, 0.25);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent),
+                0 8px 32px -12px var(--card-glow);
   }
 
   /* « Très » large : badge sur-majuscule avec letter-spacing marque de luxe */
@@ -234,17 +251,16 @@ html {
 @keyframes golden-glow {
   0%, 100% {
     opacity: 1;
-    text-shadow: 0 0 4px rgba(212, 175, 55, 0.35);
+    text-shadow: 0 0 4px color-mix(in srgb, var(--accent) 35%, transparent);
   }
   50% {
     opacity: 0.88;
-    text-shadow: 0 0 12px rgba(212, 175, 55, 0.75);
+    text-shadow: 0 0 12px color-mix(in srgb, var(--accent) 75%, transparent);
   }
 }
 
 .price-golden-pulse {
-  color: #d4af37;
-  font-weight: 700;
+  color: var(--accent);
   animation: golden-glow 3s ease-in-out infinite;
 }
 
