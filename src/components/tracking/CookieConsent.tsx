@@ -1,51 +1,21 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import Script from "next/script";
-
-type ConsentChoice = "granted" | "denied";
-
-const STORAGE_KEY = "cookie_consent";
-const CONSENT_EVENT = "cookie-consent-change";
-
-function subscribe(callback: () => void) {
-  window.addEventListener("storage", callback);
-  window.addEventListener(CONSENT_EVENT, callback);
-  return () => {
-    window.removeEventListener("storage", callback);
-    window.removeEventListener(CONSENT_EVENT, callback);
-  };
-}
-
-function getSnapshot(): ConsentChoice | null {
-  const stored = window.localStorage.getItem(STORAGE_KEY);
-  return stored === "granted" || stored === "denied" ? stored : null;
-}
-
-function getServerSnapshot(): ConsentChoice | null {
-  return null;
-}
+import { saveConsentChoice, useConsentChoice } from "@/lib/tracking/consent";
 
 /**
  * Charge le conteneur GTM uniquement si l'utilisateur a donné son
  * consentement, et affiche le bandeau tant qu'aucun choix n'a été fait.
  * Sans consentement stocké : aucun script GTM n'est injecté, donc aucun
- * cookie de mesure d'audience n'est posé (exigence CNIL).
+ * cookie de mesure d'audience ou publicitaire n'est posé (exigence CNIL).
  *
- * useSyncExternalStore lit localStorage (état externe au rendu React) :
- * le serveur n'a pas accès à ce stockage, donc getServerSnapshot renvoie
- * toujours `null` (comportement identique à un premier visiteur), et
- * React resynchronise avec la vraie valeur juste après l'hydratation,
- * sans avertissement de mismatch ni cascade de re-render.
+ * Le choix vit dans le store partagé `src/lib/tracking/consent.ts` :
+ * ce bandeau l'écrit, GTM (ici) et le Meta Pixel (MetaPixelGate) s'y
+ * abonnent — source unique, jamais de second mécanisme par pixel.
  */
 export function CookieConsent({ gtmId }: { gtmId?: string }) {
-  const consent = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-
-  function handleChoice(choice: ConsentChoice) {
-    window.localStorage.setItem(STORAGE_KEY, choice);
-    window.dispatchEvent(new Event(CONSENT_EVENT));
-  }
+  const consent = useConsentChoice();
 
   return (
     <>
@@ -75,8 +45,8 @@ export function CookieConsent({ gtmId }: { gtmId?: string }) {
           <div className="mx-auto flex max-w-5xl flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm leading-relaxed text-ink-muted">
               Nous utilisons des cookies de mesure d&rsquo;audience (Google
-              Analytics) pour comprendre l&rsquo;utilisation du site. Vous
-              pouvez accepter ou refuser à tout moment.{" "}
+              Analytics) et de performance publicitaire (Meta Pixel, Google
+              Ads). Vous pouvez accepter ou refuser à tout moment.{" "}
               <Link
                 href="/politique-de-confidentialite"
                 className="text-accent-strong underline underline-offset-2"
@@ -87,14 +57,14 @@ export function CookieConsent({ gtmId }: { gtmId?: string }) {
             <div className="flex shrink-0 gap-3">
               <button
                 type="button"
-                onClick={() => handleChoice("denied")}
+                onClick={() => saveConsentChoice("denied")}
                 className="rounded-full border border-line px-5 py-2 text-sm font-medium text-ink transition-colors hover:bg-surface-alt"
               >
                 Refuser
               </button>
               <button
                 type="button"
-                onClick={() => handleChoice("granted")}
+                onClick={() => saveConsentChoice("granted")}
                 className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-accent-foreground transition-colors hover:bg-accent-strong"
               >
                 Accepter

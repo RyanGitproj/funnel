@@ -47,6 +47,11 @@ export default function PolitiqueConfidentialitePage() {
                   Mesurer l&rsquo;audience du site (Google Analytics), uniquement
                   après votre consentement
                 </li>
+                <li>
+                  Mesurer la performance de nos campagnes publicitaires (Meta
+                  Pixel, suivi des conversions Google Ads), uniquement après
+                  votre consentement
+                </li>
               </ul>
             </LegalSection>
 
@@ -54,9 +59,10 @@ export default function PolitiqueConfidentialitePage() {
               <p>
                 Le traitement de votre demande de devis repose sur
                 l&rsquo;exécution de mesures précontractuelles prises à votre
-                demande. Le dépôt de cookies de mesure d&rsquo;audience repose
-                sur votre consentement, recueilli via le bandeau affiché lors
-                de votre première visite.
+                demande. Le dépôt de cookies de mesure d&rsquo;audience et de
+                performance publicitaire repose sur votre consentement,
+                recueilli via le bandeau affiché lors de votre première
+                visite.
               </p>
             </LegalSection>
 
@@ -79,16 +85,17 @@ export default function PolitiqueConfidentialitePage() {
                 Vos données sont accessibles à l&rsquo;équipe de LIEUX DE
                 CELEBRATIONS.COM, ainsi qu&rsquo;à nos sous-traitants
                 techniques : Render (hébergement du site), Supabase
-                (hébergement de la base de données), et Google (Google Tag
-                Manager / Google Analytics, sous réserve de votre
-                consentement).
+                (hébergement de la base de données), Google (Google Tag
+                Manager / Google Analytics / suivi des conversions Google
+                Ads, sous réserve de votre consentement) et Meta Platforms
+                (Meta Pixel, sous réserve de votre consentement).
               </p>
             </LegalSection>
 
             <LegalSection title="Transferts hors Union européenne">
               <p>
-                Certains de nos sous-traitants (notamment Google et Render)
-                sont susceptibles de traiter des données en dehors de
+                Certains de nos sous-traitants (notamment Google, Meta et
+                Render) sont susceptibles de traiter des données en dehors de
                 l&rsquo;Union européenne, notamment aux États-Unis. Ces
                 transferts sont encadrés par des garanties appropriées,
                 telles que les clauses contractuelles types de la Commission
@@ -99,8 +106,10 @@ export default function PolitiqueConfidentialitePage() {
             <LegalSection title="Cookies">
               <p>
                 Ce site utilise des cookies de mesure d&rsquo;audience (Google
-                Analytics) uniquement après recueil de votre consentement,
-                via le bandeau affiché lors de votre première visite. Vous
+                Analytics) et de performance publicitaire (Meta Pixel, suivi
+                des conversions Google Ads) uniquement après recueil de votre
+                consentement, via le bandeau affiché lors de votre première
+                visite. Vous
                 pouvez à tout moment revenir sur votre choix en effaçant les
                 données de navigation stockées par votre navigateur pour ce
                 site.

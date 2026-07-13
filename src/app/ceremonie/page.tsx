@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LeadFormCeremonie } from "@/components/forms/LeadFormCeremonie";
 import { ContactGate } from "@/components/forms/ContactGate";
+import { ViewContentTracker } from "@/components/tracking/ViewContentTracker";
 import {
   CONTACT_ID_COOKIE,
   isValidContactId,
@@ -110,6 +111,7 @@ export default async function CeremoniePage() {
       className="flex min-h-screen flex-col bg-surface"
     >
       <ContactGate initialOpen={!hasContact} sourcePage="/ceremonie" />
+      <ViewContentTracker universe="ceremonie" contentName="Devis cérémonie" />
       <Header />
 
       <main className="flex-1">

@@ -14,6 +14,7 @@ import {
 } from "@/lib/validations/contact-schema";
 import { submitContact } from "@/actions/contact";
 import { pushDataLayerEvent } from "@/lib/tracking/gtm";
+import { contentCategoryForPath, fbEvent } from "@/lib/tracking/fpixel";
 import { readUtmParams, rememberUtmParams } from "@/lib/tracking/utm";
 import {
   FormField,
@@ -120,6 +121,10 @@ export function ContactGateModal({
         pushDataLayerEvent("contact_gate_submit", {
           source_page: sourcePage,
           preparation_stage: values.preparation_stage,
+        });
+        fbEvent("Lead", {
+          content_name: "Popup contact",
+          content_category: contentCategoryForPath(sourcePage),
         });
         onSubmitted();
         return;

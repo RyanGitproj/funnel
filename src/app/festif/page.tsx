@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LeadFormFestif } from "@/components/forms/LeadFormFestif";
 import { ContactGate } from "@/components/forms/ContactGate";
+import { ViewContentTracker } from "@/components/tracking/ViewContentTracker";
 import {
   CONTACT_ID_COOKIE,
   isValidContactId,
@@ -89,6 +90,7 @@ export default async function FestifPage() {
       className="flex min-h-screen flex-col bg-surface"
     >
       <ContactGate initialOpen={!hasContact} sourcePage="/festif" />
+      <ViewContentTracker universe="festif" contentName="Devis festif" />
       <HeaderThemed theme="accueil" />
 
       <main className="flex-1">

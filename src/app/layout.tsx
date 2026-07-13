@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { RouteTracker } from "@/components/tracking/RouteTracker";
 import { CookieConsent } from "@/components/tracking/CookieConsent";
+import { MetaPixelGate } from "@/components/tracking/MetaPixelGate";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -66,6 +67,7 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning data-scroll-behavior="smooth">
       <body className="antialiased" data-theme="accueil" suppressHydrationWarning>
         <CookieConsent gtmId={gtmId} />
+        <MetaPixelGate />
         <RouteTracker />
         {children}
       </body>
