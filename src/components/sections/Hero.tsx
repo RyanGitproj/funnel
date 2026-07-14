@@ -261,7 +261,7 @@ function HeroAccueil({
             {eyebrow}
           </Badge>
         )}
-        <h1 className="mx-auto max-w-[20rem] break-words font-serif text-[1.75rem] leading-[1.1] tracking-normal text-white [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.30)] sm:max-w-2xl sm:text-[2.1rem] md:max-w-3xl md:text-[2.8rem] md:leading-[1.06] lg:text-[3.3rem]">
+        <h1 className="mx-auto max-w-[20rem] break-words font-serif text-[1.75rem] uppercase leading-[1.1] tracking-normal text-white [text-wrap:balance] [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.30)] sm:max-w-2xl sm:text-[2.1rem] md:max-w-3xl md:text-[2.8rem] md:leading-[1.06] lg:text-[3.3rem]">
           {title}
         </h1>
         {subtitle && (
@@ -301,7 +301,7 @@ function HeroCeremonie({
             {eyebrow}
           </Badge>
         )}
-        <h1 className="mx-auto max-w-full break-words font-serif text-[1.75rem] leading-[1.1] text-white [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.28)] sm:text-[2.1rem] md:text-[2.8rem] md:leading-[1.06] lg:text-[3.3rem]">
+        <h1 className="mx-auto max-w-full break-words font-serif text-[1.75rem] uppercase leading-[1.1] text-white [text-wrap:balance] [text-shadow:0_2px_14px_rgba(10,8,5,0.55),0_4px_28px_rgba(10,8,5,0.28)] sm:text-[2.1rem] md:text-[2.8rem] md:leading-[1.06] lg:text-[3.3rem]">
           {title}
         </h1>
         {subtitle && (
@@ -342,7 +342,7 @@ function HeroFestif({
               {eyebrow}
             </Badge>
           )}
-          <h1 className="max-w-full break-words font-serif text-[1.85rem] leading-[1.08] sm:text-[2.3rem] md:text-[2.9rem] lg:text-[3.5rem]">
+          <h1 className="max-w-full break-words font-serif text-[1.85rem] uppercase leading-[1.08] [text-wrap:balance] sm:text-[2.3rem] md:text-[2.9rem] lg:text-[3.5rem]">
             {title}
           </h1>
           {subtitle && (

@@ -3,7 +3,7 @@ import { PhoneLink, EmailLink } from "@/components/tracking/ContactLinks";
 
 /**
  * Footer — minimal, premium, fond vert domaine (charte p.6 : footer
- * #1F3A2E, texte beige élégance, détails dorés). Il pose lui-même
+ * #10281B, texte beige élégance, détails dorés). Il pose lui-même
  * `data-theme="dark"` pour consommer les tokens sombres quel que soit
  * le thème de la page.
  *

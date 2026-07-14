@@ -7,7 +7,7 @@ import { pushDataLayerEvent } from "@/lib/tracking/gtm";
 
 /**
  * Header — commun à toutes les pages, fond vert domaine (charte p.6 :
- * header #1F3A2E, logo doré, bouton devis doré #C9A45C texte #1C1C1C).
+ * header #10281B, logo doré, bouton devis doré #CE9F57 texte #1C1C1C).
  * Il pose lui-même `data-theme="dark"` pour consommer les tokens
  * sombres quel que soit le thème de la page.
  *

@@ -33,7 +33,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         // CTA principal — vert domaine (doré sur thème sombre)
-        // hover éclairci : le vert #1F3A2E assombri deviendrait noir
+        // hover éclairci : le vert #10281B assombri deviendrait noir
         primary: [
           "bg-primary text-primary-foreground",
           "shadow-soft hover:brightness-110 active:brightness-95",

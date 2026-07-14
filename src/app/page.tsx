@@ -75,13 +75,7 @@ export default async function HomePage() {
       <main className="flex-1">
         <Hero
           variant="accueil"
-          title={
-            <>
-              Un domaine privé pour célébrer
-              <br className="hidden md:block" />{" "}
-              ce qui compte vraiment.
-            </>
-          }
+          title="Un domaine privé pour célébrer ce qui compte vraiment."
           subtitle="Mariage, cérémonie familiale, enterrement de vie de jeune fille, enterrement de vie de garçon ou anniversaire : choisissez votre univers, nous préparons un parcours adapté à votre projet."
           image={{
             src: "/images/ceremonie/hero-bg.jpeg",
@@ -97,7 +91,7 @@ export default async function HomePage() {
           id="orientation"
           className="scroll-mt-20 border-y border-line bg-surface-alt py-16 md:py-24"
         >
-          <div className="mx-auto max-w-2xl px-6 lg:px-10">
+          <div className="mx-auto max-w-2xl px-6 lg:max-w-5xl lg:px-10">
             <div className="flex flex-col items-center">
 
               {/* Boîte de bienvenue */}
@@ -146,9 +140,11 @@ export default async function HomePage() {
                     Mariages &amp;<br />cérémonies
                   </h3>
                   <div className="h-px w-8 bg-accent/55 sm:w-10" />
-                  <ul className="flex flex-col gap-1 font-sans text-xs leading-relaxed text-ink-muted sm:gap-2 sm:text-sm">
+                  <ul className="flex flex-col gap-1 font-sans text-xs leading-relaxed text-ink-muted sm:gap-2 sm:text-sm lg:flex-row lg:flex-wrap lg:justify-center lg:gap-x-3">
                     <li>Mariage</li>
+                    <li aria-hidden className="hidden text-accent/60 lg:block">·</li>
                     <li>Communion</li>
+                    <li aria-hidden className="hidden text-accent/60 lg:block">·</li>
                     <li>Bar Mitzvah</li>
                   </ul>
                   <span className="mt-1 font-sans text-[0.55rem] font-semibold uppercase tracking-[0.15em] text-accent-strong sm:mt-2 sm:text-[0.63rem] sm:tracking-[0.20em]">
@@ -179,9 +175,11 @@ export default async function HomePage() {
                     Réceptions &amp;<br />célébrations
                   </h3>
                   <div className="h-px w-8 bg-accent/55 sm:w-10" />
-                  <ul className="flex flex-col gap-1 font-sans text-xs leading-relaxed text-ink-muted sm:gap-2 sm:text-sm">
+                  <ul className="flex flex-col gap-1 font-sans text-xs leading-relaxed text-ink-muted sm:gap-2 sm:text-sm lg:flex-row lg:flex-wrap lg:justify-center lg:gap-x-3">
                     <li>Enterrements de vie</li>
+                    <li aria-hidden className="hidden text-accent/60 lg:block">·</li>
                     <li>Anniversaire</li>
+                    <li aria-hidden className="hidden text-accent/60 lg:block">·</li>
                     <li>Fête entre amis</li>
                   </ul>
                   <span className="mt-1 font-sans text-[0.55rem] font-semibold uppercase tracking-[0.15em] text-accent-strong sm:mt-2 sm:text-[0.63rem] sm:tracking-[0.20em]">

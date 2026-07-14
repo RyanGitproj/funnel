@@ -3,8 +3,11 @@
 
 /* Titres : Marcellus, auto-hébergée via Fontsource (zéro appel réseau).
    Un seul poids (400), pas d'italique — voir font-synthesis plus bas.
-   Texte courant : stack système Helvetica, rien à héberger. */
+   Texte courant : Open Sans variable, auto-hébergée via Fontsource
+   (toutes les graisses 300-800 + italique en deux fichiers). */
 @import "@fontsource/marcellus/400.css";
+@import "@fontsource-variable/open-sans";
+@import "@fontsource-variable/open-sans/wght-italic.css";
 
 html {
   scroll-padding-top: 5rem; /* compense le header sticky h-20 (80px) */
@@ -13,9 +16,9 @@ html {
 /* ─────────────────────────────────────────────────────────────
    Domaine des Élégances — Système de thèmes
    ─────────────────────────────────────────────────────────────
-   Palette charte graphique : Vert Domaine #1F3A2E, Beige Élégance
-   #F3E9DA, Doré Champagne #C9A45C, Blanc Villa #FFFFFF, Noir Élégant
-   #1C1C1C, Ligne douce #DED2BD.
+   Palette charte graphique : Vert Domaine #10281B, Beige Élégance
+   #F3EBE1, Doré Champagne #CE9F57, Blanc Villa #FFFFFF, Noir Élégant
+   #1C1C1C, Ligne douce #DED4C4.
 
    Ambiances pilotées par data-theme sur un wrapper englobant :
      - accueil / ceremonie (blanc villa / beige, titres vert domaine)
@@ -64,8 +67,8 @@ html {
   --color-accent-foreground: var(--accent-foreground);
   --color-line: var(--line);
 
-  /* Polices — charte : Marcellus (titres), Helvetica (texte courant) */
-  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Polices — charte : Marcellus (titres), Open Sans (texte courant) */
+  --font-sans: "Open Sans Variable", "Open Sans", Helvetica, Arial, sans-serif;
   --font-serif: "Marcellus", Georgia, serif;
 
   /* Rayons (cohérents avec les boutons : 2-6px, jamais full) */
@@ -103,27 +106,27 @@ html {
 [data-theme="accueil"],
 [data-theme="ceremonie"] {
   --surface: #FFFFFF;            /* Blanc Villa — fond de page, respiration */
-  --surface-alt: #F3E9DA;        /* Beige Élégance — bandes alternées */
+  --surface-alt: #F3EBE1;        /* Beige Élégance — bandes alternées */
   --surface-elevated: #FFFFFF;   /* cartes (relief via border-line + shadow-soft) */
   --ink: #1C1C1C;                /* Noir Élégant — texte courant */
   --ink-muted: #4C4A45;          /* gris chaud dérivé */
   --ink-subtle: #767065;         /* gris chaud clair, labels */
-  --heading: #1F3A2E;            /* Vert Domaine — titres */
-  --primary: #1F3A2E;            /* CTA principal vert, texte blanc */
+  --heading: #10281B;            /* Vert Domaine — titres */
+  --primary: #10281B;            /* CTA principal vert, texte blanc */
   --primary-foreground: #FFFFFF;
-  --accent: #C9A45C;             /* Doré Champagne */
-  --accent-strong: #A9853D;      /* doré assombri — hovers, labels lisibles sur clair */
+  --accent: #CE9F57;             /* Doré Champagne */
+  --accent-strong: #AF8037;      /* doré assombri — hovers, labels lisibles sur clair */
   --accent-foreground: #1C1C1C;  /* noir élégant sur doré */
-  --line: #DED2BD;               /* Ligne douce */
-  --shadow-color: 31 58 46;      /* ombre teintée vert domaine (RGB brut) */
-  --card-glow: rgba(201, 164, 92, 0.35);
+  --line: #DED4C4;               /* Ligne douce */
+  --shadow-color: 16 40 27;      /* ombre teintée vert domaine (RGB brut) */
+  --card-glow: rgba(206, 159, 87, 0.35);
   /* Overlay des heros : voile vert domaine gradué + vignette douce,
      en une seule background-image multi-couches (texture de l'image
      préservée, jamais d'aplat). Densité calibrée pour que titre ET
      sous-titre blancs restent lisibles sur photo claire (accueil). */
   --hero-overlay:
-    linear-gradient(180deg, rgba(18, 34, 27, 0.60) 0%, rgba(18, 34, 27, 0.50) 50%, rgba(31, 58, 46, 0.65) 100%),
-    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 42%, rgba(18, 34, 27, 0.42) 100%);
+    linear-gradient(180deg, rgba(9, 23, 16, 0.60) 0%, rgba(9, 23, 16, 0.50) 50%, rgba(16, 40, 27, 0.65) 100%),
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 42%, rgba(9, 23, 16, 0.42) 100%);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -133,27 +136,27 @@ html {
    ───────────────────────────────────────────────────────────── */
 [data-theme="festif"],
 [data-theme="dark"] {
-  --surface: #1F3A2E;            /* Vert Domaine */
-  --surface-alt: #274839;        /* vert éclairci — bandes alternées */
-  --surface-elevated: #2D5342;   /* cartes */
-  --ink: #F3E9DA;                /* Beige Élégance — texte courant */
-  --ink-muted: #E2D6C2;
-  --ink-subtle: #C3B49A;
+  --surface: #10281B;            /* Vert Domaine */
+  --surface-alt: #163826;        /* vert éclairci — bandes alternées */
+  --surface-elevated: #1B442E;   /* cartes */
+  --ink: #F3EBE1;                /* Beige Élégance — texte courant */
+  --ink-muted: #E2D8C9;
+  --ink-subtle: #C3B6A1;
   --heading: #FFFFFF;            /* titres blancs */
-  --primary: #C9A45C;            /* INVERSION : le CTA principal devient doré
+  --primary: #CE9F57;            /* INVERSION : le CTA principal devient doré
                                     (jamais de vert sur fond vert) */
   --primary-foreground: #1C1C1C;
-  --accent: #C9A45C;
-  --accent-strong: #DBBC7E;      /* doré éclairci — hovers sur fond sombre */
+  --accent: #CE9F57;
+  --accent-strong: #DAB67F;      /* doré éclairci — hovers sur fond sombre */
   --accent-foreground: #1C1C1C;
-  --line: rgba(201, 164, 92, 0.32);
+  --line: rgba(206, 159, 87, 0.32);
   --shadow-color: 0 0 0;         /* ombre neutre (légère) pour CTA doré */
-  --card-glow: rgba(201, 164, 92, 0.45);
+  --card-glow: rgba(206, 159, 87, 0.45);
   /* Overlay festif : gradient latéral (texte à gauche) qui se fond
      dans le vert domaine en pied de hero. */
   --hero-overlay:
-    linear-gradient(90deg, rgba(18, 34, 27, 0.90) 0%, rgba(18, 34, 27, 0.62) 45%, rgba(31, 58, 46, 0.22) 100%),
-    linear-gradient(0deg, #1F3A2E 0%, transparent 32%, rgba(18, 34, 27, 0.40) 100%);
+    linear-gradient(90deg, rgba(9, 23, 16, 0.90) 0%, rgba(9, 23, 16, 0.62) 45%, rgba(16, 40, 27, 0.22) 100%),
+    linear-gradient(0deg, #10281B 0%, transparent 32%, rgba(9, 23, 16, 0.40) 100%);
 }
 
 @layer base {
