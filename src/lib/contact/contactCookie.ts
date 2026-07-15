@@ -11,8 +11,8 @@
 
 export const CONTACT_ID_COOKIE = "dde_contact_id";
 
-/** 30 jours : un visiteur qui revient ne repasse pas par le popup. */
-export const CONTACT_ID_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
+/** 2 jours : un visiteur qui revient ne repasse pas par le popup. */
+export const CONTACT_ID_COOKIE_MAX_AGE = 60 * 60 * 24 * 2;
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
